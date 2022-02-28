@@ -1,157 +1,55 @@
 # molecule
 
-_molecule_ adds a set of high-level functions to the generic SQL handle in GO. Check *godoc* for definitions:
+_molecule_ runs GraphQL/gRPC actions on whole database. Check *godoc* for definitions:
+
 [![GoDoc](https://godoc.org/github.com/genelet/molecule?status.svg)](https://godoc.org/github.com/genelet/molecule)
 
 There are three levels of usages:
 
-- _Basic_: on raw SQL statements
-- _Atom_: on CRUD actions of table.
-- _Molecule_: on MoleculeQL/gRPC actions of database
+- _Basic_: run raw SQL statements;
+- _Atom_: run actions on single table;
+- _Molecule_: run GraphQL/gRPC actions of multiple relational actoms.
 
-The package is fully tested in MySQL and PostgreSQL.
+_molecule_ uses JSON to define relationship between actions and atoms. It also has implemented REST actions as defaults to every table in the database. One can use _molecule_ to build APIs on database without coding. 
+
+The package is fully tested for PostgreSQL, MySQL and SQLite.
+
 
 <br /><br />
 
-## Installation
+## Chapter 1. INSTALLATION
+
+To install:
 
 > $ go get -u github.com/genelet/molecule
-<!-- go mod init github.com/genelet/molecule -->
 
-## Termilogy
+#### 1.1) Termilogy
 
-The names of arguments passed in functions or methods are defined as follows, if not specifically explained:
+- table: a database table;
+- action: a *SELECT* or *DO* database action;
+- atom: a table with actions, or a node in graph; 
+- connection: relationship between atoms, or edge in graph;
+- molecule: a set of atoms which acts with each other in relationship, or a graph.
+
+#### 1.2) Arguments
+
+The following names in functions are defined to be:
+
 Name | Type | IN/OUT | Meaning
 ---- | ---- | ------ | -------
 *args* | `...interface{}` | IN | arguments
 *ARGS* | `map[string]interface{}` | IN | input data
 *extra* | `...map[string]interface{}` | IN | _WHERE_ constraints
-*lists* | `[]map[string]interface{}` | OUT | data output as a slice of maps.
+*lists* | `[]map[string]interface{}` | OUT | output data
 
 <br /><br />
 
-## Chapter 1. BASIC USAGE
+## Chapter 2. BASIC USAGE
 
-### 1.1  _DBI_
-
-The `DBI` type embeds the standard SQL handle.
-
-```go
-package molecule
-
-type DBI struct {
-    *sql.DB          
-    LastID    int64  // saves the last inserted id
-}
-
-```
-
-To create a new handle
-
-```go
-dbi := &DBI{DB: the_standard_sql_handle}
-```
-
-<br />
-
-### 1.2  `DoSQL`
-
-```go
-func (*DBI) DoSQL(query string, args ...interface{}) error
-```
-
-The same as DB's `Exec`, except it returns error only.
-
-<br />
-
-### 1.3  `TxSQL`
-
-```go
-func (*DBI) TxSQL(query string, args ...interface{}) error
-```
-
-The same as `DoSQL` using transaction.
-
-<br />
-
-### 1.4   _Select_
-
-#### 1.4.1)  `Select`
-
-```go
-func (*DBI) Select(lists *[]map[string]interface{}, query string, args ...interface{}) error
-```
-
-It runs a *Select* query and saves the result into *lists*. The data types of the rows are determined dynamically by the generic SQL handle.
+In this example, we create table _letters_ with 3 rows, then search the data and put them into *lists*.
 
 <details>
-    <summary>Click for example</summary>
-    <p>
-
-```go
-lists := make([]map[string]interface{})
-err = dbi.Select(&lists,
-    `SELECT ts, id, name, len, flag, fv FROM mytable WHERE id=?`, 1234)
-```
-
-will select all rows with *id=1234* into *lists*:
-
-```json
-    {"ts":"2019-12-15 01:01:01", "id":1234, "name":"company", "len":30, "flag":true, "fv":789.123},
-    ....
-```
-
-</p>
-</details>
-
-#### 1.4.2) `SelectSQL`
-
-```go
-func (*DBI) SelectSQL(lists *[]map[string]interface{}, labels []interface{}, query string, args ...interface{}) error
-```
-
-The same as *Select* using *labels*. The interface can be either *string*
-which defines renamed key name, or *[2]string* which defines renames key name and its data type like _int_, _int64_ and _string_ etc.
-
-<details>
-    <summary>Click for example</summary>
-    <p>
-
-The following example assigns key names _TS_, _id_, _Name_, _Length_, _Flag_ and _fv_, of data types _string_, _int_, _string_, _int8_, _bool_ and _float32_, to the returned rows:
-
-```go
-lists := make([]map[string]interface{})
-err = dbi.querySQLLabel(&lists, 
-    `SELECT ts, id, name, len, flag, fv FROM mytable WHERE id=?`,
- []interface{}{[2]string{"TS","string"], [2]string{"id","int"], [2]string{"Name","string"], [2]string{"Length","int8"], [2]string{"Flag","bool"], [2]string{"fv","float32"]},
-    1234)
-```
-
-```json
-    {"TS":"2019-12-15 01:01:01", "id":1234, "Name":"company", "Length":30, "Flag":true, "fv":789.123},
-```
-
-</p>
-</details>
-
-<br />
-
-### 1.5  _GetSQL_
-
-If there is only one row expected, it returns the data as a map.
-
-```go
-func (*DBI) GetSQL(res map[string]interface{}, query string, labels []interface{}, args ...interface{}) error
-```
-
-<br />
-
-### 1.6) *DBI* Example
-
-In this example, we create table _letters_ with 3 rows, then query the data into *lists*.
-
-<details>
-    <summary>Click for Sample 1</summary>
+    <summary>Click for DBI example</summary>
     <p>
 
 ```go
@@ -190,10 +88,10 @@ func main() {
     _, err = db.Exec(`insert into letters (x) values ('p')`)
     if err != nil { panic(err) }
 
-    // select all data from the table using SelectSQL
+    // select all data from the table using Select
     //
     lists := make([]map[string]interface{}, 0)
-    err = dbi.SelectSQL(&lists, "SELECT id, x FROM letters")
+    err = dbi.Select(&lists, "SELECT id, x FROM letters")
     if err != nil { panic(err) }
 
     log.Printf("%v", lists)
@@ -203,7 +101,7 @@ func main() {
 }
 ```
 
-Running the example will result in
+Running it will output
 
 ```bash
 [map[id:1 x:m] map[id:2 x:n] map[id:3 x:p]]
@@ -212,66 +110,280 @@ Running the example will result in
 </p>
 </details>
 
+Here are basic data type and functions in the DBI usage. For details, please check the [document](https://)
+
+### 2.1  _DBI_
+
+The `DBI` type embeds the standard SQL handle.
+
+```go
+package molecule
+
+type DBI struct {
+    *sql.DB          
+    LastID   int64  // saves the last inserted id, if any
+}
+
+```
+
+To create a new handle
+
+```go
+dbi := &DBI{DB: the_standard_sql_handle}
+```
+
+<br />
+
+### 2.2  _DoSQL_
+
+```go
+func (*DBI) DoSQL(query string, args ...interface{}) error
+```
+
+It is the same as DB's `Exec`, except it returns error only.
+
+<br />
+
+### 2.3  _TxSQL_
+
+```go
+func (*DBI) TxSQL(query string, args ...interface{}) error
+```
+
+The same as _DoSQL_ using transaction.
+
+<br />
+
+### 2.4   _Select_
+
+```go
+func (*DBI) Select(lists *[]map[string]interface{}, query string, args ...interface{}) error
+```
+
+It runs a *Select* query and saves the result into *lists*. The data types of the rows are determined dynamically by the generic SQL handle.
+
+<details>
+    <summary>Click for example</summary>
+    <p>
+
+```go
+lists := make([]map[string]interface{})
+err = dbi.Select(&lists,
+    `SELECT ts, id, name, len, flag, fv FROM mytable WHERE id=?`, 1234)
+```
+
+will select all rows with *id=1234* into *lists*:
+
+```json
+    {"ts":"2019-12-15 01:01:01", "id":1234, "name":"company", "len":30, "flag":true, "fv":789.123},
+    ....
+```
+
+</p>
+</details>
+
+### 2.5) `SelectSQL`
+
+```go
+func (*DBI) SelectSQL(lists *[]map[string]interface{}, labels []interface{}, query string, args ...interface{}) error
+```
+
+The same as *Select*  but using *labels*, which can be  *string*
+which defines renamed key, or *[2]string* which defines renamed key and its data type such as _int_, _int64_ and _string_ etc.
+
+<details>
+    <summary>Click for example</summary>
+    <p>
+
+The following example assigns key names _TS_, _id_, _Name_, _Length_, _Flag_ and _fv_, of data types _string_, _int_, _string_, _int8_, _bool_ and _float32_, to the returned rows:
+
+```go
+lists := make([]map[string]interface{})
+err = dbi.querySQLLabel(&lists, 
+    `SELECT ts, id, name, len, flag, fv FROM mytable WHERE id=?`,
+ []interface{}{[2]string{"TS","string"], [2]string{"id","int"], [2]string{"Name","string"], [2]string{"Length","int8"], [2]string{"Flag","bool"], [2]string{"fv","float32"]},
+    1234)
+```
+
+```json
+    {"TS":"2019-12-15 01:01:01", "id":1234, "Name":"company", "Length":30, "Flag":true, "fv":789.123},
+```
+
+</p>
+</details>
+
+<br />
+
+### 2.6)  _GetSQL_
+
+If there is only one row returned, use this function to get a map.
+
+```go
+func (*DBI) GetSQL(res map[string]interface{}, query string, labels []interface{}, args ...interface{}) error
+```
+
 <br /><br />
 
-## Chapter 2. MODEL USAGE
 
-The following _CRUD_ actions and _REST_ methods are defined in our package:
+## Chapter 3. ATOM USAGE
 
-HTTP METHOD | Web URL | CRUD | Function Name | Meaning
------------ | ------- | ---- | ------------- | ----------------
-_LIST_        | webHandler | R All | _Topics_ | read all rows
-_GET_         | webHandler/ID | R One | _Edit_ | read row by ID
-_POST_        | webHandler | C | _Insert_ | create a new row
-_PUT_         | webHandler | U | _Update_ | update a row
-_PATCH_       | webHandler | P | _Insupd_ | update or insert
-_DELETE_      | webHandler | D | _Delete_ | delete a row
+In this example, we define a database table, column and actions in JSON, and let _molecule_ to run the REST actions. 
 
-<br /><br />
+<details>
+	<summary>Click here to see how atom works</summary>
+	
+```go
+package main
 
-### 2.1  *Table*
+import (
+    "log"
+    "os"
+    "database/sql"
+    "github.com/genelet/molecule"
+    _ "github.com/go-sql-driver/mysql"
+)
+
+func main() {
+    dbUser := os.Getenv("DBUSER")
+    dbPass := os.Getenv("DBPASS")
+    dbName := os.Getenv("DBNAME")
+    db, err := sql.Open("mysql", dbUser + ":" + dbPass + "@/" + dbName)
+    if err != nil { panic(err) }
+    defer db.Close()
+
+    db.Exec(`DROP TABLE IF EXISTS testing`)
+    db.Exec(`CREATE TABLE testing (id int auto_increment, x varchar(255), y varchar(255), primary key (id))`)
+
+    table := &molecule.Table{TableName: "testing", Pks:[]string{"id"}, IdAuto:"id"}
+
+    insert := &molecule.Insert{Columns: []string{"x","y"}}
+    topics := &molecule.Topics{Columns: map[string][]string{"id":{"id","int"}, "x":{"x","string"},"y":{"y","string"}}}
+    update := &molecule.Update{Columns: []string{"id","x","y"}}
+    edit   := &molecule.Edit{Columns: map[string][]string{"id":{"id","int"}, "x":{"x","string"},"y":{"y","string"}}}
+
+    args := map[string]interface{}{"x":"a","y":"b"}
+    lists, _, err := insert.RunAction(db, table, args)
+    if err != nil { panic(err) }
+    log.Println(lists)
+
+    args = map[string]interface{}{"x":"c","y":"d"}
+    lists, _, err = insert.RunAction(db, table, args)
+    if err != nil { panic(err) }
+    log.Println(lists)
+
+    args = map[string]interface{}{}
+    lists, _, err = topics.RunAction(db, table, args)
+    log.Println(lists)
+
+    args = map[string]interface{}{"id":2,"x":"c","y":"z"}
+    lists, _, err = update.RunAction(db, table, args)
+    if err != nil { panic(err) }
+    log.Println(lists)
+
+    args = map[string]interface{}{"id":2}
+    lists, _, err = edit.RunAction(db, table, args)
+    log.Println(lists)
+
+    os.Exit(0)
+}
+```
+
+Running the program will result in
+
+```bash
+[map[id:1 x:a y:b]]
+[map[id:2 x:c y:d]]
+[map[id:1 x:a y:b] map[id:2 x:c y:d]]
+[map[id:2 x:c y:z]]
+[map[id:2 x:c y:z]]
+```
+
+</p>
+</details>
+
+Here are basic data types and functions in the atom usage.
+
+<br />
+
+### 3.1) Col
+
+Define a GO column type:
+
+```go
+type Col struct {
+    ColumnName string  `json:"columnName" hcl:"columnName"`
+    TypeName string    `json:"typeName" hcl:"typeName"`
+    Label string       `json:"label" hcl:"label"`
+    Notnull bool       `json:"notnull" hcl:"notnull"`
+    Auto bool          `json:"auto" hcl:"auto"`
+    // true for a one-to-may recurse column
+    Recurse bool       `json:"recurse,omitempty" hcl:"recurse,optional"`
+}
+```
+where _ColumnName_ is the name of column, _TypeName_ is the name of column type, _Lable_ is the label for the column, _Notnull_ marks if the column can't be null, _Auto_ means if the column can be automatically assigned with a value like timestamp, auto increment etc., and _Recurse_ means a special column it recursively reference to table's primary key in a one-to-many relation.
+
+### 3.2) Fk
+
+*foreign key Fk* is a relation between atoms:
+
+```go
+type Fk struct {
+    FkTable  string    `json:"fkTable" hcl:"fkTable"`
+    FkColumn string    `json:"fkColumn" hcl:"fkColumn"`
+    Column   string    `json:"column" hcl:"column"`
+}
+```
+
+where _FkTable_ means a foreign table, _FkColumn_ foriegn table's column and _Column_ the column in the current table. _Fk_ is similar to SQL's standard foreign key but 1) the columns are limited to be single, and 2) even if there is no SQL foreign key, like noSQL database or time-series database, we can still define them in atom.
+
+### 3.3)  Table
 
 _Table_ describes a database table.
 
 ```go
 type Table struct {
-    TableName  string    `json:"table,omitempty"`  // the table name
-    Pks           []string  `json:"pks,omitempty"`     // optional, the PK 
-    IdAuto        string    `json:"idAuto,omitempty"` // table's auto id
-    Fks           []string  `json:"fks,omitempty"`     // optional, for the FK
+    TableName string   `json:"tableName" hcl:"tableName"`
+    Columns   []*Col   `json:"columns" hcl:"columns"`
+    Pks       []string `json:"pks,omitempty" hcl:"pks,optional"`
+    IdAuto    string   `json:"idAuto,omitempty" hcl:"idAuto,optional"`
+    Fks       []*Fk    `json:"fks,omitempty" hcl:"fks,optional"`
+    Uniques   []string `json:"uniques,omitempty" hcl:"uniques,optional"`
+}
+
+```
+
+where _TableName_ is the table name; _Columns_ are all columns, _Pks_ the primary key; _IdAuto_ the column having a auto increment series number, _Fks_ the foreign key relationship to other atoms, and _Uniques_ the combination of columns uniquely defining this row.
+
+<br />
+
+### 3.4) Connection
+
+_connection_ defines data are passed between atoms.
+
+```go
+type Connection struct {
+    TableName   string            `json:"tableName" hcl:"tableName,label"`
+    ActionName  string            `json:"actionName" hcl:"actionName,label"`
+    RelateArgs  map[string]string `json:"relateArgs,omitempty" hcl:"relateArgs"`
+    RelateExtra map[string]string `json:"relateExtra,omitempty" hcl:"relateExtra"`
+    Dimension  ConnectType        `json:"dimension,omitempty" hcl:"dimension,label"`
+    Marker     string             `json:"marker,omitempty" hcl:"marker,label"`
 }
 ```
 
-where _TableName_ is the table name; _Pks_ the primary key defined as a slice of columns; _IdAuto_ (optional) the column of a series number and _Fks_ (optional) the foreign key information.
+where _TableName_ is the database table name. _ActionName_ is the action name. _RelateArgs_ maps an output data of this table to the input data of the next table. _RelateExtra_ is for _where_ constraint. _Dimension_ is a relation type. And _Marker_ is a string marker. During an input action such as _insert_ and _insupd_, _Marker_ points to this table's data; and during an output action such as _topics_, it place the table data under this string.
 
-_Fks_ defines a relationship between columns in two tables, which does not need to be a native foreign key:
+### 3.5) Action
 
-index | meaning
------ | -------------------------
-0 | the foreign table name
-1 | the primary key name in the foreign table
-2 | the signature name of foreign table's primary key
-3 | the corresponding column of foreign table's PK in the current table
-4 | the signature name of current table's primary key
-
-Currently, to use this feature, we require table's primary key is a single column.
-<br />
-
-### 2.2  *Action*
-
-*Action* defines an action on table, such as *CRUD*. It should implement function *RunActionContext* using the *Capability* interface:
+*Action* defines an action, such as *CRUD*, on table. It should implement *Capability* interface:
 
 ```go
 type Action struct {
-    Must      []string    `json:"must,omitempty"
-    Nextpages []*Nextpage `json:"nextpages,omitempty"
-    Appendix  interface{} `json:"appendix,omitempty"
-}
-```
-
-```go
-type Capability interface {
-    RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]interface{}, extras ...map[string]interface{}) ([]map[string]interface{}, []*Nextpage, error)
+    ActionName string `json:"actionName,omitempty" hcl:"actionName,optional"`
+    Prepares  []*Connection `json:"Prepares,omitempty" hcl:"Prepares,block"`
+    Nextpages []*Connection `json:"nextpages,omitempty" hcl:"nextpages,block"`
+    IsDo      bool          `json:"isDo,omitempty" hcl:"isDo,optional"`
+    Appendix  interface{}   `json:"appendix,omitempty" hcl:"appendix,block"`
 }
 ```
 
@@ -290,6 +402,19 @@ named *_gsql* | a raw SQL statement
 The AND relation is assumed among multiple keys.
 
 The following *CRUD* actions are pre-defined.
+
+The following _REST_ methods are defined:
+
+HTTP METHOD | Web URL | Function Name | Meaning
+----------- | ------- | ---- | ------------- | ----------------
+_LIST_        | webHandler |  _Topics_ | read all rows
+_GET_         | webHandler/ID | _Edit_ | read row by ID
+_POST_        | webHandler | _Insert_ | create a new row
+_PUT_         | webHandler | _Update_ | update a row
+_PATCH_       | webHandler | _Insupd_ | update or insert
+_DELETE_      | webHandler | _Delete_ | delete a row
+
+<br /><br />
 
 #### 2.2.1) *Insert*
 
@@ -486,74 +611,7 @@ Parsing the JSON will build up a `map[string][]*Nextpage` structure.
     <summary>Click for Example 2</summary>
     <p>
 
-```go
-package main
 
-import (
-    "log"
-    "os"
-    "database/sql"
-    "github.com/genelet/molecule"
-    _ "github.com/go-sql-driver/mysql"
-)
-
-func main() {
-    dbUser := os.Getenv("DBUSER")
-    dbPass := os.Getenv("DBPASS")
-    dbName := os.Getenv("DBNAME")
-    db, err := sql.Open("mysql", dbUser + ":" + dbPass + "@/" + dbName)
-    if err != nil { panic(err) }
-    defer db.Close()
-
-    db.Exec(`DROP TABLE IF EXISTS testing`)
-    db.Exec(`CREATE TABLE testing (id int auto_increment, x varchar(255), y varchar(255), primary key (id))`)
-
-    table := &molecule.Table{TableName: "testing", Pks:[]string{"id"}, IdAuto:"id"}
-
-    insert := &molecule.Insert{Columns: []string{"x","y"}}
-    topics := &molecule.Topics{Columns: map[string][]string{"id":{"id","int"}, "x":{"x","string"},"y":{"y","string"}}}
-    update := &molecule.Update{Columns: []string{"id","x","y"}}
-    edit   := &molecule.Edit{Columns: map[string][]string{"id":{"id","int"}, "x":{"x","string"},"y":{"y","string"}}}
-
-    args := map[string]interface{}{"x":"a","y":"b"}
-    lists, _, err := insert.RunAction(db, table, args)
-    if err != nil { panic(err) }
-    log.Println(lists)
-
-    args = map[string]interface{}{"x":"c","y":"d"}
-    lists, _, err = insert.RunAction(db, table, args)
-    if err != nil { panic(err) }
-    log.Println(lists)
-
-    args = map[string]interface{}{}
-    lists, _, err = topics.RunAction(db, table, args)
-    log.Println(lists)
-
-    args = map[string]interface{}{"id":2,"x":"c","y":"z"}
-    lists, _, err = update.RunAction(db, table, args)
-    if err != nil { panic(err) }
-    log.Println(lists)
-
-    args = map[string]interface{}{"id":2}
-    lists, _, err = edit.RunAction(db, table, args)
-    log.Println(lists)
-
-    os.Exit(0)
-}
-```
-
-Running the program will result in
-
-```bash
-[map[id:1 x:a y:b]]
-[map[id:2 x:c y:d]]
-[map[id:1 x:a y:b] map[id:2 x:c y:d]]
-[map[id:2 x:c y:z]]
-[map[id:2 x:c y:z]]
-```
-
-</p>
-</details>
 
 <br /><br />
 
