@@ -1,6 +1,8 @@
 # molecule
 
-_molecule_ runs RESTful actions on related database tables and selective data fields in RDB like gRPC/GraphQL. The relationships between tables, which are usually described in JSON, include SQL constrains like foreign-key, and flexible logic operations like data filters and action triggers etc. In _molecule_, a table and its associated actions build up an _atom_. Atoms and relationships between atoms build up a _molecule_.
+_molecule_ runs RESTful actions on related database tables and selective data fields in RDB like gRPC/GraphQL. The relationships between tables, which are usually described in JSON, include SQL constrains like foreign-key, flexible logic operations like data filters and action triggers etc. 
+
+In _molecule_, a table and its associated actions build up an _atom_. Atoms and relationships between atoms build up a _molecule_.
 
 While traditional REST acts on individual table, _molecule_ acts on a whole database across all tables in the database.
 
