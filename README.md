@@ -41,7 +41,7 @@ Name | Type | IN/OUT | Meaning
 *extra* | `...map[string]interface{}` | IN | _WHERE_ constraints
 *lists* | `[]map[string]interface{}` | OUT | output data
 
-_molecule_ has 3 levels of usages:
+#### 1.3) Three Levels of Usages:
 
 - Basic Usage: run raw SQL statements;
 - Atom Usage: run actions on single table; 6 RESTful actions are pre-defined in this package;
@@ -118,7 +118,7 @@ Running it will output
 
 Here are mostly used functions in the `DBI usage`. For detailed list, please check the [document](https://)
 
-### 2.1  DBI
+### 2.1) DBI
 
 The `DBI` type embeds the standard SQL handle. The extra *LastID* field is used to stored auto-generated series number, if the database supports it.
 
@@ -134,7 +134,7 @@ type DBI struct {
 
 <br />
 
-### 2.2  DoSQL
+### 2.2) DoSQL
 
 The same as DB's `Exec`, except it returns error.
 
@@ -144,7 +144,7 @@ func (*DBI) DoSQL(query string, args ...interface{}) error
 
 <br />
 
-### 2.3  TxSQL
+### 2.3) TxSQL
 
 The same as _DoSQL_ but using transaction.
 
@@ -154,7 +154,7 @@ func (*DBI) TxSQL(query string, args ...interface{}) error
 
 <br />
 
-### 2.4  Select
+### 2.4) Select
 
 Return query data into *lists*, with data types determined dynamically.
 
@@ -194,7 +194,7 @@ It outputs:
 
 <br />
 
-### 2.6)  _GetSQL_
+### 2.6) GetSQL
 
 If there is only one row returned, use this function to get a map.
 
@@ -316,7 +316,7 @@ type Fk struct {
 
 where _FkTable_ means a foreign table, _FkColumn_ foriegn table's column and _Column_ the column in the current table. _Fk_ is similar to SQL's standard foreign key but 1) it is limited to be single column, and 2) it can be defined between two tables even there is no native SQL foreign key. For example, we could define _molecule_ Fk on noSQL database or time-series database.
 
-### 3.3)  Table
+### 3.3) Table
 
 _Table_ describes a database table.
 
@@ -376,8 +376,7 @@ This is the main function in _Capability_. It takes input data _ARGS_ and option
 RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error)
 ```
 
-
-### 3.6) Atom
+### 3.7) Atom
 
 An atom is made of a table and its pre-defined actions. 
 
@@ -388,7 +387,7 @@ type Atom struct {
 }
 ```
 
-### 3.7) RunAtomContext
+### 3.8) RunAtomContext
 
 This is the main function for _action_. It takes input data _ARGS_ and optional constraint _extra_, and run action. The output is a slice of interface, and an optional error.
 ```go
@@ -512,7 +511,7 @@ type Molecule struct {
 }
 ```
 
-### 3.1 Constructor
+### 5.1) Constructor
 
 ```go
 func NewMolecule(db *sql.DB, s map[string]Navigate) *Molecule
@@ -520,7 +519,7 @@ func NewMolecule(db *sql.DB, s map[string]Navigate) *Molecule
 
 <br />
 
-### 3.2 Run actions on atoms
+### 5.2) Run actions on atoms
 
 ```go
 func (self *Molecule) RunContext(ctx context.Context, atom, action string, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]map[string]interface{}, error)
@@ -530,7 +529,7 @@ which returns the data as *[]map[string]interface{}*, and optional error.
 
 <br />
 
-### 3.3) Example
+### 5.3) Example
 
 <details>
     <summary>Click for Example 3</summary>
