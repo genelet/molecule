@@ -30,11 +30,12 @@ To install:
 
 #### 1.1) Termilogy
 
-- table: a database table;
-- action: a *SELECT* or *DO* database action;
-- atom: a table with actions, or a node in graph; 
-- connection: relationship between atoms, or edge in graph;
-- molecule: a set of atoms which acts with each other in relationship, or a graph.
+- *table*: a database table;
+- *action*: a *SELECT* or *DO* database action;
+- *atom*: a table with actions (or a *node* in *graph*); 
+- *connection*: a relationship between atoms (or *edge*);
+- *molecule*: whole set of atoms which act with each other in relationship (or *graph);
+- *RDB*: relationational database system (or *meta*)
 
 #### 1.2) Arguments
 
@@ -51,7 +52,7 @@ Name | Type | IN/OUT | Meaning
 
 ## Chapter 2. BASIC USAGE
 
-In this example, we create table _letters_ with 3 rows, then search the data and put them into *lists*.
+In this example, we create table _letters_ with 3 rows, then search and put the data into *lists*.
 
 <details>
     <summary>Click for DBI example</summary>
