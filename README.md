@@ -4,7 +4,7 @@ _molecule_ runs RESTful actions on related database tables and selective data fi
 
 While traditional REST acts on individual table, _molecule_ acts on a whole database across all tables in the database.
 
-This package has pre-defined 6 RESTful actions, with which we can run most database tasks with little or no coding. For example,  think about a gRPC application. With _molecule_, we can create a Postgres database representing data stream's protocol buffer, and a JSON config to represent relationships between Postgres tables (which are usually mapped to _protobuf messages_). Then _molecule_ will process input and output streams as a gRPC call at once. Beneath the surface, _molecule_ handles detailed reads and writes on proper tables with given logic. 
+This package has pre-defined 6 RESTful actions, with which we can run most database tasks with little or no coding. For example,  think about a gRPC application. With _molecule_, we can create a Postgres database representing data stream's protocol buffer, and a JSON config representing relationships between the tables (which are usually mapped to _protobuf messages_). Then _molecule_ will process gRPC's input and output calls at once. Beneath the surface, _molecule_ handles detailed reads and writes on proper tables with given logic. 
 
 Check *godoc* for package details:
 
