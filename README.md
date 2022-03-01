@@ -10,13 +10,6 @@ Check *godoc* for package details:
 
 [![GoDoc](https://godoc.org/github.com/genelet/molecule?status.svg)](https://godoc.org/github.com/genelet/molecule)
 
-_molecule_ has 3 levels of usages:
-
-- _Basic_: run raw SQL statements;
-- _Atom_: run actions on single table; 6 RESTful actions are pre-defined in this package;
-- _Molecule_: run GraphQL/gRPC actions of multiple relational atoms.
-
-
 The package is fully tested for PostgreSQL, MySQL and SQLite.
 
 
@@ -47,6 +40,13 @@ Name | Type | IN/OUT | Meaning
 *ARGS* | `map[string]interface{}` | IN | input data
 *extra* | `...map[string]interface{}` | IN | _WHERE_ constraints
 *lists* | `[]map[string]interface{}` | OUT | output data
+
+_molecule_ has 3 levels of usages:
+
+- Basic Usage: run raw SQL statements;
+- Atom Usage: run actions on single table; 6 RESTful actions are pre-defined in this package;
+- Molecule Usage: run GraphQL/gRPC actions of multiple relational atoms.
+
 
 <br /><br />
 
