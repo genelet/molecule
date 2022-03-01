@@ -1,16 +1,21 @@
 # molecule
 
-_molecule_ runs GraphQL/gRPC actions on whole database. Check *godoc* for definitions:
+_molecule_ runs RESTful actions on related database tables and selective data fields in RDB like gRPC/GraphQL. The relationship, which is usually described in JSON, include SQL constrains like foreign-key, and flexible logic operations like data filters and action triggers etc. In _molecule_, a table and its associated actions build up an _atom_. Atoms and relationships between atoms build up a _molecule_.
+
+While traditional REST acts on individual table, _molecule_ acts on a whole database across all tables in the database.
+
+This package has pre-defined 6 RESTful actions, with which we can run most database tasks with little or no coding. For example,  think about a gRPC application. With _molecule_, we can create a Postgres database representing data stream's protocol buffer, and a JSON config to represent relationships between Postgres tables (which are usually mapped to _protobuf messages_). Then _molecule_ will process input and output streams as a gRPC call at once. Beneath the surface, _molecule_ handles detailed reads and writes on proper tables with given logic. 
+
+Check *godoc* for package details:
 
 [![GoDoc](https://godoc.org/github.com/genelet/molecule?status.svg)](https://godoc.org/github.com/genelet/molecule)
 
-There are three levels of usages:
+_molecule_ has 3 levels of usages:
 
 - _Basic_: run raw SQL statements;
-- _Atom_: run actions on single table;
-- _Molecule_: run GraphQL/gRPC actions of multiple relational actoms.
+- _Atom_: run actions on single table; 6 RESTful actions are pre-defined in this package;
+- _Molecule_: run GraphQL/gRPC actions of multiple relational atoms.
 
-_molecule_ uses JSON to define relationship between actions and atoms. It also has implemented REST actions as defaults to every table in the database. One can use _molecule_ to build APIs on database without coding. 
 
 The package is fully tested for PostgreSQL, MySQL and SQLite.
 
@@ -227,7 +232,7 @@ func (*DBI) GetSQL(res map[string]interface{}, query string, labels []interface{
 
 ## Chapter 3. ATOM USAGE
 
-In this example, we define a database table, column and actions in JSON, and let _molecule_ to run the REST actions. 
+In this example, we define table, columns and actions in JSON, and let _molecule_ to run the REST actions. 
 
 <details>
 	<summary>Click here to see how atom works</summary>
@@ -387,36 +392,11 @@ type Action struct {
 }
 ```
 
-where _Must_ is a slice of `NOT NULL` columns; _Nextpages_ other actions to follow after the current one is complete (for _Nextpage_, see below); and _Appendix_ optional data.
+where _Prepares_ is a list of actions to run before the current action, and _Nextpages_ actions to follow. 
 
-In _RunActionContext_, _ARGS_ is the input data and _extras_ a slice of constraints for the current action and all follow-up actions. This function returns the output data, the follow-up _Nextpage_s and error.
+_molecule_ has defined the following 6 RESTful actions as defaults for all tables in database.
 
-To define *extra*:
-
-key in *extra* | meaning
--------------- | -------
-has one value | an EQUAL constraint
-has multiple values | an IN constraint
-named *_gsql* | a raw SQL statement
-
-The AND relation is assumed among multiple keys.
-
-The following *CRUD* actions are pre-defined.
-
-The following _REST_ methods are defined:
-
-HTTP METHOD | Web URL | Function Name | Meaning
------------ | ------- | ---- | ------------- | ----------------
-_LIST_        | webHandler |  _Topics_ | read all rows
-_GET_         | webHandler/ID | _Edit_ | read row by ID
-_POST_        | webHandler | _Insert_ | create a new row
-_PUT_         | webHandler | _Update_ | update a row
-_PATCH_       | webHandler | _Insupd_ | update or insert
-_DELETE_      | webHandler | _Delete_ | delete a row
-
-<br /><br />
-
-#### 2.2.1) *Insert*
+#### 3.5.1) *Insert*
 
 ```go
 type Insert struct {
