@@ -491,7 +491,7 @@ type Delete struct {
 
 ### 4.7) Delecs
 
-Get all keys and foreign keys for a row. In _molecule_, when to delete a row in this table, we may have triggered deletions in other tables. So we always run _Delecs_ before _Delete_ so to make sure we have keys for deletions in the others.
+Get all keys and foreign keys for a row. In _molecule_, when to delete a row in this table, we may have triggered deletions in other tables. So we always run _Delecs_ before _Delete_ so to make sure we have keys to use in the related tables.
 
 ```go
 type Delecs struct {
