@@ -27,10 +27,10 @@ To install:
 
 - *table*: a database table;
 - *action*: a *SELECT* or *DO* database action;
-- *atom*: a table with actions (or a *node* in *graph*); 
+- *atom*: a table with actions (or *node* in *graph*); 
 - *connection*: a relationship between atoms (or *edge*);
 - *molecule*: whole set of atoms which act with each other in relationship (or *graph*);
-- *RDB*: relationational database system (or *meta*)
+- *RDB*: relationational database system.
 
 #### 1.2) Arguments
 
@@ -134,8 +134,6 @@ type DBI struct {
 
 ```
 
-<br />
-
 ### 2.2) DoSQL
 
 The same as DB's `Exec`, except it returns error.
@@ -144,8 +142,6 @@ The same as DB's `Exec`, except it returns error.
 func (*DBI) DoSQL(query string, args ...interface{}) error
 ```
 
-<br />
-
 ### 2.3) TxSQL
 
 The same as _DoSQL_ but using transaction.
@@ -153,8 +149,6 @@ The same as _DoSQL_ but using transaction.
 ```go
 func (*DBI) TxSQL(query string, args ...interface{}) error
 ```
-
-<br />
 
 ### 2.4) Select
 
@@ -193,8 +187,6 @@ It outputs:
 ```
 
 </details>
-
-<br />
 
 ### 2.6) GetSQL
 
@@ -398,7 +390,7 @@ RunActomContext(ctx context.Context, db *sql.DB, action string, ARGS interface{}
 
 ## Chapter 4. RESTFUL ACTIONS
 
-_molecule_ has defined the following 7 RESTful actions. We can fulfil most RDB tasks using these actions.
+_molecule_ has defined the following 7 RESTful actions. Most RDB tasks can be fulfilled using these actions.
 
 
 ### 4.1) Insert
@@ -517,7 +509,6 @@ type Molecule struct {
 func NewMolecule(db *sql.DB, s map[string]Navigate) *Molecule
 ```
 
-<br />
 
 ### 5.2) Run actions on atoms
 
@@ -526,8 +517,6 @@ func (self *Molecule) RunContext(ctx context.Context, atom, action string, ARGS 
 ```
 
 which returns the data as *[]map[string]interface{}*, and optional error.
-
-<br />
 
 ### 5.3) Example
 
