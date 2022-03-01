@@ -334,8 +334,6 @@ type Table struct {
 
 where _TableName_ is the table name. _Columns_ are all columns. _Pks_ is the primary key. _IdAuto_ is the auto ID. _Fks_ is a lost of foreign-key relationships. And _Uniques_ is the combination of columns uniquely defining the row.
 
-<br />
-
 ### 3.4) Connection
 
 _connection_ is associated with specific table. It defines relationship to another table for how data are passed under a specific action.
@@ -490,7 +488,7 @@ type Delete struct {
 
 ### 4.7) Delecs
 
-Get all keys and foreign keys for a row. In _molecule_, when to delete a row in this table, we may have triggered deletions in other tables. So we always run _Delecs_ before _Delete_ so to make sure we have keys to use in the related tables.
+Get all keys and foreign keys for a row. In _molecule_, when to delete a row in this table, deletions could be triggered in other tables. We always run _Delecs_ before _Delete_ so as to get keys ready for the related tables.
 
 ```go
 type Delecs struct {
@@ -500,7 +498,7 @@ type Delecs struct {
 
 <br /><br />
 
-## Chapter 5. MOLECULE Usage
+## Chapter 5. MOLECULE USAGE
 
 *Molecule* describes a database
 
