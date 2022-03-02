@@ -44,7 +44,7 @@ Name | Type | IN/OUT | Meaning
 
 #### 1.3) Three Levels of Usages:
 
-- Basic Usage: run raw SQL statements;
+- Basic Usage: run raw SQL statements using DBI struct;
 - Atom Usage: run actions on single table; 6 RESTful actions are pre-defined in this package;
 - Molecule Usage: run GraphQL/gRPC actions of multiple relational atoms.
 
@@ -56,7 +56,7 @@ Name | Type | IN/OUT | Meaning
 In this example, we create table _letters_ with 3 rows, then search and put the data into *lists*.
 
 <details>
-    <summary>Click for DBI example</summary>
+    <summary>Click for Basic Usage Sample</summary>
     <p>
 
 ```go
@@ -203,7 +203,7 @@ func (*DBI) GetSQL(res map[string]interface{}, query string, labels []interface{
 In the following example, we define table, columns and actions in JSON, and run REST actions on the table. 
 
 <details>
-	<summary>Click here to see how atom works</summary>
+	<summary>Click for Atom Usage Sample</summary>
 	
 ```go
 package main
@@ -517,7 +517,7 @@ where _DBDriver_ is one of database drive defined:
 ```
 
 <details>
-    <summary>Click for Example of Molecule Usage</summary>
+    <summary>Click for Molecule Usage Sample</summary>
     <p>
 
 ```go
