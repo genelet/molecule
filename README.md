@@ -63,10 +63,11 @@ In this example, we create table _letters_ with 3 rows, then search and put the 
 package main
 
 import (
-    "log"
     "database/sql"
+    "fmt"
     "os"
-    "github.com/genelet/molecule"
+
+    "github.com/genelet/molecule/godbi"
     _ "github.com/go-sql-driver/mysql"
 )
 
@@ -78,12 +79,10 @@ func main() {
     if err != nil { panic(err) }
     defer db.Close()
 
-    dbi := &molecule.DBI{DB:db}
+    dbi := &godbi.DBI{DB:db}
 
     // create a new table and insert 3 rows
     //
-    _, err = db.Exec(`DROP TABLE IF EXISTS letters`)
-    if err != nil { panic(err) }
     _, err = db.Exec(`CREATE TABLE letters (
         id int auto_increment primary key,
         x varchar(1))`)
@@ -97,11 +96,11 @@ func main() {
 
     // select all data from the table using Select
     //
-    lists := make([]map[string]interface{}, 0)
+    lists := make([]interface{}, 0)
     err = dbi.Select(&lists, "SELECT id, x FROM letters")
     if err != nil { panic(err) }
 
-    log.Printf("%v", lists)
+    fmt.Printf("%v\n", lists)
 
     dbi.Exec(`DROP TABLE IF EXISTS letters`)
     db.Close()
@@ -117,7 +116,7 @@ Running it will output
 </p>
 </details>
 
-Here are mostly used functions in the `DBI usage`. For detailed list, please check the [document](https://)
+Here are frequently used functions in the `DBI usage`. For detailed list, please check the document.
 
 ### 2.1) DBI
 
@@ -166,7 +165,7 @@ func (*DBI) SelectSQL(lists *[]map[string]interface{}, labels []interface{}, que
 ```
 
 <details>
-    <summary>Click for example</summary>
+    <summary>Click for Example</summary>
 
 The following example assigns key names _TS_, _id_, _Name_, _Length_, _Flag_ and _fv_, of data types _string_, _int_, _string_, _int8_, _bool_ and _float32_, to the returned rows:
 
@@ -203,16 +202,126 @@ func (*DBI) GetSQL(res map[string]interface{}, query string, labels []interface{
 In the following example, we define table, columns and actions in JSON, and run REST actions on the table. 
 
 <details>
-	<summary>Click for Atom Usage Sample</summary>
+	<summary>Click for Atom Usage Sample: Default and Customized Actions</summary>
 	
 ```go
 package main
 
 import (
-    "log"
-    "os"
+    "context"
     "database/sql"
-    "github.com/genelet/molecule"
+    "fmt"
+    "os"
+
+    "github.com/genelet/molecule/godbi"
+    _ "github.com/go-sql-driver/mysql"
+)
+
+type SQL struct {
+    godbi.Action
+    Statement string   `json:"statement"`
+}
+
+func (self *SQL) RunAction(db *sql.DB, t *godbi.Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+    return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
+}
+
+func (self *SQL) RunActionContext(ctx context.Context, db *sql.DB, t *godbi.Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+    lists := make([]interface{}, 0)
+    dbi := &godbi.DBI{DB: db}
+    err := dbi.SelectContext(ctx, &lists, self.Statement, ARGS["marker"])
+    return lists, err
+}
+
+func main() {
+    dbUser := os.Getenv("DBUSER")
+    dbPass := os.Getenv("DBPASS")
+    dbName := os.Getenv("DBNAME")
+    db, err := sql.Open("mysql", dbUser + ":" + dbPass + "@/" + dbName)
+    if err != nil { panic(err) }
+    defer db.Close()
+
+    db.Exec(`CREATE TABLE testing (
+        id int auto_increment,
+        x varchar(255),
+        y varchar(255),
+        z varchar(255),
+        primary key (id))`)
+    table := &godbi.Table{
+        TableName: "testing",
+        Pks:[]string{"id"},
+        IdAuto:"id",
+        Columns: []*godbi.Col{
+            &godbi.Col{ColumnName:"x",  Label:"x",  TypeName:"string", Notnull:true},
+            &godbi.Col{ColumnName:"y",  Label:"y",  TypeName:"string", Notnull:true},
+            &godbi.Col{ColumnName:"z",  Label:"z",  TypeName:"string"},
+            &godbi.Col{ColumnName:"id", Label:"id", TypeName:"int", Auto:true},
+        },
+    }
+
+    insert := &godbi.Insert{Action:godbi.Action{ActionName: "insert"}}
+    topics := &godbi.Topics{Action:godbi.Action{ActionName: "topics"}}
+    update := &godbi.Update{Action:godbi.Action{ActionName: "update"}}
+    edit   := &godbi.Edit{Action:godbi.Action{ActionName: "edit"}}
+    // a custom action
+    sql   := &SQL{Action:godbi.Action{ActionName: "sql"}, Statement:"SELECT z FROM testing WHERE id=?"}
+
+    args := map[string]interface{}{"x":"a","y":"b","z":"c"}
+    lists, err := insert.RunAction(db, table, args)
+    if err != nil { panic(err) }
+    fmt.Printf("Step 1: %v\n", lists)
+
+    args = map[string]interface{}{"x":"c","y":"d","z":"c"}
+    lists, err = insert.RunAction(db, table, args)
+    if err != nil { panic(err) }
+    fmt.Printf("Step 2: %v\n", lists)
+
+    lists, err = topics.RunAction(db, table, nil)
+    fmt.Printf("Step 3: %v\n", lists)
+
+    args = map[string]interface{}{"id":2,"x":"c","y":"z"}
+    lists, err = update.RunAction(db, table, args)
+    if err != nil { panic(err) }
+    fmt.Printf("Step 4: %v\n", lists)
+
+    args = map[string]interface{}{"id":2}
+    lists, err = edit.RunAction(db, table, args)
+    fmt.Printf("Step 5: %v\n", lists)
+
+    args = map[string]interface{}{"marker":1}
+    lists, err = sql.RunAction(db, table, args)
+    fmt.Printf("Step 6: %v\n", lists)
+
+    db.Exec(`DROP TABLE IF EXISTS testing`)
+    os.Exit(0)
+}
+```
+
+Running the program will result in
+
+```bash
+Step 1: [map[id:1 x:a y:b z:c]]
+Step 2: [map[id:2 x:c y:d z:c]]
+Step 3: [map[id:1 x:a y:b z:c] map[id:2 x:c y:d z:c]]
+Step 4: [map[x:c y:z]]
+Step 5: [map[id:2 x:c y:z z:c]]
+Step 6: [map[z:c]]
+```
+	
+</details>
+
+<details>
+	<summary>Click for Atom Usage Sample: Atom</summary>
+	
+```go
+package main
+
+import (
+    "database/sql"
+    "fmt"
+    "os"
+
+    "github.com/genelet/molecule/godbi"
     _ "github.com/go-sql-driver/mysql"
 )
 
@@ -224,57 +333,95 @@ func main() {
     if err != nil { panic(err) }
     defer db.Close()
 
-    db.Exec(`DROP TABLE IF EXISTS testing`)
-    db.Exec(`CREATE TABLE testing (id int auto_increment, x varchar(255), y varchar(255), primary key (id))`)
+    db.Exec(`CREATE TABLE m_a (
+        id int auto_increment not null primary key,
+        x varchar(8), y varchar(8), z varchar(8))`)
 
-    table := &molecule.Table{TableName: "testing", Pks:[]string{"id"}, IdAuto:"id"}
-
-    insert := &molecule.Insert{Columns: []string{"x","y"}}
-    topics := &molecule.Topics{Columns: map[string][]string{"id":{"id","int"}, "x":{"x","string"},"y":{"y","string"}}}
-    update := &molecule.Update{Columns: []string{"id","x","y"}}
-    edit   := &molecule.Edit{Columns: map[string][]string{"id":{"id","int"}, "x":{"x","string"},"y":{"y","string"}}}
-
-    args := map[string]interface{}{"x":"a","y":"b"}
-    lists, _, err := insert.RunAction(db, table, args)
+    str := `{
+    "tableName":"m_a",
+    "pks":["id"],
+    "idAuto":"id",
+    "columns": [
+        {"columnName":"x", "label":"x", "typeName":"string", "notnull":true },
+        {"columnName":"y", "label":"y", "typeName":"string", "notnull":true },
+        {"columnName":"z", "label":"z", "typeName":"string" },
+        {"columnName":"id", "label":"id", "typeName":"int", "auto":true }
+    ],
+    "uniques":["x","y"],
+    "actions": [
+        { "isDo":true, "actionName": "insert" },
+        { "isDo":true, "actionName": "insupd" },
+        { "isDo":true, "actionName": "delete" },
+        { "actionName": "topics" },
+        { "actionName": "edit" }
+    ]}`
+    atom, err := godbi.NewAtomJson([]byte(str))
     if err != nil { panic(err) }
-    log.Println(lists)
 
-    args = map[string]interface{}{"x":"c","y":"d"}
-    lists, _, err = insert.RunAction(db, table, args)
+    var lists []interface{}
+    // the 1st web requests is assumed to create id=1 to the m_a table
+    //
+    args := map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "temp"}
+    lists, err = atom.RunAtom(db, "insert", args)
     if err != nil { panic(err) }
-    log.Println(lists)
 
+    // the 2nd request just updates, becaues [x,y] is defined to the unique
+    //
+    args = map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "zzzzz"}
+    lists, err = atom.RunAtom(db, "insupd", args)
+    if err != nil { panic(err) }
+
+    // the 3rd request creates id=2
+    //
+    args = map[string]interface{}{"x": "c1234567", "y": "d1234567", "z": "e1234"}
+    lists, err = atom.RunAtom(db, "insert", args)
+    if err != nil { panic(err) }
+
+    // the 4th request creates id=3
+    //
+    args = map[string]interface{}{"x": "e1234567", "y": "f1234567", "z": "e1234"}
+    lists, err = atom.RunAtom(db, "insupd", args)
+    if err != nil { panic(err) }
+
+    // GET all
     args = map[string]interface{}{}
-    lists, _, err = topics.RunAction(db, table, args)
-    log.Println(lists)
-
-    args = map[string]interface{}{"id":2,"x":"c","y":"z"}
-    lists, _, err = update.RunAction(db, table, args)
+    lists, err = atom.RunAtom(db, "topics", args)
     if err != nil { panic(err) }
-    log.Println(lists)
+    fmt.Printf("Step 1: %v\n", lists)
 
-    args = map[string]interface{}{"id":2}
-    lists, _, err = edit.RunAction(db, table, args)
-    log.Println(lists)
+    // GET one
+    args = map[string]interface{}{"id": 1}
+    lists, err = atom.RunAtom(db, "edit", args)
+    if err != nil { panic(err) }
+    fmt.Printf("Step 2: %v\n", lists)
 
-    os.Exit(0)
+    // DELETE
+    args = map[string]interface{}{"id": 1}
+    lists, err = atom.RunAtom(db, "delete", args)
+    if err != nil { panic(err) }
+
+    // GET all
+    args = map[string]interface{}{}
+    lists, err = atom.RunAtom(db, "topics", args)
+    if err != nil { panic(err) }
+    fmt.Printf("Step 3: %v\n", lists)
+
+    db.Exec(`drop table if exists m_a`)
 }
+
 ```
 
 Running the program will result in
 
 ```bash
-[map[id:1 x:a y:b]]
-[map[id:2 x:c y:d]]
-[map[id:1 x:a y:b] map[id:2 x:c y:d]]
-[map[id:2 x:c y:z]]
-[map[id:2 x:c y:z]]
+Step 1: [map[id:1 x:a1234567 y:b1234567 z:zzzzz] map[id:2 x:c1234567 y:d1234567 z:e1234] map[id:3 x:e1234567 y:f1234567 z:e1234]]
+Step 2: [map[id:1 x:a1234567 y:b1234567 z:zzzzz]]
+Step 3: [map[id:2 x:c1234567 y:d1234567 z:e1234] map[id:3 x:e1234567 y:f1234567 z:e1234]]
 ```
-
-</p>
+	
 </details>
 
-Here are mostly used data types and functions in the atom usage.
+Here are frequently used data types and functions in the atom usage.
 
 <br />
 
@@ -524,10 +671,12 @@ where _DBDriver_ is one of database drive defined:
 package main
 
 import (
-    "log"
+    "context"
     "database/sql"
+    "fmt"
     "os"
-    "github.com/genelet/molecule"
+
+    "github.com/genelet/molecule/godbi"
     _ "github.com/go-sql-driver/mysql"
 )
 
@@ -539,75 +688,169 @@ func main() {
     if err != nil { panic(err) }
     defer db.Close()
 
-    db.Exec(`drop table if exists test_a`)
-    db.Exec(`CREATE TABLE test_a (id int auto_increment not null primary key,
+    db.Exec(`drop table if exists m_b`)
+    db.Exec(`drop table if exists m_a`)
+    db.Exec(`CREATE TABLE m_a (
+        id int auto_increment not null primary key,
         x varchar(8), y varchar(8), z varchar(8))`)
-    db.Exec(`drop table if exists test_b`)
-    db.Exec(`CREATE TABLE test_b (tid int auto_increment not null primary key,
-        child varchar(8), id int)`)
+    db.Exec(`CREATE TABLE m_b (
+        tid int auto_increment not null primary key,
+        child varchar(8),
+        id int)`)
 
-    ta, err := molecule.NewAtomJsonFile("test_a.json")
-    if err != nil { panic(err) }
-    tb, err := molecule.NewAtomJsonFile("test_b.json")
-    if err != nil { panic(err) }
+    ctx := context.Background()
+    METHODS := map[string]string{"LIST": "topics", "GET": "edit", "POST": "insert", "PUT": "update", "PATCH": "insupd", "DELETE": "delete"}
 
-    molecule := &molecule.Molecule{db, map[string]molecule.Navigate{"ta":ta, "tb":tb}}
+   molecule, err := godbi.NewMoleculeJson([]byte(`{"atoms":
+[{
+    "tableName": "m_a",
+    "pks": [ "id" ],
+    "idAuto": "id",
+    "columns": [
+        {"columnName":"x", "label":"x", "typeName":"string", "notnull":true },
+        {"columnName":"y", "label":"y", "typeName":"string", "notnull":true },
+        {"columnName":"z", "label":"z", "typeName":"string" },
+        {"columnName":"id", "label":"id", "typeName":"int", "auto":true }
+    ],
+    "uniques":["x","y"],
+    "actions": [{
+        "actionName": "insupd",
+        "isDo": true,
+        "nextpages": [{
+            "tableName": "m_b",
+            "actionName": "insert",
+            "relateArgs": { "id": "id" },
+            "marker": "m_b"
+        }]
+    },{
+        "actionName": "insert",
+        "isDo": true,
+        "nextpages": [{
+            "tableName": "m_b",
+            "actionName": "insert",
+            "relateArgs": { "id": "id" },
+            "marker": "m_b"
+        }]
+    },{
+        "actionName": "edit",
+        "nextpages": [{
+            "tableName": "m_b",
+            "actionName": "topics",
+            "relateExtra": { "id": "id" }
+        }]
+    },{
+        "actionName": "delete",
+        "prepares": [{
+            "tableName": "m_b",
+            "actionName": "delecs",
+            "relateArgs": { "id": "id" }
+        }]
+    },{
+        "actionName": "topics",
+        "nextpages": [{
+            "tableName": "m_a",
+            "actionName": "edit",
+            "relateExtra": { "id": "id" }
+        }]
+    }]
+},{
+    "tableName": "m_b",
+    "pks": [ "tid" ],
+    "fks": [{"fkTable":"m_a", "fkColumn":"id", "column":"id"}],
+    "idAuto": "tid",
+    "columns": [
+        {"columnName":"tid", "label":"tid", "typeName":"int", "notnull": true, "auto":true},
+        {"columnName":"child", "label":"child", "typeName":"string"},
+        {"columnName":"id", "label":"id", "typeName":"int", "notnull": true}
+    ],
+    "actions": [{
+        "isDo": true,
+        "actionName": "insert"
+    },{
+        "actionName": "edit"
+    },{
+        "isDo": true,
+        "actionName": "delete"
+    },{
+        "isDo": true,
+        "actionName": "delecs",
+        "nextpages": [{
+            "tableName": "m_b",
+            "actionName": "delete",
+            "relateArgs": { "tid": "tid" }
+        }]
+    },{
+        "actionName": "topics"
+    }]
+}]
+}`))
 
-    methods := map[string]string{"LIST":"topics", "GET":"edit", "POST":"insert", "PATCH":"insupd", "PUT":"update", "DELETE":"delete"}
+    var lists []interface{}
 
-    var lists []map[string]interface{}
-    // the 1st web requests is assumed to create id=1 to the test_a and test_b tables:
+    // the 1st web requests creates id=1 to the m_a and m_b tables:
     //
-    args := map[string]interface{}{"x":"a1234567","y":"b1234567","z":"temp", "child":"john"}
-    if lists, err = molecule.Run("ta", methods["PATCH"], args); err != nil { panic(err) }
+    args := map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john", "m_b": []map[string]interface{}{{"child": "john"}, {"child": "john2"}}}
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], args)
+    if err != nil { panic(err) }
 
-    // the 2nd request just updates, because [x,y] is defined to the unique in ta.
-    // but create a new record to tb for id=1, since insupd triggers insert in tb
-    //
-    args = map[string]interface{}{"x":"a1234567","y":"b1234567","z":"zzzzz", "child":"sam"}
-    if lists, err = molecule.Run("ta", methods["PATCH"], args); err != nil { panic(err) }
+    // the 2nd request just updates, becaues [x,y] is unique in m_a.
+    // but creates a new record in tb for id=1
+   args = map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "zzzzz", "m_b": map[string]interface{}{"child": "sam"}}
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], args)
+    if err != nil { panic(err) }
 
     // the 3rd request creates id=2
     //
-    args = map[string]interface{}{"x":"c1234567","y":"d1234567","z":"e1234","child":"mary"}
-    if lists, err = molecule.Run("ta", methods["POST"], args); err != nil { panic(err) }
+    args = map[string]interface{}{"x": "c1234567", "y": "d1234567", "z": "e1234", "m_b": map[string]interface{}{"child": "mary"}}
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args)
+    if err != nil { panic(err) }
 
     // the 4th request creates id=3
     //
-    args = map[string]interface{}{"x":"e1234567","y":"f1234567","z":"e1234","child":"marcus"}
-    if lists, err = molecule.Run("ta", methods["POST"], args); err != nil { panic(err) }
+    args = map[string]interface{}{"x": "e1234567", "y": "f1234567", "z": "e1234", "m_b": map[string]interface{}{"child": "marcus"}}
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args)
+    if err != nil { panic(err) }
 
-    // LIST all
+    // GET all
     args = map[string]interface{}{}
-    if lists, err = molecule.Run("ta", methods["LIST"], args); err != nil { panic(err) }
-    log.Printf("LIST: %v", lists)
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], args)
+    if err != nil { panic(err) }
+    fmt.Printf("Step 1: %v\n", lists)
 
     // GET one
-    args = map[string]interface{}{"id":1}
-    if lists, err = molecule.Run("ta", methods["GET"], args); err != nil { panic(err) }
-    log.Printf("GET: %v", lists)
+    args = map[string]interface{}{"id": 1}
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["GET"], args)
+    if err != nil { panic(err) }
+    fmt.Printf("Step 2: %v\n", lists)
 
     // DELETE
-    extra := map[string]interface{}{"id":1}
-    if lists, err = molecule.Run("tb", methods["DELETE"], map[string]interface{}{"tid": 1}, extra); err != nil { panic(err) }
-    if lists, err = molecule.Run("tb", methods["DELETE"], map[string]interface{}{"tid": 2}, extra); err != nil { panic(err) }
-    if lists, err = molecule.Run("ta", methods["DELETE"], map[string]interface{}{"id":1}); err != nil { panic(err) }
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["DELETE"], map[string]interface{}{"id": 1})
+    if err != nil { panic(err) }
 
-    // LIST all
+    // GET all m_a
     args = map[string]interface{}{}
-    if lists, err = molecule.Run("ta", methods["LIST"], args); err != nil { panic(err) }
-    log.Printf("LIST: %v", lists)
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], args)
+    if err != nil { panic(err) }
+    fmt.Printf("Step 3: %v\n", lists)
 
-    os.Exit(0)
+    // GET all m_b
+    args = map[string]interface{}{}
+    lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], args)
+    if err != nil { panic(err) }
+    fmt.Printf("Step 4: %v\n", lists)
+
+    db.Exec(`drop table if exists m_a`)
+    db.Exec(`drop table if exists m_b`)
 }
 ```
 
 Running it will result in:
 
 ```bash
-LIST: [map[id:1 ta_edit:[map[id:1 tb_topics:[map[child:john id:1 tid:1]] x:a1234567 y:b1234567 z:zzzzz]] x:a1234567 y:b1234567 z:zzzzz] map[id:2 ta_edit:[map[id:2 tb_topics:[map[child:mary id:2 tid:3]] x:c1234567 y:d1234567 z:e1234]] x:c1234567 y:d1234567 z:e1234] map[id:3 ta_edit:[map[id:3 tb_topics:[map[child:marcus id:3 tid:4]] x:e1234567 y:f1234567 z:e1234]] x:e1234567 y:f1234567 z:e1234]]
-GET: [map[id:1 tb_topics:[map[child:john id:1 tid:1]] x:a1234567 y:b1234567 z:zzzzz]]
-LIST: [map[id:2 ta_edit:[map[id:2 tb_topics:[map[child:mary id:2 tid:3]] x:c1234567 y:d1234567 z:e1234]] x:c1234567 y:d1234567 z:e1234] map[id:3 ta_edit:[map[id:3 tb_topics:[map[child:marcus id:3 tid:4]] x:e1234567 y:f1234567 z:e1234]] x:e1234567 y:f1234567 z:e1234]]
+Step 1: [map[id:1 m_a_edit:[map[id:1 m_b_topics:[map[child:john id:1 tid:1] map[child:john2 id:1 tid:2] map[child:sam id:1 tid:3]] x:a1234567 y:b1234567 z:zzzzz]] x:a1234567 y:b1234567 z:zzzzz] map[id:2 m_a_edit:[map[id:2 m_b_topics:[map[child:mary id:2 tid:4]] x:c1234567 y:d1234567 z:e1234]] x:c1234567 y:d1234567 z:e1234] map[id:3 m_a_edit:[map[id:3 m_b_topics:[map[child:marcus id:3 tid:5]] x:e1234567 y:f1234567 z:e1234]] x:e1234567 y:f1234567 z:e1234]]
+Step 2: [map[id:1 m_b_topics:[map[child:john id:1 tid:1] map[child:john2 id:1 tid:2] map[child:sam id:1 tid:3]] x:a1234567 y:b1234567 z:zzzzz]]
+Step 3: [map[id:2 m_a_edit:[map[id:2 m_b_topics:[map[child:mary id:2 tid:4]] x:c1234567 y:d1234567 z:e1234]] x:c1234567 y:d1234567 z:e1234] map[id:3 m_a_edit:[map[id:3 m_b_topics:[map[child:marcus id:3 tid:5]] x:e1234567 y:f1234567 z:e1234]] x:e1234567 y:f1234567 z:e1234]]
+Step 4: [map[child:mary id:2 tid:4] map[child:marcus id:3 tid:5]]
 ```
 
 </p>
