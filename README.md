@@ -1,19 +1,18 @@
 # molecule
 
-_molecule_ runs RESTful actions on related database tables and selective data fields in RDB like gRPC/GraphQL. The relationships between tables, which are usually described in JSON, include SQL constrains like foreign-key, flexible logic operations like data filters and action triggers etc. 
+_molecule_ runs RESTful actions on related database tables and selective data fields in RDB like gRPC/GraphQL. The relationships between tables, which are usually described in JSON, include logic operators, data filters, action triggers and SQL foreign-key constraints etc. 
 
 In _molecule_, a table and its associated actions build up an _atom_. Atoms and relationships between atoms build up a _molecule_.
 
-While traditional REST acts on individual table, _molecule_ acts on a whole database across all tables in the database.
+While traditional REST acts on individual table, _molecule_ acts on whole database across all tables in it.
 
-This package has pre-defined 7 RESTful actions, with which we can run most database tasks with little or no coding. For example, think about a gRPC application. We can create a Postgres database representing data stream's protocol buffer, and a JSON config representing relationships between the tables (which are usually mapped to _protobuf messages_). With _molecule_, we can process gRPC's input and output calls at once. Beneath the surface, _molecule_ handles detailed reads and writes on proper tables with given logic. 
+This package has pre-defined 7 RESTful actions, with which we can run most database tasks with little or no coding. For example, think about a gRPC application. We can create a Postgres database representing data stream's protocol buffer, and a JSON config representing relationships between the tables (which are usually mapped to _protobuf messages_). With _molecule_, we can process gRPC's input and output calls at once. Beneath the surface, _molecule_ will handle detailed reads and writes on proper tables with given logic. 
 
 Check *godoc* for package details:
 
 [![GoDoc](https://godoc.org/github.com/genelet/molecule?status.svg)](https://godoc.org/github.com/genelet/molecule)
 
 The package is fully tested for PostgreSQL, MySQL and SQLite.
-
 
 <br /><br />
 
@@ -494,34 +493,31 @@ type Delecs struct {
 
 ## Chapter 5. MOLECULE USAGE
 
-*Molecule* describes a database
+
+*Molecule* is a collection of all atoms in the database and implements the *Run* function to react.
 
 ```go
 type Molecule struct {
-    *sql.DB
-    Atoms map[string]Navigate
+    Atoms []Navigate `json:"atoms" hcl:"atoms"`
+    DatabaseName string `json:"databaseName" hcl:"databaseName"`
+    DBDriver DBType `json:"dbDriver" hcl:"dbDriver"`
 }
 ```
 
-### 5.1) Constructor
+where _DBDriver_ is one of database drive defined:
 
 ```go
-func NewMolecule(db *sql.DB, s map[string]Navigate) *Molecule
+    SQLDefault DBType = iota
+    SQLRaw
+    SQLite
+    MySQL
+    Postgres
+    TSMillisecond
+    TSMicrosecond
 ```
-
-
-### 5.2) Run actions on atoms
-
-```go
-func (self *Molecule) RunContext(ctx context.Context, atom, action string, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]map[string]interface{}, error)
-```
-
-which returns the data as *[]map[string]interface{}*, and optional error.
-
-### 5.3) Example
 
 <details>
-    <summary>Click for Example 3</summary>
+    <summary>Click for Example of Molecule Usage</summary>
     <p>
 
 ```go
@@ -616,3 +612,28 @@ LIST: [map[id:2 ta_edit:[map[id:2 tb_topics:[map[child:mary id:2 tid:3]] x:c1234
 
 </p>
 </details>
+
+<br />
+
+### 5.1) Construct
+
+Use JSON to build a molecule
+
+```go
+func NewMoleculeJsonFile(filename string, cmap ...map[string][]Capability) (*Molecule, error) 
+```
+
+where _cmap_ is for customized actions not in the default list.
+
+### 5.2) Run action on atom
+
+We can run any action on any atom by names using _RunConext_. The output is data which is a slice of interface, and an optional error.
+
+```go
+func (self *Molecule) RunContext(ctx context.Context, atom, action string, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]map[string]interface{}, error)
+```
+
+Unlike traditional REST, which is limited to a sinlge table and sinle action, _RunContext_ will act on related tables and trigger associated actions.
+
+Please check [the full document](https://godoc.org/github.com/genelet/molecule) for usage.
+
