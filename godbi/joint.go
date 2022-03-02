@@ -1,4 +1,4 @@
-package molecule
+package godbi
 
 type Joint struct {
 	TableName string `json:"tableName" hcl:"tableName,label"`

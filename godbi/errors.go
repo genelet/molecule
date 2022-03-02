@@ -1,4 +1,4 @@
-package molecule
+package godbi
 
 import (
 	"fmt"

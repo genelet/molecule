@@ -1,4 +1,4 @@
-package molecule
+package godbi
 
 type ConnectType int
 const (

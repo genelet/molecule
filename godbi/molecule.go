@@ -1,4 +1,4 @@
-package molecule
+package godbi
 
 import (
 	"context"
@@ -156,15 +156,6 @@ func (self *Molecule) generalContext(topRecursive bool, ctx context.Context, db 
 //
 
 func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sql.DB, atom, action string, args, extra map[string]interface{}) ([]interface{}, error) {
-see := false
-if action=="insert" || action=="insupd" {
-//if (action=="edit" || action=="topics") && !(atom=="CompoundIdent" || atom=="CompoundIdent_Idents") {
-//if (action=="delecs" || action=="delete") && (atom=="Person" || atom=="PersonTeacher" || atom=="PersonTeacher_Advisors") {
-see = true
-}
-if see {
-fmt.Printf("\n\n1111 %s=>%s=>args: %v\n", atom, action, args)
-}
 	atomObj := self.GetAtom(atom)
 	if atomObj == nil {
 		return nil, errorAtomNotFound(atom)
@@ -194,11 +185,6 @@ fmt.Printf("\n\n1111 %s=>%s=>args: %v\n", atom, action, args)
 		isDo        := pAtom.GetAction(p.ActionName).GetIsDo()
 		isRecursive := pTable.IsRecursive()
 
-see1 := false
-if action=="insert" || action=="insupd" {
-//if (p.ActionName=="edit" || p.ActionName=="topics") && !(p.TableName=="CompoundIdent" || p.TableName=="CompoundIdent_Idents") {
-see1 = true
-}
 		var lists []interface{}
 		var err error
 
@@ -216,20 +202,11 @@ see1 = true
                 for _, s := range t { delete(s, pk) }
 				}
 			}
-if see1 {
-fmt.Printf("22221 %s=>%s\n%v\n%v\n", p.TableName, p.ActionName, preArgs, preExtra)
-}
 			lists, err = self.runRecurseContext(ctx, db, p.TableName, p.ActionName, preArgs, preExtra)
 		} else if isDo && isRecursive {
 		// this triggers the original topRecursive and is always a DO action
-if see1 {
-fmt.Printf("22222 %s=>%s\n%v\n%v\n", p.TableName, p.ActionName, preArgs, preExtra)
-}
 			lists, err = self.runRecurseContext(ctx, db, p.TableName, p.ActionName, preArgs, preExtra)
 		} else {
-if see1 {
-fmt.Printf("22223 %s=>%s\n%v\n%v\n", p.TableName, p.ActionName, preArgs, preExtra)
-}
 			lists, err = self.RunContext(ctx, db, p.TableName, p.ActionName, preArgs, preExtra)
 		}
 		if err != nil { return nil, err }
@@ -278,23 +255,11 @@ fmt.Printf("22223 %s=>%s\n%v\n%v\n", p.TableName, p.ActionName, preArgs, preExtr
 		newArgs = tableObj.refreshArgs(newArgs)
 	}
 
-if see {
-fmt.Printf("33333 %s=>%s\n%v\n%v\n", atom, action, newArgs, newExtra)
-}
 	data, err := atomObj.RunAtomContext(ctx, db, action, newArgs, newExtra)
 	if err != nil { return nil, err }
-if see {
-fmt.Printf("finish 33333: %v\n", data)
-}
 
 	if topRecursive && action != "delecs" {
-if see {
-fmt.Printf("after 33334: %v\n", topRecursive)
-}
 		if tableObj.IsRecursive() {
-if see {
-fmt.Printf("after 33335: %v\n", true)
-}
 			var p      *Connection
 			var pAtom   Navigate
 			var rColumn string
@@ -303,11 +268,6 @@ fmt.Printf("after 33335: %v\n", true)
 				rColumn = pAtom.GetTable().RecursiveColumn()
 				if rColumn != "" { break }
 			}
-see1 := false
-//if (p.ActionName=="edit" || p.ActionName=="topics") && !(p.TableName=="CompoundIdent" || p.TableName=="CompoundIdent_Idents") {
-if action=="insert" || action=="insupd" {
-see1 = true
-}
 			if rColumn == "" { return data, nil }
 			argsData, _ := p.FindArgs(newArgs)
 			if !hasValue(argsData) {
@@ -316,9 +276,6 @@ see1 = true
 			for _, item := range data {
 				nextArgs :=  p.NextArgs(item)
 				nextArgs = MergeArgs(argsData, nextArgs)
-if see1 {
-fmt.Printf("44444 %s=>%s\n%v\n", p.TableName, p.ActionName, nextArgs)
-}
 				_, err = self.runRecurseContext(ctx, db, p.TableName, p.ActionName, nextArgs, nil)
 				if err != nil { return nil, err }
 			}
@@ -327,11 +284,6 @@ fmt.Printf("44444 %s=>%s\n%v\n", p.TableName, p.ActionName, nextArgs)
 	}
 
 	for _, p := range nextpages {
-see1 := false
-if action=="insert" || action=="insupd" {
-//if (p.ActionName=="edit" || p.ActionName=="topics") && !(p.TableName=="CompoundIdent" || p.TableName=="CompoundIdent_Idents") {
-see1 = true
-}
 		for _, item := range data {
 			pAtom := self.GetAtom(p.TableName)
 			pAction := pAtom.GetAction(p.ActionName)
@@ -351,9 +303,6 @@ see1 = true
 					continue
 				}
 			}
-if see1 {
-fmt.Printf("66666 %s=>%s\n%v\n%v\n", p.TableName, p.ActionName, nextArgs, nextExtra)
-}
 			newLists, err := self.RunContext(ctx, db, p.TableName, p.ActionName, nextArgs, nextExtra)
 			if err != nil { return nil, err }
 			if hasValue(newLists) {
@@ -384,8 +333,5 @@ fmt.Printf("66666 %s=>%s\n%v\n%v\n", p.TableName, p.ActionName, nextArgs, nextEx
 		}
 	}
 
-if see {
-fmt.Printf("9999 %s=>%s=>%v\n", atom, action, data)
-}
 	return data, nil
 }

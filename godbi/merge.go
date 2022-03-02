@@ -1,4 +1,4 @@
-package molecule
+package godbi
 
 // CloneArgs clones args to a new args, keeping proper data type
 //
