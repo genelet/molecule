@@ -1,0 +1,146 @@
+syntax = "proto3";
+import "google/protobuf/any.proto";
+
+package molecule;
+option go_package = "./gometa";
+
+message Node {
+	message Table {
+		string tableName = 1;
+
+		message Col {
+   		 	string columnName = 1;
+   		 	string typeName = 2;
+   		 	string label = 3;
+   		 	bool notnull = 4;
+   		 	bool auto = 5;
+			bool recurse = 6;
+			string inOneof = 7;
+		}
+		repeated Col columns = 2;
+
+		repeated string pks = 3;
+		string idAuto = 4;
+
+		message Fk {
+			string fkTable = 1;
+			string fkColumn = 2;
+			string column = 3;
+		}
+		repeated Fk fks = 5;
+		repeated string uniques = 6;
+	}
+
+	message Actions {
+		enum ConnectType {
+			CONNECTDefault = 0;
+			CONNECTOne = 1;
+			CONNECTArray = 2;
+			CONNECTMap = 3;
+			CONNECTMany = 4;
+		}
+	
+		message Connection {
+			string tableName = 1;
+			string actionName = 2;	
+			map<string, string> relateArgs = 3;
+			map<string, string> relateExtra = 4;
+			string marker = 5;
+			ConnectType dimension = 6;
+		}
+	
+		message Insert {
+			string actionName = 1;
+			repeated Connection prepareConnects = 2;
+			repeated Connection nextpageConnects = 3;
+			bool isDo = 4;
+			repeated google.protobuf.Any appendix = 15;	
+		}
+		Insert insertItem = 7;
+	
+		message Update {
+			string actionName = 1;
+			repeated Connection prepareConnects = 2;
+			repeated Connection nextpageConnects = 3;
+			bool isDo = 4;
+			repeated string empties = 5;
+			repeated google.protobuf.Any appendix = 15;	
+		}
+		Update updateItem = 9;
+	
+		message Insupd {
+			string actionName = 1;
+			repeated Connection prepareConnects = 2;
+			repeated Connection nextpageConnects = 3;
+			bool isDo = 4;
+			repeated google.protobuf.Any appendix = 15;	
+		}
+		Insupd insupdItem = 10;
+	
+		message Delete {
+			string actionName = 1;
+			repeated Connection prepareConnects = 2;
+			repeated Connection nextpageConnects = 3;
+			bool isDo = 4;
+			repeated google.protobuf.Any appendix = 15;	
+		}
+		Delete deleteItem = 12;
+	
+		message Delecs {
+			string actionName = 1;
+			repeated Connection prepareConnects = 2;
+			repeated Connection nextpageConnects = 3;
+			bool isDo = 4;
+			repeated google.protobuf.Any appendix = 15;	
+		}
+		Delecs delecsItem = 13;
+	
+		message Joint {
+			string tableName = 1;
+			string alias = 2;
+			string joinType  = 3;
+			string joinUsing = 4;
+			string joinOn    = 5;
+			string sortby = 6;
+		}
+	
+		message Edit {
+			string actionName = 1;
+			repeated Connection prepareConnects = 2;
+			repeated Connection nextpageConnects = 3;
+			bool isDo = 4;
+   		 	repeated Joint joints = 5;
+   		 	string FIELDS = 14;
+			repeated google.protobuf.Any appendix = 15;	
+		}
+		Edit editItem = 14;
+	
+		message Topics {
+			string actionName = 1;
+			repeated Connection prepareConnects = 2;
+			repeated Connection nextpageConnects = 3;
+			bool isDo = 4;
+   		 	repeated Joint joints = 5;
+   		 	int32 totalForce = 7;
+   			string MAXPAGENO = 8;
+   			string TOTALNO   = 9;
+   			string ROWCOUNT  = 10;
+   			string PAGENO    = 11;
+   			string SORTBY    = 12;
+   			string SORTREVERSE = 13;
+   		 	string FIELDS = 14;
+			repeated google.protobuf.Any appendix = 15;	
+		}
+		Topics topicsItem = 15;
+	}
+
+	Table atomTable = 1;
+	Actions atomActions = 2;
+}
+
+// Graph
+message Graph {
+  string packageName = 1;
+  string databaseName = 2;
+  repeated Node nodes = 3;
+}
