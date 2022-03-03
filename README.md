@@ -28,7 +28,7 @@ To use _molecule_, in your GO program:
 import ("github.com/genelet/molecule/godbi")
 ```
 
-You may also encode and process _molecule_ in protocol buffer, which we have named [Graph](https://godoc.org/github.com/genelet/molecule/gometa). To use _Graph_, in your GO program:
+You may also encode and process _molecule_ in protocol buffer, which we have named [Graph](https://godoc.org/github.com/genelet/molecule/gometa). To use _Graph_:
 
 ```go
 import ("github.com/genelet/molecule/gometa")
