@@ -456,7 +456,7 @@ where _ColumnName_ is the column name. _TypeName_ is column's type. _Lable_ is t
 
 ### 3.2) Fk
 
-Foreign key *Fk* is a relation between 2 atoms:
+We call it `Forward Key`, a reversed-view of SQL's foreign key. It's a relationship between 2 atoms:
 
 ```go
 type Fk struct {
@@ -466,7 +466,11 @@ type Fk struct {
 }
 ```
 
-where _FkTable_ means a foreign table, _FkColumn_ foriegn table's column and _Column_ the column in the current table. _Fk_ is similar to SQL's standard foreign key but 1) it is limited to be single column, and 2) it can be defined between two tables even there is no native SQL foreign key. For example, we could define _molecule_ Fk on noSQL database or time-series database.
+where _FkTable_ means a forward table, _FkColumn_ forward table's column, and _Column_ the column in the current table. 
+
+- in SQL, a foriegn key means a column in another table (called foreign table) that has passed its value to a column in this table.
+- in _molecule_, a forward key means a column in this table that will pass value to a column in another table (called forward table).
+- forward key can be defined even there is no native SQL foreign key, such as columns in noSQL database or time-series database.
 
 ### 3.3) Table
 
