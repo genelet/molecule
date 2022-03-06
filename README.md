@@ -468,11 +468,10 @@ type Fk struct {
 
 where _FkTable_ means a forward table, _FkColumn_ forward table's column, and _Column_ the column in the current table. 
 
-- In SQL, a foriegn key means a column in another table (called foreign table) that has passed its value to column in this table.
-- In _molecule_, a forward key means a column in this table that will pass value to column in another table (called forward table).
-- Forward key can be defined even if there is no native SQL foreign key, such as noSQL database or time-series database.
-- In this package, forward key is only used in action *Delecs*.
+- In SQL, a foriegn key means a column in another table (called foreign table) that has passed its value to column in this table. In _molecule_, a forward key means a column in this table that will pass value to column in another table (called forward table).
 - Forward key is always a single column.
+- Forward key can be defined even if there is no native SQL foreign key, like NoSQL or time-series database.
+- In this package, forward key is only used in action *Delecs*.
 
 ### 3.3) Table
 
