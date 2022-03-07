@@ -456,7 +456,7 @@ where _ColumnName_ is the column name. _TypeName_ is column's type. _Lable_ is t
 
 ### 3.2) Fk
 
-We call it `Forward Key`, a reversed-view of SQL's foreign key. It's a relationship between 2 atoms:
+SQL's foreign key. It's a relationship between 2 atoms:
 
 ```go
 type Fk struct {
@@ -466,12 +466,11 @@ type Fk struct {
 }
 ```
 
-where _FkTable_ means a forward table, _FkColumn_ forward table's column, and _Column_ the column in the current table. 
+where _FkTable_ means a foreign table, _FkColumn_ foreign table's column, and _Column_ the column in the current table. 
 
-- In SQL, a foriegn key means a column in another table (called foreign table) that has passed its value to column in this table. In _molecule_, a forward key means a column in this table that will pass value to column in another table (called forward table).
-- Forward key is always a single column.
-- Forward key can be defined even if there is no native SQL foreign key, like NoSQL or time-series database.
-- In this package, forward key is only used in action *Delecs*.
+- Foreign key is defined to be a single column in this package.
+- Foreign key can be defined even if there is no native SQL foreign key, like NoSQL or time-series database.
+- Foreign key is only used in action *Delecs*.
 
 ### 3.3) Table
 
