@@ -8,14 +8,19 @@ import (
 	"io/ioutil"
 )
 
+type Stopper interface {
+	Sign(tableObj *Table, item interface{}) bool
+}
+
 // Molecule describes all atoms and actions in a database schema
 //
 type Molecule struct {
 	Atoms []Navigate `json:"atoms" hcl:"atoms"`
-	argsMap map[string]interface{}
-	extraMap map[string]interface{}
 	DatabaseName string `json:"databaseName" hcl:"databaseName"`
 	DBDriver DBType `json:"dbDriver" hcl:"dbDriver"`
+	argsMap map[string]interface{}
+	extraMap map[string]interface{}
+	Stopper
 }
 
 func NewMoleculeJsonFile(fn string, cmap ...map[string][]Capability) (*Molecule, error) {
@@ -27,9 +32,9 @@ func NewMoleculeJsonFile(fn string, cmap ...map[string][]Capability) (*Molecule,
 }
 
 type g struct {
-	Atoms []*m `json:"atoms" hcl:"atoms"`
-	DatabaseName string `json:"databaseName" hcl:"databaseName"`
-	DBDriver DBType `json:"dbDriver" hcl:"dbDriver"`
+	Atoms []json.RawMessage `json:"atoms" hcl:"atoms"`
+	DatabaseName string     `json:"databaseName" hcl:"databaseName"`
+	DBDriver DBType         `json:"dbDriver" hcl:"dbDriver"`
 }
 
 func NewMoleculeJson(dat json.RawMessage, cmap ...map[string][]Capability) (*Molecule, error) {
@@ -40,15 +45,14 @@ func NewMoleculeJson(dat json.RawMessage, cmap ...map[string][]Capability) (*Mol
 
 	var atoms []Navigate
 	for _, tmp := range tmps.Atoms {
-		var cs []Capability
+		atom, err := NewAtomJson(tmp)
+		if err != nil { return nil, err }
 		if cmap != nil && cmap[0] != nil {
-			cs, _ = cmap[0][tmp.TableName]
+			cs := cmap[0][atom.Table.TableName]
+			atom, err = NewAtomJson(tmp, cs...)
+			if err != nil { return nil, err }
 		}
-		actions, err := Assertion(tmp.Actions, cs...)
-		if err != nil {
-			return nil, err
-		}
-		atoms = append(atoms, &Atom{tmp.Table, actions})
+		atoms = append(atoms, atom)
 	}
 
 	return &Molecule{Atoms:atoms, DatabaseName: tmps.DatabaseName, DBDriver:tmps.DBDriver}, nil
@@ -285,6 +289,7 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 
 	for _, p := range nextpages {
 		for _, item := range data {
+			if self.Stopper != nil && self.Stopper.Sign(tableObj, item) { continue }
 			pAtom := self.GetAtom(p.TableName)
 			pAction := pAtom.GetAction(p.ActionName)
 			nextArgs := p.NextArgs(item)

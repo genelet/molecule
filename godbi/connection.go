@@ -25,7 +25,11 @@ type Connection struct {
 
 	// RelateExtra: map current page's columns to nextpage's columns (for Nextpages), or prepared page's columns to current page's columns (for Prepares) as constrains.
 	RelateExtra map[string]string `json:"relateExtra,omitempty" hcl:"relateExtra"`
+
+	// Dimension: for nextpage's output format
 	Dimension  ConnectType        `json:"dimension,omitempty" hcl:"dimension,label"`
+
+	// Marker: for input data, this marks a whole data set for the next or previous object; for output data, this is the key for the next whole data set.
 	Marker     string             `json:"marker,omitempty" hcl:"marker,label"`
 }
 
