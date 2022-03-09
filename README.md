@@ -488,7 +488,7 @@ type Table struct {
 
 ```
 
-where _TableName_ is the table name. _Columns_ are all columns. _Pks_ is the primary key. _IdAuto_ is the auto ID. _Fks_ is a lost of foreign-key relationships. And _Uniques_ is the combination of columns uniquely defining the row.
+where _TableName_ is the table name. _Columns_ are all columns. _Pks_ is the primary key. _IdAuto_ is the auto ID. _Fks_ is a list of foreign-key relationships. And _Uniques_ is the combination of columns uniquely defining the row.
 
 ### 3.4) Connection
 
