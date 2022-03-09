@@ -1,6 +1,6 @@
 # molecule
 
-_molecule_ runs RESTful actions on related database tables and selective data fields in RDB like gRPC/GraphQL. The relationships between tables, which are usually described in JSON, include logic operators, data filters, action triggers and SQL foreign-key constraints etc. 
+_molecule_ runs complex RESTful actions on related database tables and selective data fields in RDB like gRPC/GraphQL. The relationships between tables, which are usually described in JSON, include logic operators, data filters, action triggers and SQL foreign-key constraints etc. 
 
 In _molecule_, a table and its associated actions build up an _atom_. Atoms and relationships between atoms build up a _molecule_.
 
