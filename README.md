@@ -886,7 +886,7 @@ where _cmap_ is for customized actions not in the default list.
 
 ### 5.2) Run action on atom
 
-We can run any action on any atom by names using _RunConext_. The output is data which is a slice of interface, and an optional error.
+We can run any action on any atom by names using _RunConext_. The output is data as a slice of interface, and an optional error.
 
 ```go
 func (self *Molecule) RunContext(ctx context.Context, atom, action string, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]map[string]interface{}, error)
