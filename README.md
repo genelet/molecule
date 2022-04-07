@@ -1,8 +1,8 @@
 # molecule
 
-_molecule_ runs complex RESTful actions on selective data fields in related database tables like gRPC/GraphQL. The relationships between tables, which are usually described in JSON, include logic operators, data filters, action triggers and SQL foreign-key constraints etc. 
+In _molecule_, a database table and its associated actions build up an _atom_. Atoms and relationships between them build up a _molecule_. While traditional REST acts on individual table, _molecule_ acts on whole RDB across all tables.
 
-In _molecule_, a table and its associated actions build up an _atom_. Atoms and relationships between them build up a _molecule_. While traditional REST acts on individual table, _molecule_ acts on whole RDB across all tables.
+Like gRPC/GraphQL, _molecule_ runs complex RESTful actions on selective data fields in related tables. The relationships, which are usually described in JSON, can be logic operators, data filters, action triggers, SQL foreign-key constraints and others as what we want them to be.
 
 This package has pre-defined 6 RESTful actions, with which we can run most database tasks with little or no coding.
 
