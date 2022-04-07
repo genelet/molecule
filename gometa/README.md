@@ -31,7 +31,7 @@ map[tableName][string][]string
 
 ## Chapter 2. Functions
 
-### 2.1 From _Graph_ to _Molecule_
+### 2.1 _Graph_ to _Molecule_
 
 ```go
 func GraphToMolecule(graph *Graph) (*godbi.Molecule, map[string]map[string][]string) {
@@ -41,10 +41,10 @@ It translates _Graph_ to _Molecule_ and the associated oneofs in _map[string]map
 
 <br />
 
-### 2.2 From _Molecule_ to _Graph_
+### 2.2 _Molecule_ to _Graph_
 
 ```go
-MoleculeToGraph(molecule *godbi.Molecule, rest ...interface{}) *Graph
+func MoleculeToGraph(molecule *godbi.Molecule, rest ...interface{}) *Graph
 ```
 
 where the first element of _rest_ is the _oneof_ map, and the second _Graph_ package name.
