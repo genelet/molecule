@@ -6,7 +6,7 @@ In _molecule_, a table and its associated actions build up an _atom_. Atoms and 
 
 This package has pre-defined 6 RESTful actions, with which we can run most database tasks with little or no coding.
 
-For example, assuming we create a Postgres database to represent a gRPC protocol buffer, where each table represents a sub message, or a relationship between sub messages, or a protobuf data type etc. We receive such a message in gRPC call, and want to split it into tables and write to the database. Or we want to combine the table records back to the original procol buffer messages as a search result. With _molecule_, we can process these gRPC calls at once. Beneath the surface, _molecule_ will handle detailed reads and writes on related tables with given logic. 
+For example, assuming we create a Postgres database to represent a gRPC protocol buffer, where each table represents a sub message, or a relationship between sub messages, or a protobuf data type etc. We receive a protobuf message in gRPC call, and want to split it into tables and write to the database. Or we search tables and return results as original procolbuf messages. With _molecule_, we can process these gRPC calls at once. Beneath the surface, _molecule_ will handle detailed reads and writes with given logic. 
 
 Check *godoc* for package details:
 
@@ -14,10 +14,10 @@ Check *godoc* for package details:
 
 The package is fully tested for PostgreSQL, MySQL and SQLite.
 
-### Please also check the READMEs for two sub packages
+### Please also check the READMEs for two sub packages:
 
-- [rdb](https://github.com/genelet/molecule/tree/master/rdb) How to auto generate a simple molecule from database.
-- [gometa](https://github.com/genelet/molecule/tree/master/gometa) Molecule's GOLANG structs could be prepresented by protobuf. How to use it.
+- How to auto generate a simple molecule from database: [rdb](https://github.com/genelet/molecule/tree/master/rdb)
+- Molecule's GOLANG structs could be prepresented by protobuf: [gometa](https://github.com/genelet/molecule/tree/master/gometa)
 
 
 <br /><br />
