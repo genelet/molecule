@@ -7,7 +7,7 @@ meta such as primary keys, foreign keys, and auto increment fields etc.
 
 <br /><br />
 
-## Chapter 1. Creating Molecule 
+## Chapter 1. Molecule Creation 
 
 ```go
 func NewMolecule(db *sql.DB, driver godbi.DBType, dbName string) (*godbi.Molecule, error)
