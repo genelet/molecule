@@ -14,13 +14,13 @@ _Graph_ to _Molecule_.
 ## Chapter 1. Oneof
 
 _oneof_ is a powerful message type in protobuf, yet it is not associated with
-any native GO type. In this package, we associate element in _oneof_ to a list of table columns. If a table has mutiple _oneof_, they will be represented by string-to-list map, where the key is oneof's name and the value a list of columns.
+any native GO type. In this package, we associate elements in _oneof_ to a list of table columns. If a table has mutiple _oneof_, they will be represented by string-to-list map, where the key is oneof's name and the value a list of columns.
 
 ```go
 map[string][]string
 ```
 
-For a whole database which consists of many tables, all the _oneof_s are
+For a whole database which consists of many tables, all the oneofs are
 represented by
 
 ```go
@@ -37,7 +37,7 @@ map[tableName][string][]string
 func GraphToMolecule(graph *Graph) (*godbi.Molecule, map[string]map[string][]string) {
 ```
 
-It translates a _Graph_ to _Molecule_ and the associated oneofs in _map[string]map[string][]string_.
+It translates _Graph_ to _Molecule_ and the associated oneofs in _map[string]map[string][]string_.
 
 <br />
 
@@ -47,13 +47,13 @@ It translates a _Graph_ to _Molecule_ and the associated oneofs in _map[string]m
 MoleculeToGraph(molecule *godbi.Molecule, rest ...interface{}) *Graph
 ```
 
-where the first element of _rest_ is the _oneof_ map, and the second _Graph_'s package name.
+where the first element of _rest_ is the _oneof_ map, and the second _Graph_ package name.
 
 
 <br />
 
 ### 2.3 Errors
 
-Because of the exact matchings between protobuf messages to atoms, there is
+Because of the exact matchings between protobuf fields to table columns, there is
 no ambiguity in the functions. Every error should be panic and
 be fixed in the package.
