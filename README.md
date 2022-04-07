@@ -6,7 +6,9 @@ In _molecule_, a table and its associated actions build up an _atom_. Atoms and 
 
 While traditional REST acts on individual table, _molecule_ acts on whole RDB across all tables.
 
-This package has pre-defined 6 RESTful actions, with which we can run most database tasks with little or no coding. For example, think about a gRPC application. We can create a Postgres database representing data stream's protocol buffer, and a JSON config representing relationships between the tables (which are usually mapped to _protobuf messages_). With _molecule_, we can process gRPC's input and output calls at once. Beneath the surface, _molecule_ will handle detailed reads and writes on proper tables with given logic. 
+This package has pre-defined 6 RESTful actions, with which we can run most database tasks with little or no coding.
+
+For example, assuming we create a Postgres database to represent a gRPC protocol buffer, where each table represents a sub message, or a relationship between sub messages, or a protobuf data type etc. We receive such a message in gRPC call, and want to split it into tables and write to the database. Or we'd like to glue the tables back to the procobuf and report a search result. With _molecule_, we can process these gRPC calls at once. Beneath the surface, _molecule_ will handle detailed reads and writes on related tables with given logic. 
 
 Check *godoc* for package details:
 
