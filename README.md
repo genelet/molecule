@@ -543,7 +543,7 @@ type Atom struct {
 
 ### 3.8) RunAtomContext
 
-This is the main function for _action_. It takes input data _ARGS_ and optional constraint _extra_, and run action. The output is a slice of interface, and an optional error.
+This is the main function for _action_. It takes input data _ARGS_ and optional constraint _extra_, and acts. The output is a slice of interface, and an optional error.
 ```go
 RunActomContext(ctx context.Context, db *sql.DB, action string, ARGS interface{}, extra ...map[string]interface{}) ([]interface{}, error)
 ```
