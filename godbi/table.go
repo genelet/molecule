@@ -34,10 +34,6 @@ type Table struct {
 	dbDriver DBType
 }
 
-func (self *Table) GetTableName() string {
-	return self.TableName
-}
-
 func (self *Table) IsRecursive() bool {
 	for _, col := range self.Columns {
 		if col.ColumnName==self.Pks[0] && col.Recurse {

@@ -1,0 +1,2246 @@
+{
+  "atoms": [
+    {
+      "tableName": "actor",
+      "columns": [
+        {
+          "columnName": "aid",
+          "typeName": "int",
+          "label": "aid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "gender",
+          "typeName": "string",
+          "label": "gender",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "name",
+          "typeName": "string",
+          "label": "name",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "nationality",
+          "typeName": "string",
+          "label": "nationality",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "birth_city",
+          "typeName": "string",
+          "label": "birth_city",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "birth_year",
+          "typeName": "int",
+          "label": "birth_year",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "aid"
+      ],
+      "idAuto": "rowid",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "tableName": "cast",
+              "actionName": "topics",
+              "relateExtra": {
+                "aid": "aid"
+              },
+              "marker": "cast"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "tableName": "cast",
+              "actionName": "topics",
+              "relateExtra": {
+                "aid": "aid"
+              },
+              "marker": "cast"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "tableName": "cast",
+              "actionName": "insert",
+              "relateArgs": {
+                "aid": "aid"
+              },
+              "marker": "cast"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "tableName": "cast",
+              "actionName": "update",
+              "relateArgs": {
+                "aid": "aid"
+              },
+              "marker": "cast"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "tableName": "cast",
+              "actionName": "insupd",
+              "relateArgs": {
+                "aid": "aid"
+              },
+              "marker": "cast"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "Prepares": [
+            {
+              "tableName": "cast",
+              "actionName": "delecs",
+              "relateArgs": {
+                "aid": "aid"
+              }
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "actor",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "copyright",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "cid",
+          "typeName": "int",
+          "label": "cid",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "tableName": "cast",
+              "actionName": "topics",
+              "relateExtra": {
+                "msid": "msid"
+              },
+              "marker": "cast"
+            },
+            {
+              "tableName": "classification",
+              "actionName": "topics",
+              "relateExtra": {
+                "msid": "msid"
+              },
+              "marker": "classification"
+            },
+            {
+              "tableName": "directed_by",
+              "actionName": "topics",
+              "relateExtra": {
+                "msid": "msid"
+              },
+              "marker": "directed_by"
+            },
+            {
+              "tableName": "made_by",
+              "actionName": "topics",
+              "relateExtra": {
+                "msid": "msid"
+              },
+              "marker": "made_by"
+            },
+            {
+              "tableName": "tags",
+              "actionName": "topics",
+              "relateExtra": {
+                "msid": "msid"
+              },
+              "marker": "tags"
+            },
+            {
+              "tableName": "written_by",
+              "actionName": "topics",
+              "relateExtra": {
+                "msid": "msid"
+              },
+              "marker": "written_by"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "tableName": "cast",
+              "actionName": "topics",
+              "relateExtra": {
+                "msid": "msid"
+              },
+              "marker": "cast"
+            },
+            {
+              "tableName": "classification",
+              "actionName": "topics",
+              "relateExtra": {
+                "msid": "msid"
+              },
+              "marker": "classification"
+            },
+            {
+              "tableName": "directed_by",
+              "actionName": "topics",
+              "relateExtra": {
+                "msid": "msid"
+              },
+              "marker": "directed_by"
+            },
+            {
+              "tableName": "made_by",
+              "actionName": "topics",
+              "relateExtra": {
+                "msid": "msid"
+              },
+              "marker": "made_by"
+            },
+            {
+              "tableName": "tags",
+              "actionName": "topics",
+              "relateExtra": {
+                "msid": "msid"
+              },
+              "marker": "tags"
+            },
+            {
+              "tableName": "written_by",
+              "actionName": "topics",
+              "relateExtra": {
+                "msid": "msid"
+              },
+              "marker": "written_by"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "tableName": "cast",
+              "actionName": "insert",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "cast"
+            },
+            {
+              "tableName": "classification",
+              "actionName": "insert",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "classification"
+            },
+            {
+              "tableName": "directed_by",
+              "actionName": "insert",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "directed_by"
+            },
+            {
+              "tableName": "made_by",
+              "actionName": "insert",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "made_by"
+            },
+            {
+              "tableName": "tags",
+              "actionName": "insert",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "tags"
+            },
+            {
+              "tableName": "written_by",
+              "actionName": "insert",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "written_by"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "tableName": "cast",
+              "actionName": "update",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "cast"
+            },
+            {
+              "tableName": "classification",
+              "actionName": "update",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "classification"
+            },
+            {
+              "tableName": "directed_by",
+              "actionName": "update",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "directed_by"
+            },
+            {
+              "tableName": "made_by",
+              "actionName": "update",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "made_by"
+            },
+            {
+              "tableName": "tags",
+              "actionName": "update",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "tags"
+            },
+            {
+              "tableName": "written_by",
+              "actionName": "update",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "written_by"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "tableName": "cast",
+              "actionName": "insupd",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "cast"
+            },
+            {
+              "tableName": "classification",
+              "actionName": "insupd",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "classification"
+            },
+            {
+              "tableName": "directed_by",
+              "actionName": "insupd",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "directed_by"
+            },
+            {
+              "tableName": "made_by",
+              "actionName": "insupd",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "made_by"
+            },
+            {
+              "tableName": "tags",
+              "actionName": "insupd",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "tags"
+            },
+            {
+              "tableName": "written_by",
+              "actionName": "insupd",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "written_by"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "Prepares": [
+            {
+              "tableName": "cast",
+              "actionName": "delecs",
+              "relateArgs": {
+                "msid": "msid"
+              }
+            },
+            {
+              "tableName": "classification",
+              "actionName": "delecs",
+              "relateArgs": {
+                "msid": "msid"
+              }
+            },
+            {
+              "tableName": "directed_by",
+              "actionName": "delecs",
+              "relateArgs": {
+                "msid": "msid"
+              }
+            },
+            {
+              "tableName": "made_by",
+              "actionName": "delecs",
+              "relateArgs": {
+                "msid": "msid"
+              }
+            },
+            {
+              "tableName": "tags",
+              "actionName": "delecs",
+              "relateArgs": {
+                "msid": "msid"
+              }
+            },
+            {
+              "tableName": "written_by",
+              "actionName": "delecs",
+              "relateArgs": {
+                "msid": "msid"
+              }
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "copyright",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "cast",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "aid",
+          "typeName": "int",
+          "label": "aid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "role",
+          "typeName": "int",
+          "label": "role",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
+      "fks": [
+        {
+          "fkTable": "copyright",
+          "fkColumn": "msid",
+          "column": "msid"
+        },
+        {
+          "fkTable": "actor",
+          "fkColumn": "aid",
+          "column": "aid"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "Prepares": [
+            {
+              "tableName": "copyright",
+              "actionName": "insert",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            },
+            {
+              "tableName": "actor",
+              "actionName": "insert",
+              "relateArgs": {
+                "aid": "aid"
+              },
+              "marker": "actor"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "Prepares": [
+            {
+              "tableName": "copyright",
+              "actionName": "update",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            },
+            {
+              "tableName": "actor",
+              "actionName": "update",
+              "relateArgs": {
+                "aid": "aid"
+              },
+              "marker": "actor"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "Prepares": [
+            {
+              "tableName": "copyright",
+              "actionName": "insupd",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            },
+            {
+              "tableName": "actor",
+              "actionName": "insupd",
+              "relateArgs": {
+                "aid": "aid"
+              },
+              "marker": "actor"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "cast",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "genre",
+      "columns": [
+        {
+          "columnName": "gid",
+          "typeName": "int",
+          "label": "gid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "genre",
+          "typeName": "string",
+          "label": "genre",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "gid"
+      ],
+      "idAuto": "rowid",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "tableName": "classification",
+              "actionName": "topics",
+              "relateExtra": {
+                "gid": "gid"
+              },
+              "marker": "classification"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "tableName": "classification",
+              "actionName": "topics",
+              "relateExtra": {
+                "gid": "gid"
+              },
+              "marker": "classification"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "tableName": "classification",
+              "actionName": "insert",
+              "relateArgs": {
+                "gid": "gid"
+              },
+              "marker": "classification"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "tableName": "classification",
+              "actionName": "update",
+              "relateArgs": {
+                "gid": "gid"
+              },
+              "marker": "classification"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "tableName": "classification",
+              "actionName": "insupd",
+              "relateArgs": {
+                "gid": "gid"
+              },
+              "marker": "classification"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "Prepares": [
+            {
+              "tableName": "classification",
+              "actionName": "delecs",
+              "relateArgs": {
+                "gid": "gid"
+              }
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "genre",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "classification",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "gid",
+          "typeName": "int",
+          "label": "gid",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
+      "fks": [
+        {
+          "fkTable": "copyright",
+          "fkColumn": "msid",
+          "column": "msid"
+        },
+        {
+          "fkTable": "genre",
+          "fkColumn": "gid",
+          "column": "gid"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "Prepares": [
+            {
+              "tableName": "copyright",
+              "actionName": "insert",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            },
+            {
+              "tableName": "genre",
+              "actionName": "insert",
+              "relateArgs": {
+                "gid": "gid"
+              },
+              "marker": "genre"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "Prepares": [
+            {
+              "tableName": "copyright",
+              "actionName": "update",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            },
+            {
+              "tableName": "genre",
+              "actionName": "update",
+              "relateArgs": {
+                "gid": "gid"
+              },
+              "marker": "genre"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "Prepares": [
+            {
+              "tableName": "copyright",
+              "actionName": "insupd",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            },
+            {
+              "tableName": "genre",
+              "actionName": "insupd",
+              "relateArgs": {
+                "gid": "gid"
+              },
+              "marker": "genre"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "classification",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "company",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "name",
+          "typeName": "string",
+          "label": "name",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "country_code",
+          "typeName": "string",
+          "label": "country_code",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "company",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "director",
+      "columns": [
+        {
+          "columnName": "did",
+          "typeName": "int",
+          "label": "did",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "gender",
+          "typeName": "string",
+          "label": "gender",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "name",
+          "typeName": "string",
+          "label": "name",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "nationality",
+          "typeName": "string",
+          "label": "nationality",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "birth_city",
+          "typeName": "string",
+          "label": "birth_city",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "birth_year",
+          "typeName": "int",
+          "label": "birth_year",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "did"
+      ],
+      "idAuto": "rowid",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "tableName": "directed_by",
+              "actionName": "topics",
+              "relateExtra": {
+                "did": "did"
+              },
+              "marker": "directed_by"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "tableName": "directed_by",
+              "actionName": "topics",
+              "relateExtra": {
+                "did": "did"
+              },
+              "marker": "directed_by"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "tableName": "directed_by",
+              "actionName": "insert",
+              "relateArgs": {
+                "did": "did"
+              },
+              "marker": "directed_by"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "tableName": "directed_by",
+              "actionName": "update",
+              "relateArgs": {
+                "did": "did"
+              },
+              "marker": "directed_by"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "tableName": "directed_by",
+              "actionName": "insupd",
+              "relateArgs": {
+                "did": "did"
+              },
+              "marker": "directed_by"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "Prepares": [
+            {
+              "tableName": "directed_by",
+              "actionName": "delecs",
+              "relateArgs": {
+                "did": "did"
+              }
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "director",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "producer",
+      "columns": [
+        {
+          "columnName": "pid",
+          "typeName": "int",
+          "label": "pid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "gender",
+          "typeName": "string",
+          "label": "gender",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "name",
+          "typeName": "string",
+          "label": "name",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "nationality",
+          "typeName": "string",
+          "label": "nationality",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "birth_city",
+          "typeName": "string",
+          "label": "birth_city",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "birth_year",
+          "typeName": "int",
+          "label": "birth_year",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "pid"
+      ],
+      "idAuto": "rowid",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "tableName": "made_by",
+              "actionName": "topics",
+              "relateExtra": {
+                "pid": "pid"
+              },
+              "marker": "made_by"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "tableName": "made_by",
+              "actionName": "topics",
+              "relateExtra": {
+                "pid": "pid"
+              },
+              "marker": "made_by"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "tableName": "made_by",
+              "actionName": "insert",
+              "relateArgs": {
+                "pid": "pid"
+              },
+              "marker": "made_by"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "tableName": "made_by",
+              "actionName": "update",
+              "relateArgs": {
+                "pid": "pid"
+              },
+              "marker": "made_by"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "tableName": "made_by",
+              "actionName": "insupd",
+              "relateArgs": {
+                "pid": "pid"
+              },
+              "marker": "made_by"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "Prepares": [
+            {
+              "tableName": "made_by",
+              "actionName": "delecs",
+              "relateArgs": {
+                "pid": "pid"
+              }
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "producer",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "directed_by",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "did",
+          "typeName": "int",
+          "label": "did",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
+      "fks": [
+        {
+          "fkTable": "director",
+          "fkColumn": "did",
+          "column": "did"
+        },
+        {
+          "fkTable": "copyright",
+          "fkColumn": "msid",
+          "column": "msid"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "Prepares": [
+            {
+              "tableName": "director",
+              "actionName": "insert",
+              "relateArgs": {
+                "did": "did"
+              },
+              "marker": "director"
+            },
+            {
+              "tableName": "copyright",
+              "actionName": "insert",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "Prepares": [
+            {
+              "tableName": "director",
+              "actionName": "update",
+              "relateArgs": {
+                "did": "did"
+              },
+              "marker": "director"
+            },
+            {
+              "tableName": "copyright",
+              "actionName": "update",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "Prepares": [
+            {
+              "tableName": "director",
+              "actionName": "insupd",
+              "relateArgs": {
+                "did": "did"
+              },
+              "marker": "director"
+            },
+            {
+              "tableName": "copyright",
+              "actionName": "insupd",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "directed_by",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "keyword",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "keyword",
+          "typeName": "string",
+          "label": "keyword",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "tableName": "tags",
+              "actionName": "topics",
+              "relateExtra": {
+                "kid": "kid"
+              },
+              "marker": "tags"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "tableName": "tags",
+              "actionName": "topics",
+              "relateExtra": {
+                "kid": "kid"
+              },
+              "marker": "tags"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "tableName": "tags",
+              "actionName": "insert",
+              "relateArgs": {
+                "kid": "kid"
+              },
+              "marker": "tags"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "tableName": "tags",
+              "actionName": "update",
+              "relateArgs": {
+                "kid": "kid"
+              },
+              "marker": "tags"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "tableName": "tags",
+              "actionName": "insupd",
+              "relateArgs": {
+                "kid": "kid"
+              },
+              "marker": "tags"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "Prepares": [
+            {
+              "tableName": "tags",
+              "actionName": "delecs",
+              "relateArgs": {
+                "kid": "kid"
+              }
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "keyword",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "made_by",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "pid",
+          "typeName": "int",
+          "label": "pid",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
+      "fks": [
+        {
+          "fkTable": "producer",
+          "fkColumn": "pid",
+          "column": "pid"
+        },
+        {
+          "fkTable": "copyright",
+          "fkColumn": "msid",
+          "column": "msid"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "Prepares": [
+            {
+              "tableName": "producer",
+              "actionName": "insert",
+              "relateArgs": {
+                "pid": "pid"
+              },
+              "marker": "producer"
+            },
+            {
+              "tableName": "copyright",
+              "actionName": "insert",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "Prepares": [
+            {
+              "tableName": "producer",
+              "actionName": "update",
+              "relateArgs": {
+                "pid": "pid"
+              },
+              "marker": "producer"
+            },
+            {
+              "tableName": "copyright",
+              "actionName": "update",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "Prepares": [
+            {
+              "tableName": "producer",
+              "actionName": "insupd",
+              "relateArgs": {
+                "pid": "pid"
+              },
+              "marker": "producer"
+            },
+            {
+              "tableName": "copyright",
+              "actionName": "insupd",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "made_by",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "movie",
+      "columns": [
+        {
+          "columnName": "mid",
+          "typeName": "int",
+          "label": "mid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "title",
+          "typeName": "string",
+          "label": "title",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "release_year",
+          "typeName": "int",
+          "label": "release_year",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "title_aka",
+          "typeName": "string",
+          "label": "title_aka",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "budget",
+          "typeName": "string",
+          "label": "budget",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "mid"
+      ],
+      "idAuto": "rowid",
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "movie",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "tags",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "kid",
+          "typeName": "int",
+          "label": "kid",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
+      "fks": [
+        {
+          "fkTable": "keyword",
+          "fkColumn": "kid",
+          "column": "kid"
+        },
+        {
+          "fkTable": "copyright",
+          "fkColumn": "msid",
+          "column": "msid"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "Prepares": [
+            {
+              "tableName": "keyword",
+              "actionName": "insert",
+              "relateArgs": {
+                "kid": "kid"
+              },
+              "marker": "keyword"
+            },
+            {
+              "tableName": "copyright",
+              "actionName": "insert",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "Prepares": [
+            {
+              "tableName": "keyword",
+              "actionName": "update",
+              "relateArgs": {
+                "kid": "kid"
+              },
+              "marker": "keyword"
+            },
+            {
+              "tableName": "copyright",
+              "actionName": "update",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "Prepares": [
+            {
+              "tableName": "keyword",
+              "actionName": "insupd",
+              "relateArgs": {
+                "kid": "kid"
+              },
+              "marker": "keyword"
+            },
+            {
+              "tableName": "copyright",
+              "actionName": "insupd",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "tags",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "tv_series",
+      "columns": [
+        {
+          "columnName": "sid",
+          "typeName": "int",
+          "label": "sid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "title",
+          "typeName": "string",
+          "label": "title",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "release_year",
+          "typeName": "int",
+          "label": "release_year",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "num_of_seasons",
+          "typeName": "int",
+          "label": "num_of_seasons",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "num_of_episodes",
+          "typeName": "int",
+          "label": "num_of_episodes",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "title_aka",
+          "typeName": "string",
+          "label": "title_aka",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "budget",
+          "typeName": "string",
+          "label": "budget",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "sid"
+      ],
+      "idAuto": "rowid",
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "tv_series",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "writer",
+      "columns": [
+        {
+          "columnName": "wid",
+          "typeName": "int",
+          "label": "wid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "gender",
+          "typeName": "string",
+          "label": "gender",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "name",
+          "typeName": "int",
+          "label": "name",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "nationality",
+          "typeName": "int",
+          "label": "nationality",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "num_of_episodes",
+          "typeName": "int",
+          "label": "num_of_episodes",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "birth_city",
+          "typeName": "string",
+          "label": "birth_city",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "birth_year",
+          "typeName": "int",
+          "label": "birth_year",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "pks": [
+        "wid"
+      ],
+      "idAuto": "rowid",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "tableName": "written_by",
+              "actionName": "topics",
+              "relateExtra": {
+                "wid": "wid"
+              },
+              "marker": "written_by"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "tableName": "written_by",
+              "actionName": "topics",
+              "relateExtra": {
+                "wid": "wid"
+              },
+              "marker": "written_by"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "tableName": "written_by",
+              "actionName": "insert",
+              "relateArgs": {
+                "wid": "wid"
+              },
+              "marker": "written_by"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "tableName": "written_by",
+              "actionName": "update",
+              "relateArgs": {
+                "wid": "wid"
+              },
+              "marker": "written_by"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "tableName": "written_by",
+              "actionName": "insupd",
+              "relateArgs": {
+                "wid": "wid"
+              },
+              "marker": "written_by"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "Prepares": [
+            {
+              "tableName": "written_by",
+              "actionName": "delecs",
+              "relateArgs": {
+                "wid": "wid"
+              }
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "writer",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    },
+    {
+      "tableName": "written_by",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid",
+          "notnull": false,
+          "auto": false
+        },
+        {
+          "columnName": "wid",
+          "typeName": "int",
+          "label": "wid",
+          "notnull": false,
+          "auto": false
+        }
+      ],
+      "idAuto": "rowid",
+      "fks": [
+        {
+          "fkTable": "writer",
+          "fkColumn": "wid",
+          "column": "wid"
+        },
+        {
+          "fkTable": "copyright",
+          "fkColumn": "msid",
+          "column": "msid"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "Prepares": [
+            {
+              "tableName": "writer",
+              "actionName": "insert",
+              "relateArgs": {
+                "wid": "wid"
+              },
+              "marker": "writer"
+            },
+            {
+              "tableName": "copyright",
+              "actionName": "insert",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "update",
+          "Prepares": [
+            {
+              "tableName": "writer",
+              "actionName": "update",
+              "relateArgs": {
+                "wid": "wid"
+              },
+              "marker": "writer"
+            },
+            {
+              "tableName": "copyright",
+              "actionName": "update",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "insupd",
+          "Prepares": [
+            {
+              "tableName": "writer",
+              "actionName": "insupd",
+              "relateArgs": {
+                "wid": "wid"
+              },
+              "marker": "writer"
+            },
+            {
+              "tableName": "copyright",
+              "actionName": "insupd",
+              "relateArgs": {
+                "msid": "msid"
+              },
+              "marker": "copyright"
+            }
+          ],
+          "isDo": true
+        },
+        {
+          "actionName": "delete",
+          "isDo": true
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "tableName": "written_by",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ],
+          "isDo": true
+        }
+      ]
+    }
+  ],
+  "databaseName": "imdb",
+  "dbDriver": 2,
+  "Stopper": null
+}

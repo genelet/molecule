@@ -72,7 +72,7 @@ func (self *Molecule) GetAtom(atom string) Navigate {
 	if self.Atoms != nil {
 		for _, item := range self.Atoms {
 			tableObj := item.GetTable()
-			if tableObj.GetTableName() == atom {
+			if tableObj.TableName == atom {
 				tableObj.SetDBDriver(self.DBDriver)
 				return item
 			}

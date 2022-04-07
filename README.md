@@ -664,6 +664,11 @@ type Molecule struct {
     Atoms []Navigate `json:"atoms" hcl:"atoms"`
     DatabaseName string `json:"databaseName" hcl:"databaseName"`
     DBDriver DBType `json:"dbDriver" hcl:"dbDriver"`
+	Stopper
+}
+
+type Stopper interface {
+	Sign(tableObj *Table, item interface{}) bool
 }
 ```
 
@@ -678,6 +683,8 @@ where _DBDriver_ is one of database drive defined:
     TSMillisecond
     TSMicrosecond
 ```
+
+Stopper stops molecule's chain actions at an earlier stage defined by _Sign_ is true.
 
 <details>
     <summary>Click for Molecule Usage Sample</summary>
