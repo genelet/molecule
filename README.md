@@ -16,8 +16,8 @@ The package is fully tested for PostgreSQL, MySQL and SQLite.
 
 ### Please also check the READMEs for two sub packages:
 
-- Ho auto generate a simple molecule from database: [rdb](https://github.com/genelet/molecule/tree/master/rdb). This is a good starting point for first-time users.
-- Molecule's GOLANG structs could be prepresented by protobuf: [gometa](https://github.com/genelet/molecule/tree/master/gometa)
+- To auto generate a simple molecule from database: [rdb](https://github.com/genelet/molecule/tree/master/rdb). This is a good starting point for first-time users.
+- Instead of JSON, Molecule's meta could be prepresented by protobuf: [gometa](https://github.com/genelet/molecule/tree/master/gometa)
 
 
 <br /><br />
