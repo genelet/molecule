@@ -1,6 +1,8 @@
 package godbi
 
 import (
+"encoding/json"
+"io/ioutil"
 	"testing"
 )
 
@@ -15,6 +17,14 @@ func TestMoleculeContext(t *testing.T) {
 	}
 	molecule := &Molecule{Atoms:[]Navigate{ta, tb}}
 	MoleculeGeneral(t, molecule)
+}
+
+func TestMoleculeEasy(t *testing.T) {
+	dat, err := ioutil.ReadFile("molecule.json")
+	if err != nil { t.Fatal(err) }
+	m := new(Molecule)
+	err = json.Unmarshal(dat, m)
+	if err != nil { t.Fatal(err) }
 }
 
 func TestMoleculeParse(t *testing.T) {

@@ -37,6 +37,15 @@ type g struct {
 	DBDriver DBType         `json:"dbDriver" hcl:"dbDriver"`
 }
 
+func (self *Molecule) UnmarshalJSON(bs []byte) error {
+	m, err := NewMoleculeJson(bs)
+	if err != nil {
+		return err
+	}
+	*self = *m
+	return nil
+}
+
 func NewMoleculeJson(dat json.RawMessage, cmap ...map[string][]Capability) (*Molecule, error) {
 	tmps := new(g)
 	if err := json.Unmarshal(dat, &tmps); err != nil {

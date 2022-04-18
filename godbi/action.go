@@ -19,6 +19,7 @@ type Capability interface {
 	RunActionContext(context.Context, *sql.DB, *Table, map[string]interface{}, ...map[string]interface{}) ([]interface{}, error)
 }
 
+// Action is the base struct for REST actions. Prepares and Nextpages are edges to other tables before and after the action.
 type Action struct {
 	ActionName string `json:"actionName,omitempty" hcl:"actionName,optional"`
 	Prepares  []*Connection `json:"Prepares,omitempty" hcl:"Prepares,block"`

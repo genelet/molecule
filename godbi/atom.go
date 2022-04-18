@@ -15,11 +15,13 @@ type Navigate interface {
 	RunAtomContext(context.Context, *sql.DB, string, interface{}, ...map[string]interface{}) ([]interface{}, error)
 }
 
+// Atom is a table with multiple actions
 type Atom struct {
 	Table
 	Actions []Capability `json:"actions,omitempty" hcl:"actions,optional"`
 }
 
+// NewAtomJsonFile parse a disk file to atom
 func NewAtomJsonFile(fn string, custom ...Capability) (*Atom, error) {
 	dat, err := ioutil.ReadFile(fn)
 	if err != nil {
@@ -33,16 +35,32 @@ type m struct {
 	Actions []interface{} `json:"actions,omitempty" hcl:"actions,optional"`
 }
 
+// Atom is an unmarshaler
+func (self *Atom) UnmarshalJSON(bs []byte) error {
+	tmp := &m{}
+	if err := json.Unmarshal(bs, tmp); err != nil {
+		return err
+	}
+	actions, err := assertion(tmp.Actions)
+	if err != nil {
+		return err
+	}
+	self.Table = tmp.Table
+	self.Actions = actions
+	return nil
+}
+
+// NewAtomJson parses bytes to atom
 func NewAtomJson(dat json.RawMessage, custom ...Capability) (*Atom, error) {
 	tmp := &m{}
 	if err := json.Unmarshal(dat, tmp); err != nil {
 		return nil, err
 	}
-	actions, err := Assertion(tmp.Actions, custom...)
+	actions, err := assertion(tmp.Actions, custom...)
 	return &Atom{tmp.Table, actions}, err
 }
 
-func Assertion(actions []interface{}, custom ...Capability) ([]Capability, error) {
+func assertion(actions []interface{}, custom ...Capability) ([]Capability, error) {
 	var trans []Capability
 
 	for _, item := range actions {
@@ -91,10 +109,12 @@ func Assertion(actions []interface{}, custom ...Capability) ([]Capability, error
 	return trans, nil
 }
 
+// GetTable gets the table from atom
 func (self *Atom) GetTable() *Table {
 	return &self.Table
 }
 
+// GetAction gets a specific action by name
 func (self *Atom) GetAction(action string) Capability {
 	if self.Actions != nil {
 		for _, item := range self.Actions {
@@ -107,10 +127,12 @@ func (self *Atom) GetAction(action string) Capability {
 	return nil
 }
 
+// RunAtom runs an action by name
 func (self *Atom) RunAtom(db *sql.DB, action string, ARGS interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
 	return self.RunAtomContext(context.Background(), db, action, ARGS, extra...)
 }
 
+// RunAtom runs an action with context by name
 func (self *Atom) RunAtomContext(ctx context.Context, db *sql.DB, action string, ARGS interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
     obj := self.GetAction(action)
     if obj == nil {

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 )
 
+// Insert struct for table insert
 type Insert struct {
 	Action
 }

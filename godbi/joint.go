@@ -1,5 +1,6 @@
 package godbi
 
+// Joint struct describes the joined search
 type Joint struct {
 	TableName string `json:"tableName" hcl:"tableName,label"`
 	Alias     string `json:"alias,omitempty" hcl:"alias,optional"`

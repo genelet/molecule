@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// Delecs is a special Topics action that returns all foreign keys
 type Delecs struct {
 	Action
 }

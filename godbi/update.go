@@ -5,6 +5,7 @@ import (
 	"database/sql"
 )
 
+// Update struct for row update by primary key
 type Update struct {
 	Action
 	Empties []string `json:"empties,omitempty" hcl:"empties,optional"`

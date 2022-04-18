@@ -5,6 +5,7 @@ import (
 	"database/sql"
 )
 
+// Edit struct for search one specific row by primary key
 type Edit struct {
 	Action
 	Joints []*Joint `json:"joins,omitempty" hcl:"join,block"`

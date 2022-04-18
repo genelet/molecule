@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// Topics struct for search multiple rows by constraints
 type Topics struct {
 	Action
 	Joints []*Joint    `json:"joints,omitempty" hcl:"joints,block"`

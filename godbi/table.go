@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Col defines table column in GO struct
 type Col struct {
 	ColumnName string  `json:"columnName" hcl:"columnName"`
 	TypeName string    `json:"typeName" hcl:"typeName"`
@@ -18,12 +19,14 @@ type Col struct {
 	Recurse bool       `json:"recurse,omitempty" hcl:"recurse,optional"`
 }
 
+// Fk defines foreign key struct
 type Fk struct {
 	FkTable  string    `json:"fkTable" hcl:"fkTable"`
 	FkColumn string    `json:"fkColumn" hcl:"fkColumn"`
 	Column   string    `json:"column" hcl:"column"`
 }
 
+// Table defines a table by name, columns, primary key, foreign keys, auto id and unique columns
 type Table struct {
 	TableName string   `json:"tableName" hcl:"tableName"`
     Columns   []*Col   `json:"columns" hcl:"columns"`
@@ -34,6 +37,7 @@ type Table struct {
 	dbDriver DBType
 }
 
+// IsRecursive indicates if table references to itself in one to multiple relations
 func (self *Table) IsRecursive() bool {
 	for _, col := range self.Columns {
 		if col.ColumnName==self.Pks[0] && col.Recurse {
@@ -43,6 +47,7 @@ func (self *Table) IsRecursive() bool {
 	return false
 }
 
+// RecursiveColumn returns the name of the resursive column
 func (self *Table) RecursiveColumn() string {
 	for _, col := range self.Columns {
 		if col.ColumnName==self.Pks[0] || !col.Recurse { continue }
@@ -51,8 +56,9 @@ func (self *Table) RecursiveColumn() string {
 	return ""
 }
 
-func (self *Table) SetDBDriver(is DBType) {
-	self.dbDriver = is
+// SetDBDriver sets the driver type
+func (self *Table) SetDBDriver(driver DBType) {
+	self.dbDriver = driver
 }
 
 // refreshes args by checking if column's label exists a key.

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 )
 
+// Delete struct for row deletion by primary key
 type Delete struct {
 	Action
 }

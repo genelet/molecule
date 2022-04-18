@@ -5,6 +5,7 @@ import (
 	"database/sql"
 )
 
+// Insupd struct for table update, if not existing according to the unique key, do insert
 type Insupd struct {
 	Action
 }
