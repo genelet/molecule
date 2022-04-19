@@ -1,4 +1,5 @@
 {
+"table":{
 	"tableName": "m_a",
 	"pks": [ "id" ],
 	"idAuto": "id",
@@ -8,7 +9,8 @@
 {"columnName":"z", "label":"z", "typeName":"string" },
 {"columnName":"id", "label":"id", "typeName":"int", "auto":true }
     ],
-    "uniques":["x","y"],
+    "uniques":["x","y"]
+},
 	"actions": [
 		{
 			"actionName": "insupd",

@@ -72,6 +72,7 @@ func TestAtomRun(t *testing.T) {
         x varchar(8), y varchar(8), z varchar(8))`)
 
 	str := `{
+"table": {
     "tableName":"m_a",
     "pks":["id"],
     "idAuto":"id",
@@ -81,7 +82,8 @@ func TestAtomRun(t *testing.T) {
 {"columnName":"z", "label":"z", "typeName":"string" },
 {"columnName":"id", "label":"id", "typeName":"int", "auto":true }
     ],
-	"uniques":["x","y"],
+	"uniques":["x","y"]
+},
 	"actions": [
 	{
 		"isDo":true,
@@ -203,6 +205,7 @@ func TestAtomRunMultiple(t *testing.T) {
         x varchar(8), y varchar(8), z varchar(8))`)
 
 	str := `{
+"table": {
     "tableName":"m_a",
     "pks":["id"],
     "idAuto":"id",
@@ -212,7 +215,8 @@ func TestAtomRunMultiple(t *testing.T) {
 {"columnName":"z", "label":"z", "typeName":"string" },
 {"columnName":"id", "label":"id", "typeName":"int", "auto":true }
     ],
-	"uniques":["x","y"],
+	"uniques":["x","y"]
+},
 	"actions": [
 	{
 		"actionName": "insert"

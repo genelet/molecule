@@ -17,7 +17,7 @@ type Navigate interface {
 
 // Atom is a table with multiple actions
 type Atom struct {
-	Table
+	Table                `json:"table" hcl:"table"`
 	Actions []Capability `json:"actions,omitempty" hcl:"actions,optional"`
 }
 
@@ -31,7 +31,7 @@ func NewAtomJsonFile(fn string, custom ...Capability) (*Atom, error) {
 }
 
 type m struct {
-	Table
+	Table                 `json:"table" hcl:"table"`
 	Actions []interface{} `json:"actions,omitempty" hcl:"actions,optional"`
 }
 
@@ -45,8 +45,7 @@ func (self *Atom) UnmarshalJSON(bs []byte) error {
 	if err != nil {
 		return err
 	}
-	self.Table = tmp.Table
-	self.Actions = actions
+	self = &Atom{tmp.Table, actions}
 	return nil
 }
 

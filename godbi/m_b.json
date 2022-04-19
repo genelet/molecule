@@ -1,4 +1,5 @@
 {
+"table":{
 	"tableName": "m_b",
 	"pks": [ "tid" ],
 	"idAuto": "tid",
@@ -6,7 +7,8 @@
 {"columnName":"tid", "label":"tid", "typeName":"int", "notnull": true, "auto":true},
 {"columnName":"child", "label":"child", "typeName":"string"},
 {"columnName":"id", "label":"id", "typeName":"int", "notnull": true}
-    ],
+    ]
+},
 	"actions": [
 		{
 			"actionName": "insert",

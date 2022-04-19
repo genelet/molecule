@@ -1,4 +1,5 @@
 {
+"table": {
 	"fks": [ {"fkTable":"", "fkColumn":"adv_id", "column":"adv_id"} ],
 	"tableName":"adv_campaign",
 	"pks":["campaign_id"],
@@ -8,7 +9,8 @@
 		{"columnName":"campaign_id","label":"campaign_id","typeName":"INT","notnull":true,"auto":true},
 		{"columnName":"campaign_name","label":"campaign_name","typeName":"VARCHAR","notnull":true}
 	],
-	"uniques":["adv_id","campaign_id"],
+	"uniques":["adv_id","campaign_id"]
+},
 	"actions":[
 		{
 			"actionName": "topics",
