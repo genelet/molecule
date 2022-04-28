@@ -25,6 +25,11 @@ func TestMoleculeEasy(t *testing.T) {
 	m := new(Molecule)
 	err = json.Unmarshal(dat, m)
 	if err != nil { t.Fatal(err) }
+	if m.Atoms[0].GetTable().TableName != "m_a" ||
+		m.Atoms[1].GetTable().TableName != "m_b" {
+		t.Errorf("%#v", m.Atoms[0])
+		t.Errorf("%#v", m.Atoms[1])
+	}
 }
 
 func TestMoleculeParse(t *testing.T) {

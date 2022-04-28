@@ -3,6 +3,7 @@ package godbi
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"testing"
 )
 
@@ -103,6 +104,16 @@ func TestAtomRun(t *testing.T) {
 		"actionName": "edit"
 	}
 ]}`
+	x := Atom{}
+	err = json.Unmarshal([]byte(str), &x)
+	if x.Actions[0].GetActionName() != "insert" ||
+	x.Actions[1].GetActionName() != "insupd" ||
+	x.Actions[2].GetActionName() != "delete" ||
+	x.Actions[3].GetActionName() != "topics" ||
+	x.Actions[4].GetActionName() != "edit" {
+		t.Errorf("%#v", x)
+	}
+
 	atom, err := NewAtomJson([]byte(str))
 	if err != nil {
 		t.Fatal(err)

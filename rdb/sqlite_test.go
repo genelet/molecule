@@ -15,19 +15,18 @@ func TestSQLite(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer db.Close()
-
 	object := newSQLite(databaseName)
 	molecule, err := object.GetMolecule(db)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	/*
+/*
 		err = os.WriteFile(databaseName + ".json", []byte(molecule.String()), 0666)
 		if err != nil {
 			t.Fatal(err)
 		}
-	*/
+*/
 
 	data, err := os.ReadFile(databaseName + ".json")
 	if err != nil {

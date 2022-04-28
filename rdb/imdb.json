@@ -1,55 +1,57 @@
 {
   "atoms": [
     {
-      "tableName": "actor",
-      "columns": [
-        {
-          "columnName": "aid",
-          "typeName": "int",
-          "label": "aid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "gender",
-          "typeName": "string",
-          "label": "gender",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "name",
-          "typeName": "string",
-          "label": "name",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "nationality",
-          "typeName": "string",
-          "label": "nationality",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "birth_city",
-          "typeName": "string",
-          "label": "birth_city",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "birth_year",
-          "typeName": "int",
-          "label": "birth_year",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "aid"
-      ],
-      "idAuto": "rowid",
+      "table": {
+        "tableName": "actor",
+        "columns": [
+          {
+            "columnName": "aid",
+            "typeName": "int",
+            "label": "aid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "gender",
+            "typeName": "string",
+            "label": "gender",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "name",
+            "typeName": "string",
+            "label": "name",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "nationality",
+            "typeName": "string",
+            "label": "nationality",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "birth_city",
+            "typeName": "string",
+            "label": "birth_city",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "birth_year",
+            "typeName": "int",
+            "label": "birth_year",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "aid"
+        ],
+        "idAuto": "rowid"
+      },
       "actions": [
         {
           "actionName": "edit",
@@ -148,34 +150,36 @@
       ]
     },
     {
-      "tableName": "copyright",
-      "columns": [
-        {
-          "columnName": "id",
-          "typeName": "int",
-          "label": "id",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "msid",
-          "typeName": "int",
-          "label": "msid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "cid",
-          "typeName": "int",
-          "label": "cid",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "id"
-      ],
-      "idAuto": "rowid",
+      "table": {
+        "tableName": "copyright",
+        "columns": [
+          {
+            "columnName": "id",
+            "typeName": "int",
+            "label": "id",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "msid",
+            "typeName": "int",
+            "label": "msid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "cid",
+            "typeName": "int",
+            "label": "cid",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "id"
+        ],
+        "idAuto": "rowid"
+      },
       "actions": [
         {
           "actionName": "edit",
@@ -509,53 +513,55 @@
       ]
     },
     {
-      "tableName": "cast",
-      "columns": [
-        {
-          "columnName": "id",
-          "typeName": "int",
-          "label": "id",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "msid",
-          "typeName": "int",
-          "label": "msid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "aid",
-          "typeName": "int",
-          "label": "aid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "role",
-          "typeName": "int",
-          "label": "role",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "id"
-      ],
-      "idAuto": "rowid",
-      "fks": [
-        {
-          "fkTable": "copyright",
-          "fkColumn": "msid",
-          "column": "msid"
-        },
-        {
-          "fkTable": "actor",
-          "fkColumn": "aid",
-          "column": "aid"
-        }
-      ],
+      "table": {
+        "tableName": "cast",
+        "columns": [
+          {
+            "columnName": "id",
+            "typeName": "int",
+            "label": "id",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "msid",
+            "typeName": "int",
+            "label": "msid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "aid",
+            "typeName": "int",
+            "label": "aid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "role",
+            "typeName": "int",
+            "label": "role",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "id"
+        ],
+        "idAuto": "rowid",
+        "fks": [
+          {
+            "fkTable": "copyright",
+            "fkColumn": "msid",
+            "column": "msid"
+          },
+          {
+            "fkTable": "actor",
+            "fkColumn": "aid",
+            "column": "aid"
+          }
+        ]
+      },
       "actions": [
         {
           "actionName": "edit"
@@ -649,27 +655,29 @@
       ]
     },
     {
-      "tableName": "genre",
-      "columns": [
-        {
-          "columnName": "gid",
-          "typeName": "int",
-          "label": "gid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "genre",
-          "typeName": "string",
-          "label": "genre",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "gid"
-      ],
-      "idAuto": "rowid",
+      "table": {
+        "tableName": "genre",
+        "columns": [
+          {
+            "columnName": "gid",
+            "typeName": "int",
+            "label": "gid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "genre",
+            "typeName": "string",
+            "label": "genre",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "gid"
+        ],
+        "idAuto": "rowid"
+      },
       "actions": [
         {
           "actionName": "edit",
@@ -768,46 +776,48 @@
       ]
     },
     {
-      "tableName": "classification",
-      "columns": [
-        {
-          "columnName": "id",
-          "typeName": "int",
-          "label": "id",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "msid",
-          "typeName": "int",
-          "label": "msid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "gid",
-          "typeName": "int",
-          "label": "gid",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "id"
-      ],
-      "idAuto": "rowid",
-      "fks": [
-        {
-          "fkTable": "copyright",
-          "fkColumn": "msid",
-          "column": "msid"
-        },
-        {
-          "fkTable": "genre",
-          "fkColumn": "gid",
-          "column": "gid"
-        }
-      ],
+      "table": {
+        "tableName": "classification",
+        "columns": [
+          {
+            "columnName": "id",
+            "typeName": "int",
+            "label": "id",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "msid",
+            "typeName": "int",
+            "label": "msid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "gid",
+            "typeName": "int",
+            "label": "gid",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "id"
+        ],
+        "idAuto": "rowid",
+        "fks": [
+          {
+            "fkTable": "copyright",
+            "fkColumn": "msid",
+            "column": "msid"
+          },
+          {
+            "fkTable": "genre",
+            "fkColumn": "gid",
+            "column": "gid"
+          }
+        ]
+      },
       "actions": [
         {
           "actionName": "edit"
@@ -901,34 +911,36 @@
       ]
     },
     {
-      "tableName": "company",
-      "columns": [
-        {
-          "columnName": "id",
-          "typeName": "int",
-          "label": "id",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "name",
-          "typeName": "string",
-          "label": "name",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "country_code",
-          "typeName": "string",
-          "label": "country_code",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "id"
-      ],
-      "idAuto": "rowid",
+      "table": {
+        "tableName": "company",
+        "columns": [
+          {
+            "columnName": "id",
+            "typeName": "int",
+            "label": "id",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "name",
+            "typeName": "string",
+            "label": "name",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "country_code",
+            "typeName": "string",
+            "label": "country_code",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "id"
+        ],
+        "idAuto": "rowid"
+      },
       "actions": [
         {
           "actionName": "edit"
@@ -968,55 +980,57 @@
       ]
     },
     {
-      "tableName": "director",
-      "columns": [
-        {
-          "columnName": "did",
-          "typeName": "int",
-          "label": "did",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "gender",
-          "typeName": "string",
-          "label": "gender",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "name",
-          "typeName": "string",
-          "label": "name",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "nationality",
-          "typeName": "string",
-          "label": "nationality",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "birth_city",
-          "typeName": "string",
-          "label": "birth_city",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "birth_year",
-          "typeName": "int",
-          "label": "birth_year",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "did"
-      ],
-      "idAuto": "rowid",
+      "table": {
+        "tableName": "director",
+        "columns": [
+          {
+            "columnName": "did",
+            "typeName": "int",
+            "label": "did",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "gender",
+            "typeName": "string",
+            "label": "gender",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "name",
+            "typeName": "string",
+            "label": "name",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "nationality",
+            "typeName": "string",
+            "label": "nationality",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "birth_city",
+            "typeName": "string",
+            "label": "birth_city",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "birth_year",
+            "typeName": "int",
+            "label": "birth_year",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "did"
+        ],
+        "idAuto": "rowid"
+      },
       "actions": [
         {
           "actionName": "edit",
@@ -1115,55 +1129,57 @@
       ]
     },
     {
-      "tableName": "producer",
-      "columns": [
-        {
-          "columnName": "pid",
-          "typeName": "int",
-          "label": "pid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "gender",
-          "typeName": "string",
-          "label": "gender",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "name",
-          "typeName": "string",
-          "label": "name",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "nationality",
-          "typeName": "string",
-          "label": "nationality",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "birth_city",
-          "typeName": "string",
-          "label": "birth_city",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "birth_year",
-          "typeName": "int",
-          "label": "birth_year",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "pid"
-      ],
-      "idAuto": "rowid",
+      "table": {
+        "tableName": "producer",
+        "columns": [
+          {
+            "columnName": "pid",
+            "typeName": "int",
+            "label": "pid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "gender",
+            "typeName": "string",
+            "label": "gender",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "name",
+            "typeName": "string",
+            "label": "name",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "nationality",
+            "typeName": "string",
+            "label": "nationality",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "birth_city",
+            "typeName": "string",
+            "label": "birth_city",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "birth_year",
+            "typeName": "int",
+            "label": "birth_year",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "pid"
+        ],
+        "idAuto": "rowid"
+      },
       "actions": [
         {
           "actionName": "edit",
@@ -1262,46 +1278,48 @@
       ]
     },
     {
-      "tableName": "directed_by",
-      "columns": [
-        {
-          "columnName": "id",
-          "typeName": "int",
-          "label": "id",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "msid",
-          "typeName": "int",
-          "label": "msid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "did",
-          "typeName": "int",
-          "label": "did",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "id"
-      ],
-      "idAuto": "rowid",
-      "fks": [
-        {
-          "fkTable": "director",
-          "fkColumn": "did",
-          "column": "did"
-        },
-        {
-          "fkTable": "copyright",
-          "fkColumn": "msid",
-          "column": "msid"
-        }
-      ],
+      "table": {
+        "tableName": "directed_by",
+        "columns": [
+          {
+            "columnName": "id",
+            "typeName": "int",
+            "label": "id",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "msid",
+            "typeName": "int",
+            "label": "msid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "did",
+            "typeName": "int",
+            "label": "did",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "id"
+        ],
+        "idAuto": "rowid",
+        "fks": [
+          {
+            "fkTable": "director",
+            "fkColumn": "did",
+            "column": "did"
+          },
+          {
+            "fkTable": "copyright",
+            "fkColumn": "msid",
+            "column": "msid"
+          }
+        ]
+      },
       "actions": [
         {
           "actionName": "edit"
@@ -1395,27 +1413,29 @@
       ]
     },
     {
-      "tableName": "keyword",
-      "columns": [
-        {
-          "columnName": "id",
-          "typeName": "int",
-          "label": "id",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "keyword",
-          "typeName": "string",
-          "label": "keyword",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "id"
-      ],
-      "idAuto": "rowid",
+      "table": {
+        "tableName": "keyword",
+        "columns": [
+          {
+            "columnName": "id",
+            "typeName": "int",
+            "label": "id",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "keyword",
+            "typeName": "string",
+            "label": "keyword",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "id"
+        ],
+        "idAuto": "rowid"
+      },
       "actions": [
         {
           "actionName": "edit",
@@ -1514,46 +1534,48 @@
       ]
     },
     {
-      "tableName": "made_by",
-      "columns": [
-        {
-          "columnName": "id",
-          "typeName": "int",
-          "label": "id",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "msid",
-          "typeName": "int",
-          "label": "msid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "pid",
-          "typeName": "int",
-          "label": "pid",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "id"
-      ],
-      "idAuto": "rowid",
-      "fks": [
-        {
-          "fkTable": "producer",
-          "fkColumn": "pid",
-          "column": "pid"
-        },
-        {
-          "fkTable": "copyright",
-          "fkColumn": "msid",
-          "column": "msid"
-        }
-      ],
+      "table": {
+        "tableName": "made_by",
+        "columns": [
+          {
+            "columnName": "id",
+            "typeName": "int",
+            "label": "id",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "msid",
+            "typeName": "int",
+            "label": "msid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "pid",
+            "typeName": "int",
+            "label": "pid",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "id"
+        ],
+        "idAuto": "rowid",
+        "fks": [
+          {
+            "fkTable": "producer",
+            "fkColumn": "pid",
+            "column": "pid"
+          },
+          {
+            "fkTable": "copyright",
+            "fkColumn": "msid",
+            "column": "msid"
+          }
+        ]
+      },
       "actions": [
         {
           "actionName": "edit"
@@ -1647,48 +1669,50 @@
       ]
     },
     {
-      "tableName": "movie",
-      "columns": [
-        {
-          "columnName": "mid",
-          "typeName": "int",
-          "label": "mid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "title",
-          "typeName": "string",
-          "label": "title",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "release_year",
-          "typeName": "int",
-          "label": "release_year",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "title_aka",
-          "typeName": "string",
-          "label": "title_aka",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "budget",
-          "typeName": "string",
-          "label": "budget",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "mid"
-      ],
-      "idAuto": "rowid",
+      "table": {
+        "tableName": "movie",
+        "columns": [
+          {
+            "columnName": "mid",
+            "typeName": "int",
+            "label": "mid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "title",
+            "typeName": "string",
+            "label": "title",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "release_year",
+            "typeName": "int",
+            "label": "release_year",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "title_aka",
+            "typeName": "string",
+            "label": "title_aka",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "budget",
+            "typeName": "string",
+            "label": "budget",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "mid"
+        ],
+        "idAuto": "rowid"
+      },
       "actions": [
         {
           "actionName": "edit"
@@ -1728,46 +1752,48 @@
       ]
     },
     {
-      "tableName": "tags",
-      "columns": [
-        {
-          "columnName": "id",
-          "typeName": "int",
-          "label": "id",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "msid",
-          "typeName": "int",
-          "label": "msid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "kid",
-          "typeName": "int",
-          "label": "kid",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "id"
-      ],
-      "idAuto": "rowid",
-      "fks": [
-        {
-          "fkTable": "keyword",
-          "fkColumn": "kid",
-          "column": "kid"
-        },
-        {
-          "fkTable": "copyright",
-          "fkColumn": "msid",
-          "column": "msid"
-        }
-      ],
+      "table": {
+        "tableName": "tags",
+        "columns": [
+          {
+            "columnName": "id",
+            "typeName": "int",
+            "label": "id",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "msid",
+            "typeName": "int",
+            "label": "msid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "kid",
+            "typeName": "int",
+            "label": "kid",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "id"
+        ],
+        "idAuto": "rowid",
+        "fks": [
+          {
+            "fkTable": "keyword",
+            "fkColumn": "kid",
+            "column": "kid"
+          },
+          {
+            "fkTable": "copyright",
+            "fkColumn": "msid",
+            "column": "msid"
+          }
+        ]
+      },
       "actions": [
         {
           "actionName": "edit"
@@ -1861,62 +1887,64 @@
       ]
     },
     {
-      "tableName": "tv_series",
-      "columns": [
-        {
-          "columnName": "sid",
-          "typeName": "int",
-          "label": "sid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "title",
-          "typeName": "string",
-          "label": "title",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "release_year",
-          "typeName": "int",
-          "label": "release_year",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "num_of_seasons",
-          "typeName": "int",
-          "label": "num_of_seasons",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "num_of_episodes",
-          "typeName": "int",
-          "label": "num_of_episodes",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "title_aka",
-          "typeName": "string",
-          "label": "title_aka",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "budget",
-          "typeName": "string",
-          "label": "budget",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "sid"
-      ],
-      "idAuto": "rowid",
+      "table": {
+        "tableName": "tv_series",
+        "columns": [
+          {
+            "columnName": "sid",
+            "typeName": "int",
+            "label": "sid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "title",
+            "typeName": "string",
+            "label": "title",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "release_year",
+            "typeName": "int",
+            "label": "release_year",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "num_of_seasons",
+            "typeName": "int",
+            "label": "num_of_seasons",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "num_of_episodes",
+            "typeName": "int",
+            "label": "num_of_episodes",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "title_aka",
+            "typeName": "string",
+            "label": "title_aka",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "budget",
+            "typeName": "string",
+            "label": "budget",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "sid"
+        ],
+        "idAuto": "rowid"
+      },
       "actions": [
         {
           "actionName": "edit"
@@ -1956,62 +1984,64 @@
       ]
     },
     {
-      "tableName": "writer",
-      "columns": [
-        {
-          "columnName": "wid",
-          "typeName": "int",
-          "label": "wid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "gender",
-          "typeName": "string",
-          "label": "gender",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "name",
-          "typeName": "int",
-          "label": "name",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "nationality",
-          "typeName": "int",
-          "label": "nationality",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "num_of_episodes",
-          "typeName": "int",
-          "label": "num_of_episodes",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "birth_city",
-          "typeName": "string",
-          "label": "birth_city",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "birth_year",
-          "typeName": "int",
-          "label": "birth_year",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "pks": [
-        "wid"
-      ],
-      "idAuto": "rowid",
+      "table": {
+        "tableName": "writer",
+        "columns": [
+          {
+            "columnName": "wid",
+            "typeName": "int",
+            "label": "wid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "gender",
+            "typeName": "string",
+            "label": "gender",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "name",
+            "typeName": "int",
+            "label": "name",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "nationality",
+            "typeName": "int",
+            "label": "nationality",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "num_of_episodes",
+            "typeName": "int",
+            "label": "num_of_episodes",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "birth_city",
+            "typeName": "string",
+            "label": "birth_city",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "birth_year",
+            "typeName": "int",
+            "label": "birth_year",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "pks": [
+          "wid"
+        ],
+        "idAuto": "rowid"
+      },
       "actions": [
         {
           "actionName": "edit",
@@ -2110,43 +2140,45 @@
       ]
     },
     {
-      "tableName": "written_by",
-      "columns": [
-        {
-          "columnName": "id",
-          "typeName": "int",
-          "label": "id",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "msid",
-          "typeName": "int",
-          "label": "msid",
-          "notnull": false,
-          "auto": false
-        },
-        {
-          "columnName": "wid",
-          "typeName": "int",
-          "label": "wid",
-          "notnull": false,
-          "auto": false
-        }
-      ],
-      "idAuto": "rowid",
-      "fks": [
-        {
-          "fkTable": "writer",
-          "fkColumn": "wid",
-          "column": "wid"
-        },
-        {
-          "fkTable": "copyright",
-          "fkColumn": "msid",
-          "column": "msid"
-        }
-      ],
+      "table": {
+        "tableName": "written_by",
+        "columns": [
+          {
+            "columnName": "id",
+            "typeName": "int",
+            "label": "id",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "msid",
+            "typeName": "int",
+            "label": "msid",
+            "notnull": false,
+            "auto": false
+          },
+          {
+            "columnName": "wid",
+            "typeName": "int",
+            "label": "wid",
+            "notnull": false,
+            "auto": false
+          }
+        ],
+        "idAuto": "rowid",
+        "fks": [
+          {
+            "fkTable": "writer",
+            "fkColumn": "wid",
+            "column": "wid"
+          },
+          {
+            "fkTable": "copyright",
+            "fkColumn": "msid",
+            "column": "msid"
+          }
+        ]
+      },
       "actions": [
         {
           "actionName": "edit"

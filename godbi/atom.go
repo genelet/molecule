@@ -45,7 +45,11 @@ func (self *Atom) UnmarshalJSON(bs []byte) error {
 	if err != nil {
 		return err
 	}
-	self = &Atom{tmp.Table, actions}
+	self.Table = tmp.Table
+	self.Actions = nil
+	for _, item := range actions {
+		self.Actions = append(self.Actions, item)
+	}
 	return nil
 }
 
