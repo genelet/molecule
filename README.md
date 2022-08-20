@@ -2,11 +2,10 @@
 
 While REST acts on individual table, _molecule_ acts on whole database across all tables:
 - a database table and its associated actions build up an _atom_
-- atoms build up a _molecule_
-
-_molecule_ can run complex RESTful actions on selective data fields in multiple tables. The relationships, usually described in JSON, can be logic operators, data filters, action triggers and SQL foreign-key constraints etc. We can use _molecule_ to build gRPC or GraphQL easily.
-
-This package has pre-defined 6 RESTful actions, with which we can run most database tasks with little or no coding.
+- a relationship, usually described in JSON, can be logic operator, data filter, action trigger and SQL foreign-key constraint between tables etc.
+- atoms and relationships build up a _molecule_
+- we can run most database tasks with little or no coding in _molecule_
+- _molecule_ is a tool to build gRPC or GraphQL easily.
 
 For example, assuming we create a Postgres database to represent a gRPC protocol buffer, where each table represents a sub message, or a relationship between sub messages, or a protobuf data type etc. We receive a protobuf message in gRPC call, and want to split it into tables and write to the database. Or we search tables and return results as original procolbuf messages. With _molecule_, we can process these gRPC calls at once. Beneath the surface, _molecule_ will handle detailed reads and writes with given logic. 
 
