@@ -902,7 +902,7 @@ where _cmap_ is for customized actions not in the default list.
 We can run any action on any atom by names using _RunConext_. The output is data as a slice of interface, and an optional error.
 
 ```go
-func (self *Molecule) RunContext(ctx context.Context, atom, action string, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]map[string]interface{}, error)
+func (self *Molecule) RunContext(ctx context.Context, db *sql.DB, atom, action string, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]map[string]interface{}, error)
 ```
 
 Unlike traditional REST, which is limited to a sinlge table and sinle action, _RunContext_ will act on related tables and trigger associated actions.
