@@ -12,6 +12,16 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
+type Restful interface {
+    Write(context.Context, *sql.DB, proto.Message, ...map[string]interface{}) ([]interface{}, error)
+    Read(context.Context, *sql.DB, proto.Message, ...map[string]interface{}) ([]interface{}, error)
+    List(context.Context, *sql.DB, proto.Message, ...map[string]interface{}) ([]interface{}, error)
+    Update(context.Context, *sql.DB, proto.Message, ...map[string]interface{}) ([]interface{}, error)
+    Delete(context.Context, *sql.DB, proto.Message, ...map[string]interface{}) ([]interface{}, error)
+}
+
+var _ Restful = (*Rest)(nil)
+
 // Rest handles simple restful actions on Protobuf message,
 // using the engine described by Molecule.
 //
