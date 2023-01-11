@@ -13,8 +13,6 @@ import (
 )
 
 type Restful interface {
-	SetPK(string)
-	GetPK() string
     Write(context.Context, *sql.DB, proto.Message, ...map[string]interface{}) ([]interface{}, error)
     Read(context.Context, *sql.DB, proto.Message, ...map[string]interface{}) ([]interface{}, error)
     List(context.Context, *sql.DB, proto.Message, ...map[string]interface{}) ([]interface{}, error)
@@ -28,33 +26,24 @@ var _ Restful = (*Rest)(nil)
 // using the engine described by Molecule.
 //
 type Rest struct {
-	*godbi.Molecule
-	pk   string
+	Graph
+	mole *godbi.Molecule
 }
 
-func NewRest(raw []byte, pk ...string) (*Rest, error) {
-	m, err := godbi.NewMoleculeJson(json.RawMessage(raw))
+func NewRest(graph *Graph) *Rest {
+	mole, _ := GraphToMolecule(graph)
+	return &Rest{*graph, mole}
+}
+
+func NewRestByte(bs []byte) (*Rest, error) {
+	graph := new(Graph)
+	um := protojson.UnmarshalOptions{DiscardUnknown: true, AllowPartial: true}
+    err := um.Unmarshal(bs, graph)
 	if err != nil {
 		return nil, err
 	}
 
-	if pk == nil {
-		return &Rest{Molecule:m}, nil
-	}
-	return &Rest{Molecule:m, pk: pk[0]}, nil
-}
-
-func NewGraphRest(graph *Graph) *Rest {
-	m, _ := GraphToMolecule(graph)
-	return &Rest{Molecule:m, pk: graph.PkName}
-}
-
-func (self *Rest) GetPK() string {
-	return self.pk
-}
-
-func (self *Rest) SetPK(pk string) {
-	self.pk = pk
+	return NewRest(graph), nil
 }
 
 func (self *Rest) nameArgsFromPBExtra(check bool, pb proto.Message, extra ...map[string]interface{}) (string, map[string]interface{}, error) {
@@ -67,10 +56,10 @@ func (self *Rest) nameArgsFromPBExtra(check bool, pb proto.Message, extra ...map
 		}
 	}
 	if check {
-		if self.pk == "" {
+		if self.Graph.PkName == "" {
 			return "", nil, fmt.Errorf("primary key not defined")
 		}
-		if _, ok := args[self.pk]; !ok {
+		if _, ok := args[self.Graph.PkName]; !ok {
 			return "", nil, fmt.Errorf("primary key is empty")
 		}
 	}
@@ -82,9 +71,9 @@ func (self *Rest) nameArgsFromPBExtra(check bool, pb proto.Message, extra ...map
 func (self *Rest) List(ctx context.Context, db *sql.DB, pb proto.Message, extra ...map[string]interface{}) ([]interface{}, error ) {
 	name := string(pb.ProtoReflect().Descriptor().Name())
 	if extra != nil {
-		return self.Molecule.RunContext(ctx, db, name, "topics", nil, extra[0])
+		return self.mole.RunContext(ctx, db, name, "topics", nil, extra[0])
 	}
-	return self.Molecule.RunContext(ctx, db, name, "topics")
+	return self.mole.RunContext(ctx, db, name, "topics")
 }
 
 // Get proto message from database by the primary key defined in constraint extra.
@@ -95,7 +84,7 @@ func (self *Rest) Read(ctx context.Context, db *sql.DB, pb proto.Message, extra 
         return nil, err
     }
 
-	return self.Molecule.RunContext(ctx, db, name, "edit", args)
+	return self.mole.RunContext(ctx, db, name, "edit", args)
 }
 
 // Insert protobuf message into database, with optional input data in extra.
@@ -105,7 +94,7 @@ func (self *Rest) Write(ctx context.Context, db *sql.DB, pb proto.Message, extra
     if err != nil {
         return nil, err
     }
-    return self.Molecule.RunContext(ctx, db, name, "insert", args)
+    return self.mole.RunContext(ctx, db, name, "insert", args)
 }
 
 // Update protobuf message in database by the primary key defined in contraint extra.
@@ -115,7 +104,7 @@ func (self *Rest) Update(ctx context.Context, db *sql.DB, pb proto.Message, extr
     if err != nil {
         return nil, err
     }
-    return self.Molecule.RunContext(ctx, db, name, "update", args)
+    return self.mole.RunContext(ctx, db, name, "update", args)
 }
 
 // Delete protobuf message from database by the primary key defined in constraint extra.
@@ -125,7 +114,7 @@ func (self *Rest) Delete(ctx context.Context, db *sql.DB, pb proto.Message, extr
     if err != nil {
         return nil, err
     }
-    return self.Molecule.RunContext(ctx, db, name, "delecs", args)
+    return self.mole.RunContext(ctx, db, name, "delecs", args)
 }
 
 func ProtobufToMap(pb proto.Message) (map[string]interface{}, error) {
