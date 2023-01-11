@@ -10,12 +10,17 @@ import (
 //
 func MoleculeToGraph(molecule *godbi.Molecule, rest ...interface{}) *Graph {
 	var oneofs map[string]map[string][]string
-	var packageName string
-	if rest != nil && rest[0] != nil {
-		oneofs = rest[0].(map[string]map[string][]string)
-	}
-	if rest != nil && rest[1] != nil {
-		packageName = rest[1].(string)
+	var packageName, pkName string
+	if rest != nil {
+		if rest[0] != nil {
+			oneofs = rest[0].(map[string]map[string][]string)
+		}
+		if len(rest) >= 2 && rest[1] != nil {
+			packageName = rest[1].(string)
+		}
+		if len(rest) >= 3 && rest[2] != nil {
+			pkName = rest[2].(string)
+		} 
 	}
 	var nodes []*Node
 	for _, atom := range molecule.Atoms {
@@ -28,7 +33,7 @@ func MoleculeToGraph(molecule *godbi.Molecule, rest ...interface{}) *Graph {
 		nodes = append(nodes, node)
 	}
 
-	return &Graph{PackageName: packageName, DatabaseName: molecule.DatabaseName, Nodes: nodes}
+	return &Graph{PackageName: packageName, DatabaseName: molecule.DatabaseName, PkName: pkName, Nodes: nodes}
 }
 
 func atomToNode(atom godbi.Navigate, oneofs ...map[string][]string) *Node {

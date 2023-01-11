@@ -13,6 +13,8 @@ import (
 )
 
 type Restful interface {
+	SetPK(string)
+	GetPK() string
     Write(context.Context, *sql.DB, proto.Message, ...map[string]interface{}) ([]interface{}, error)
     Read(context.Context, *sql.DB, proto.Message, ...map[string]interface{}) ([]interface{}, error)
     List(context.Context, *sql.DB, proto.Message, ...map[string]interface{}) ([]interface{}, error)
@@ -30,12 +32,21 @@ type Rest struct {
 	pk   string
 }
 
-func NewRest(raw []byte) (*Rest, error) {
+func NewRest(raw []byte, pk ...string) (*Rest, error) {
 	m, err := godbi.NewMoleculeJson(json.RawMessage(raw))
 	if err != nil {
 		return nil, err
 	}
-	return &Rest{Molecule:m}, nil
+
+	if pk == nil {
+		return &Rest{Molecule:m}, nil
+	}
+	return &Rest{Molecule:m, pk: pk[0]}, nil
+}
+
+func NewGraphRest(graph *Graph) *Rest {
+	m, _ := GraphToMolecule(graph)
+	return &Rest{Molecule:m, pk: graph.PkName}
 }
 
 func (self *Rest) GetPK() string {

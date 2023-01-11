@@ -142,5 +142,6 @@ message Node {
 message Graph {
   string packageName = 1;
   string databaseName = 2;
-  repeated Node nodes = 3;
+  string pkName = 3;
+  repeated Node nodes = 4;
 }

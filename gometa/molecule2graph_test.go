@@ -7,14 +7,10 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
-const (
-	PACKAGE = "gometa"
-)
-
 func tryit(m *godbi.Molecule, t *testing.T) {
-	g := MoleculeToGraph(m, nil, PACKAGE)
+	g := MoleculeToGraph(m, nil, "gometa", "Graph_id")
 	m1, oneofs := GraphToMolecule(g)
-	g1 := MoleculeToGraph(m1, oneofs, PACKAGE)
+	g1 := MoleculeToGraph(m1, oneofs, "gometa", "Graph_id")
 	if !proto.Equal(g, g1) {
 		if g.PackageName != g1.PackageName {
 			t.Errorf("%s",  g.PackageName)
