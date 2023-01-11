@@ -21,7 +21,7 @@ func GraphToMolecule(graph *Graph) (*godbi.Molecule, map[string]map[string][]str
 			oneofs[node.AtomTable.TableName] = hash
 		}
 	}
-	return &godbi.Molecule{Atoms: atoms, DatabaseName: graph.DatabaseName}, oneofs
+	return &godbi.Molecule{Atoms: atoms, DatabaseName: graph.DatabaseName, DBDriver: godbi.DBType(graph.DBDriver)}, oneofs
 }
 
 func nodeToAtom(node *Node) (*godbi.Atom, map[string][]string) {

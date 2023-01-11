@@ -141,10 +141,12 @@ message Node {
 // Graph
 message Graph {
   string packageName = 1;
-  string databaseName = 2;
-  string pkTable = 3;
-  string pkName = 4;
-  map<string, string> pksTable = 5;
-  map<string, string> pks = 6;
-  repeated Node nodes = 7;
+  string goPackageName = 2;
+  string databaseName = 3;
+  int32 dBDriver = 4;
+  string pkTable = 5;
+  string pkName = 6;
+  map<string, string> pksTable = 7;
+  map<string, string> pks = 8;
+  repeated Node nodes = 9;
 }

@@ -15,7 +15,7 @@ import (
 //
 func MoleculeToGraph(molecule *godbi.Molecule, args ...interface{}) *Graph {
 	var oneofs map[string]map[string][]string
-	var packageName, pkTable, pkName string
+	var packageName, goPackageName, pkTable, pkName string
 	var pksTable, pks map[string]string
 	if args != nil {
 		if args[0] != nil {
@@ -25,16 +25,19 @@ func MoleculeToGraph(molecule *godbi.Molecule, args ...interface{}) *Graph {
 			packageName = args[1].(string)
 		}
 		if len(args) >= 3 && args[2] != nil {
-			pkTable = args[2].(string)
+			goPackageName = args[2].(string)
 		}
 		if len(args) >= 4 && args[3] != nil {
-			pkName = args[3].(string)
+			pkTable = args[3].(string)
 		}
 		if len(args) >= 5 && args[4] != nil {
-			pksTable = args[4].(map[string]string)
+			pkName = args[4].(string)
 		}
 		if len(args) >= 6 && args[5] != nil {
-			pks = args[5].(map[string]string)
+			pksTable = args[5].(map[string]string)
+		}
+		if len(args) >= 7 && args[6] != nil {
+			pks = args[6].(map[string]string)
 		}
 	}
 	var nodes []*Node
@@ -48,7 +51,7 @@ func MoleculeToGraph(molecule *godbi.Molecule, args ...interface{}) *Graph {
 		nodes = append(nodes, node)
 	}
 
-	return &Graph{PackageName: packageName, DatabaseName: molecule.DatabaseName, PkTable: pkTable, PkName: pkName, PksTable: pksTable, Pks: pks, Nodes: nodes}
+	return &Graph{PackageName: packageName, DatabaseName: molecule.DatabaseName, PkTable: pkTable, PkName: pkName, GoPackageName: goPackageName, DBDriver: int32(molecule.DBDriver), PksTable: pksTable, Pks: pks, Nodes: nodes}
 }
 
 func atomToNode(atom godbi.Navigate, oneofs ...map[string][]string) *Node {
