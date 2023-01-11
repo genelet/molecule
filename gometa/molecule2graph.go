@@ -4,23 +4,38 @@ import (
 	"github.com/genelet/molecule/godbi"
 )
 
-// MoleculeToGraph translates molecule (plus possible oneof map, and package name) into protobuf
+// MoleculeToGraph translates molecule into protobuf. args:
 //
-// oneofs format: map[atomName][oneofName][list of fields]
+//  - oneofs format: map[atomName][oneofName][list of fields]
+//  - package name
+//  - primary table name
+//  - primary table's pk
+//  - child to parent table mapping
+//  - table name to pk mapping
 //
-func MoleculeToGraph(molecule *godbi.Molecule, rest ...interface{}) *Graph {
+func MoleculeToGraph(molecule *godbi.Molecule, args ...interface{}) *Graph {
 	var oneofs map[string]map[string][]string
-	var packageName, pkName string
-	if rest != nil {
-		if rest[0] != nil {
-			oneofs = rest[0].(map[string]map[string][]string)
+	var packageName, pkTable, pkName string
+	var pksTable, pks map[string]string
+	if args != nil {
+		if args[0] != nil {
+			oneofs = args[0].(map[string]map[string][]string)
 		}
-		if len(rest) >= 2 && rest[1] != nil {
-			packageName = rest[1].(string)
+		if len(args) >= 2 && args[1] != nil {
+			packageName = args[1].(string)
 		}
-		if len(rest) >= 3 && rest[2] != nil {
-			pkName = rest[2].(string)
-		} 
+		if len(args) >= 3 && args[2] != nil {
+			pkTable = args[2].(string)
+		}
+		if len(args) >= 4 && args[3] != nil {
+			pkName = args[3].(string)
+		}
+		if len(args) >= 5 && args[4] != nil {
+			pksTable = args[4].(map[string]string)
+		}
+		if len(args) >= 6 && args[5] != nil {
+			pks = args[5].(map[string]string)
+		}
 	}
 	var nodes []*Node
 	for _, atom := range molecule.Atoms {
@@ -33,7 +48,7 @@ func MoleculeToGraph(molecule *godbi.Molecule, rest ...interface{}) *Graph {
 		nodes = append(nodes, node)
 	}
 
-	return &Graph{PackageName: packageName, DatabaseName: molecule.DatabaseName, PkName: pkName, Nodes: nodes}
+	return &Graph{PackageName: packageName, DatabaseName: molecule.DatabaseName, PkTable: pkTable, PkName: pkName, PksTable: pksTable, Pks: pks, Nodes: nodes}
 }
 
 func atomToNode(atom godbi.Navigate, oneofs ...map[string][]string) *Node {

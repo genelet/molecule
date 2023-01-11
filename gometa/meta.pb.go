@@ -137,10 +137,13 @@ type Graph struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	PackageName  string  `protobuf:"bytes,1,opt,name=packageName,proto3" json:"packageName,omitempty"`
-	DatabaseName string  `protobuf:"bytes,2,opt,name=databaseName,proto3" json:"databaseName,omitempty"`
-	PkName       string  `protobuf:"bytes,3,opt,name=pkName,proto3" json:"pkName,omitempty"`
-	Nodes        []*Node `protobuf:"bytes,4,rep,name=nodes,proto3" json:"nodes,omitempty"`
+	PackageName  string            `protobuf:"bytes,1,opt,name=packageName,proto3" json:"packageName,omitempty"`
+	DatabaseName string            `protobuf:"bytes,2,opt,name=databaseName,proto3" json:"databaseName,omitempty"`
+	PkTable      string            `protobuf:"bytes,3,opt,name=pkTable,proto3" json:"pkTable,omitempty"`
+	PkName       string            `protobuf:"bytes,4,opt,name=pkName,proto3" json:"pkName,omitempty"`
+	PksTable     map[string]string `protobuf:"bytes,5,rep,name=pksTable,proto3" json:"pksTable,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Pks          map[string]string `protobuf:"bytes,6,rep,name=pks,proto3" json:"pks,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Nodes        []*Node           `protobuf:"bytes,7,rep,name=nodes,proto3" json:"nodes,omitempty"`
 }
 
 func (x *Graph) Reset() {
@@ -189,11 +192,32 @@ func (x *Graph) GetDatabaseName() string {
 	return ""
 }
 
+func (x *Graph) GetPkTable() string {
+	if x != nil {
+		return x.PkTable
+	}
+	return ""
+}
+
 func (x *Graph) GetPkName() string {
 	if x != nil {
 		return x.PkName
 	}
 	return ""
+}
+
+func (x *Graph) GetPksTable() map[string]string {
+	if x != nil {
+		return x.PksTable
+	}
+	return nil
+}
+
+func (x *Graph) GetPks() map[string]string {
+	if x != nil {
+		return x.Pks
+	}
+	return nil
 }
 
 func (x *Graph) GetNodes() []*Node {
@@ -1624,17 +1648,32 @@ var file_meta_proto_rawDesc = []byte{
 	0x01, 0x12, 0x10, 0x0a, 0x0c, 0x43, 0x4f, 0x4e, 0x4e, 0x45, 0x43, 0x54, 0x41, 0x72, 0x72, 0x61,
 	0x79, 0x10, 0x02, 0x12, 0x0e, 0x0a, 0x0a, 0x43, 0x4f, 0x4e, 0x4e, 0x45, 0x43, 0x54, 0x4d, 0x61,
 	0x70, 0x10, 0x03, 0x12, 0x0f, 0x0a, 0x0b, 0x43, 0x4f, 0x4e, 0x4e, 0x45, 0x43, 0x54, 0x4d, 0x61,
-	0x6e, 0x79, 0x10, 0x04, 0x22, 0x8b, 0x01, 0x0a, 0x05, 0x47, 0x72, 0x61, 0x70, 0x68, 0x12, 0x20,
+	0x6e, 0x79, 0x10, 0x04, 0x22, 0x81, 0x03, 0x0a, 0x05, 0x47, 0x72, 0x61, 0x70, 0x68, 0x12, 0x20,
 	0x0a, 0x0b, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20,
 	0x01, 0x28, 0x09, 0x52, 0x0b, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x4e, 0x61, 0x6d, 0x65,
 	0x12, 0x22, 0x0a, 0x0c, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x4e, 0x61, 0x6d, 0x65,
 	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65,
-	0x4e, 0x61, 0x6d, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x6b, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x03,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x70, 0x6b, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x24, 0x0a, 0x05,
-	0x6e, 0x6f, 0x64, 0x65, 0x73, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x6d, 0x6f,
-	0x6c, 0x65, 0x63, 0x75, 0x6c, 0x65, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x52, 0x05, 0x6e, 0x6f, 0x64,
-	0x65, 0x73, 0x42, 0x0a, 0x5a, 0x08, 0x2e, 0x2f, 0x67, 0x6f, 0x6d, 0x65, 0x74, 0x61, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x4e, 0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x70, 0x6b, 0x54, 0x61, 0x62, 0x6c, 0x65, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x70, 0x6b, 0x54, 0x61, 0x62, 0x6c, 0x65, 0x12, 0x16,
+	0x0a, 0x06, 0x70, 0x6b, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06,
+	0x70, 0x6b, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x39, 0x0a, 0x08, 0x70, 0x6b, 0x73, 0x54, 0x61, 0x62,
+	0x6c, 0x65, 0x18, 0x05, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x6d, 0x6f, 0x6c, 0x65, 0x63,
+	0x75, 0x6c, 0x65, 0x2e, 0x47, 0x72, 0x61, 0x70, 0x68, 0x2e, 0x50, 0x6b, 0x73, 0x54, 0x61, 0x62,
+	0x6c, 0x65, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x08, 0x70, 0x6b, 0x73, 0x54, 0x61, 0x62, 0x6c,
+	0x65, 0x12, 0x2a, 0x0a, 0x03, 0x70, 0x6b, 0x73, 0x18, 0x06, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x18,
+	0x2e, 0x6d, 0x6f, 0x6c, 0x65, 0x63, 0x75, 0x6c, 0x65, 0x2e, 0x47, 0x72, 0x61, 0x70, 0x68, 0x2e,
+	0x50, 0x6b, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x03, 0x70, 0x6b, 0x73, 0x12, 0x24, 0x0a,
+	0x05, 0x6e, 0x6f, 0x64, 0x65, 0x73, 0x18, 0x07, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x6d,
+	0x6f, 0x6c, 0x65, 0x63, 0x75, 0x6c, 0x65, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x52, 0x05, 0x6e, 0x6f,
+	0x64, 0x65, 0x73, 0x1a, 0x3b, 0x0a, 0x0d, 0x50, 0x6b, 0x73, 0x54, 0x61, 0x62, 0x6c, 0x65, 0x45,
+	0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01,
+	0x1a, 0x36, 0x0a, 0x08, 0x50, 0x6b, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03,
+	0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14,
+	0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76,
+	0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x42, 0x0a, 0x5a, 0x08, 0x2e, 0x2f, 0x67, 0x6f,
+	0x6d, 0x65, 0x74, 0x61, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1650,7 +1689,7 @@ func file_meta_proto_rawDescGZIP() []byte {
 }
 
 var file_meta_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_meta_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_meta_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_meta_proto_goTypes = []interface{}{
 	(Node_Actions_ConnectType)(0),   // 0: molecule.Node.Actions.ConnectType
 	(*Node)(nil),                    // 1: molecule.Node
@@ -1670,52 +1709,56 @@ var file_meta_proto_goTypes = []interface{}{
 	(*Node_Actions_Topics)(nil),     // 15: molecule.Node.Actions.Topics
 	nil,                             // 16: molecule.Node.Actions.Connection.RelateArgsEntry
 	nil,                             // 17: molecule.Node.Actions.Connection.RelateExtraEntry
-	(*any1.Any)(nil),                // 18: google.protobuf.Any
+	nil,                             // 18: molecule.Graph.PksTableEntry
+	nil,                             // 19: molecule.Graph.PksEntry
+	(*any1.Any)(nil),                // 20: google.protobuf.Any
 }
 var file_meta_proto_depIdxs = []int32{
 	3,  // 0: molecule.Node.atomTable:type_name -> molecule.Node.Table
 	4,  // 1: molecule.Node.atomActions:type_name -> molecule.Node.Actions
-	1,  // 2: molecule.Graph.nodes:type_name -> molecule.Node
-	5,  // 3: molecule.Node.Table.columns:type_name -> molecule.Node.Table.Col
-	6,  // 4: molecule.Node.Table.fks:type_name -> molecule.Node.Table.Fk
-	8,  // 5: molecule.Node.Actions.insertItem:type_name -> molecule.Node.Actions.Insert
-	9,  // 6: molecule.Node.Actions.updateItem:type_name -> molecule.Node.Actions.Update
-	10, // 7: molecule.Node.Actions.insupdItem:type_name -> molecule.Node.Actions.Insupd
-	11, // 8: molecule.Node.Actions.deleteItem:type_name -> molecule.Node.Actions.Delete
-	12, // 9: molecule.Node.Actions.delecsItem:type_name -> molecule.Node.Actions.Delecs
-	14, // 10: molecule.Node.Actions.editItem:type_name -> molecule.Node.Actions.Edit
-	15, // 11: molecule.Node.Actions.topicsItem:type_name -> molecule.Node.Actions.Topics
-	16, // 12: molecule.Node.Actions.Connection.relateArgs:type_name -> molecule.Node.Actions.Connection.RelateArgsEntry
-	17, // 13: molecule.Node.Actions.Connection.relateExtra:type_name -> molecule.Node.Actions.Connection.RelateExtraEntry
-	0,  // 14: molecule.Node.Actions.Connection.dimension:type_name -> molecule.Node.Actions.ConnectType
-	7,  // 15: molecule.Node.Actions.Insert.prepareConnects:type_name -> molecule.Node.Actions.Connection
-	7,  // 16: molecule.Node.Actions.Insert.nextpageConnects:type_name -> molecule.Node.Actions.Connection
-	18, // 17: molecule.Node.Actions.Insert.appendix:type_name -> google.protobuf.Any
-	7,  // 18: molecule.Node.Actions.Update.prepareConnects:type_name -> molecule.Node.Actions.Connection
-	7,  // 19: molecule.Node.Actions.Update.nextpageConnects:type_name -> molecule.Node.Actions.Connection
-	18, // 20: molecule.Node.Actions.Update.appendix:type_name -> google.protobuf.Any
-	7,  // 21: molecule.Node.Actions.Insupd.prepareConnects:type_name -> molecule.Node.Actions.Connection
-	7,  // 22: molecule.Node.Actions.Insupd.nextpageConnects:type_name -> molecule.Node.Actions.Connection
-	18, // 23: molecule.Node.Actions.Insupd.appendix:type_name -> google.protobuf.Any
-	7,  // 24: molecule.Node.Actions.Delete.prepareConnects:type_name -> molecule.Node.Actions.Connection
-	7,  // 25: molecule.Node.Actions.Delete.nextpageConnects:type_name -> molecule.Node.Actions.Connection
-	18, // 26: molecule.Node.Actions.Delete.appendix:type_name -> google.protobuf.Any
-	7,  // 27: molecule.Node.Actions.Delecs.prepareConnects:type_name -> molecule.Node.Actions.Connection
-	7,  // 28: molecule.Node.Actions.Delecs.nextpageConnects:type_name -> molecule.Node.Actions.Connection
-	18, // 29: molecule.Node.Actions.Delecs.appendix:type_name -> google.protobuf.Any
-	7,  // 30: molecule.Node.Actions.Edit.prepareConnects:type_name -> molecule.Node.Actions.Connection
-	7,  // 31: molecule.Node.Actions.Edit.nextpageConnects:type_name -> molecule.Node.Actions.Connection
-	13, // 32: molecule.Node.Actions.Edit.joints:type_name -> molecule.Node.Actions.Joint
-	18, // 33: molecule.Node.Actions.Edit.appendix:type_name -> google.protobuf.Any
-	7,  // 34: molecule.Node.Actions.Topics.prepareConnects:type_name -> molecule.Node.Actions.Connection
-	7,  // 35: molecule.Node.Actions.Topics.nextpageConnects:type_name -> molecule.Node.Actions.Connection
-	13, // 36: molecule.Node.Actions.Topics.joints:type_name -> molecule.Node.Actions.Joint
-	18, // 37: molecule.Node.Actions.Topics.appendix:type_name -> google.protobuf.Any
-	38, // [38:38] is the sub-list for method output_type
-	38, // [38:38] is the sub-list for method input_type
-	38, // [38:38] is the sub-list for extension type_name
-	38, // [38:38] is the sub-list for extension extendee
-	0,  // [0:38] is the sub-list for field type_name
+	18, // 2: molecule.Graph.pksTable:type_name -> molecule.Graph.PksTableEntry
+	19, // 3: molecule.Graph.pks:type_name -> molecule.Graph.PksEntry
+	1,  // 4: molecule.Graph.nodes:type_name -> molecule.Node
+	5,  // 5: molecule.Node.Table.columns:type_name -> molecule.Node.Table.Col
+	6,  // 6: molecule.Node.Table.fks:type_name -> molecule.Node.Table.Fk
+	8,  // 7: molecule.Node.Actions.insertItem:type_name -> molecule.Node.Actions.Insert
+	9,  // 8: molecule.Node.Actions.updateItem:type_name -> molecule.Node.Actions.Update
+	10, // 9: molecule.Node.Actions.insupdItem:type_name -> molecule.Node.Actions.Insupd
+	11, // 10: molecule.Node.Actions.deleteItem:type_name -> molecule.Node.Actions.Delete
+	12, // 11: molecule.Node.Actions.delecsItem:type_name -> molecule.Node.Actions.Delecs
+	14, // 12: molecule.Node.Actions.editItem:type_name -> molecule.Node.Actions.Edit
+	15, // 13: molecule.Node.Actions.topicsItem:type_name -> molecule.Node.Actions.Topics
+	16, // 14: molecule.Node.Actions.Connection.relateArgs:type_name -> molecule.Node.Actions.Connection.RelateArgsEntry
+	17, // 15: molecule.Node.Actions.Connection.relateExtra:type_name -> molecule.Node.Actions.Connection.RelateExtraEntry
+	0,  // 16: molecule.Node.Actions.Connection.dimension:type_name -> molecule.Node.Actions.ConnectType
+	7,  // 17: molecule.Node.Actions.Insert.prepareConnects:type_name -> molecule.Node.Actions.Connection
+	7,  // 18: molecule.Node.Actions.Insert.nextpageConnects:type_name -> molecule.Node.Actions.Connection
+	20, // 19: molecule.Node.Actions.Insert.appendix:type_name -> google.protobuf.Any
+	7,  // 20: molecule.Node.Actions.Update.prepareConnects:type_name -> molecule.Node.Actions.Connection
+	7,  // 21: molecule.Node.Actions.Update.nextpageConnects:type_name -> molecule.Node.Actions.Connection
+	20, // 22: molecule.Node.Actions.Update.appendix:type_name -> google.protobuf.Any
+	7,  // 23: molecule.Node.Actions.Insupd.prepareConnects:type_name -> molecule.Node.Actions.Connection
+	7,  // 24: molecule.Node.Actions.Insupd.nextpageConnects:type_name -> molecule.Node.Actions.Connection
+	20, // 25: molecule.Node.Actions.Insupd.appendix:type_name -> google.protobuf.Any
+	7,  // 26: molecule.Node.Actions.Delete.prepareConnects:type_name -> molecule.Node.Actions.Connection
+	7,  // 27: molecule.Node.Actions.Delete.nextpageConnects:type_name -> molecule.Node.Actions.Connection
+	20, // 28: molecule.Node.Actions.Delete.appendix:type_name -> google.protobuf.Any
+	7,  // 29: molecule.Node.Actions.Delecs.prepareConnects:type_name -> molecule.Node.Actions.Connection
+	7,  // 30: molecule.Node.Actions.Delecs.nextpageConnects:type_name -> molecule.Node.Actions.Connection
+	20, // 31: molecule.Node.Actions.Delecs.appendix:type_name -> google.protobuf.Any
+	7,  // 32: molecule.Node.Actions.Edit.prepareConnects:type_name -> molecule.Node.Actions.Connection
+	7,  // 33: molecule.Node.Actions.Edit.nextpageConnects:type_name -> molecule.Node.Actions.Connection
+	13, // 34: molecule.Node.Actions.Edit.joints:type_name -> molecule.Node.Actions.Joint
+	20, // 35: molecule.Node.Actions.Edit.appendix:type_name -> google.protobuf.Any
+	7,  // 36: molecule.Node.Actions.Topics.prepareConnects:type_name -> molecule.Node.Actions.Connection
+	7,  // 37: molecule.Node.Actions.Topics.nextpageConnects:type_name -> molecule.Node.Actions.Connection
+	13, // 38: molecule.Node.Actions.Topics.joints:type_name -> molecule.Node.Actions.Joint
+	20, // 39: molecule.Node.Actions.Topics.appendix:type_name -> google.protobuf.Any
+	40, // [40:40] is the sub-list for method output_type
+	40, // [40:40] is the sub-list for method input_type
+	40, // [40:40] is the sub-list for extension type_name
+	40, // [40:40] is the sub-list for extension extendee
+	0,  // [0:40] is the sub-list for field type_name
 }
 
 func init() { file_meta_proto_init() }
@@ -1911,7 +1954,7 @@ func file_meta_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_meta_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   17,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
