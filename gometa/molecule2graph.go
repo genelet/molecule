@@ -8,6 +8,7 @@ import (
 //
 //  - oneofs format: map[atomName][oneofName][list of fields]
 //  - package name
+//  - goPackage name
 //  - primary table name
 //  - primary table's pk
 //  - child to parent table mapping

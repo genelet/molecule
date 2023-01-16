@@ -14,13 +14,15 @@ _Graph_ to _Molecule_.
 ## Chapter 1. Oneof
 
 _oneof_ is a powerful message type in protobuf, yet it is not associated with
-any native GO type. In this package, we associate elements in _oneof_ to a list of table columns. If a table has mutiple _oneof_, they will be represented by string-to-list map, where the key is oneof's name and the value a list of columns.
+any native GO type. In this package, we assign _oneof_ to a list of table
+columns. If table has mutiple _oneof_, they will be represented by a map,
+in which key is the name of oneof and value its list of columns.
 
 ```go
 map[string][]string
 ```
 
-For a whole database which consists of many tables, all the oneofs are
+For whole database which contains many tables, all the oneofs are
 represented by
 
 ```go
@@ -44,16 +46,22 @@ It translates _Graph_ to _Molecule_ and the associated oneofs in _map[string]map
 ### 2.2 _Molecule_ to _Graph_
 
 ```go
-func MoleculeToGraph(molecule *godbi.Molecule, rest ...interface{}) *Graph
+func MoleculeToGraph(molecule *godbi.Molecule, args ...interface{}) *Graph
 ```
 
-where the first element of _rest_ is the _oneof_ map, and the second _Graph_ package name.
-
+where _args_ are
+  - oneofs in the database: map[atomName][oneofName][]string
+  - package name
+  - goPackage name
+  - primary table name
+  - primary table's pk
+  - child to parent table mapping
+  - table name to pk mapping
 
 <br />
 
 ### 2.3 Errors
 
-Because of the exact matchings between protobuf fields to table columns, there is
-no ambiguity in the functions. Every error should be panic and
+Matchings between protobuf fields to table columns have to be unique, hence,
+there is no ambiguity in the functions. Every error should be panic and
 be fixed in the package.

@@ -60,7 +60,7 @@ func (self *Rest) nameArgsFromPBExtra(check bool, pb proto.Message, extra ...map
 			return "", nil, fmt.Errorf("primary key not defined")
 		}
 		if _, ok := args[self.Graph.PkName]; !ok {
-			return "", nil, fmt.Errorf("primary key is empty")
+			return "", nil, fmt.Errorf("the primary key, %s is empty", self.Graph.PkName)
 		}
 	}
 	return name, args, nil

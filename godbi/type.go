@@ -3,7 +3,7 @@ package godbi
 import (
 )
 
-type DBType int64
+type DBType int32
 
 const (
 	SQLDefault DBType = iota
