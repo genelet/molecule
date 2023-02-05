@@ -21,14 +21,15 @@ type Molecule struct {
 	argsMap map[string]interface{}
 	extraMap map[string]interface{}
 	Stopper
+	pFunc func(json.RawMessage, ...Capability) (Navigate, error)
 }
 
-func NewMoleculeJsonFile(fn string, cmap ...map[string][]Capability) (*Molecule, error) {
+func NewMoleculeJsonFile(fn string, args ...interface{}) (*Molecule, error) {
 	dat, err := ioutil.ReadFile(fn)
 	if err != nil {
 		return nil, err
 	}
-	return NewMoleculeJson(json.RawMessage(dat), cmap...)
+	return NewMoleculeJson(json.RawMessage(dat), args...)
 }
 
 type g struct {
@@ -38,7 +39,7 @@ type g struct {
 }
 
 func (self *Molecule) UnmarshalJSON(bs []byte) error {
-	m, err := NewMoleculeJson(bs)
+	m, err := NewMoleculeJson(bs, self.pFunc)
 	if err != nil {
 		return err
 	}
@@ -46,25 +47,54 @@ func (self *Molecule) UnmarshalJSON(bs []byte) error {
 	return nil
 }
 
-func NewMoleculeJson(dat json.RawMessage, cmap ...map[string][]Capability) (*Molecule, error) {
+// NewMoleculeJson parses a raw message into Molecule with
+//  - func(json.RawMessage, ...Capability) (Navigate, error)
+//  - list of customized capacities using tables names as keys 
+func NewMoleculeJson(dat json.RawMessage, args ...interface{}) (*Molecule, error) {
+	var err error 
 	tmps := new(g)
-	if err := json.Unmarshal(dat, &tmps); err != nil {
+	if err = json.Unmarshal(dat, &tmps); err != nil {
 		return nil, err
 	}
 
+	var pFunc func(json.RawMessage, ...Capability) (Navigate, error)
+	var cmap []map[string][]Capability
+	var ok bool
+
+	if args != nil {
+		if args[0] != nil {
+			pFunc, ok = args[0].(func(json.RawMessage, ...Capability) (Navigate, error))
+			if !ok { return nil, fmt.Errorf("wrong data format %T", args[0]) }
+		}
+		if len(args) > 1 {
+			for i:=1; i<len(args); i++ {
+				c, ok := args[i].(map[string][]Capability)
+				if !ok { return nil, fmt.Errorf("wrong data format %T", args[i]) }
+				cmap = append(cmap, c)
+			}
+		}
+	}
+	if pFunc == nil {
+		pFunc = func(dat json.RawMessage, c ...Capability) (Navigate, error) {
+			return NewAtomJson(dat, c...)
+		}
+	}
+
 	var atoms []Navigate
-	for _, tmp := range tmps.Atoms {
-		atom, err := NewAtomJson(tmp)
+	var atom Navigate
+	for i, tmp := range tmps.Atoms {
+		atom, err = pFunc(tmp)
 		if err != nil { return nil, err }
-		if cmap != nil && cmap[0] != nil {
-			cs := cmap[0][atom.Table.TableName]
-			atom, err = NewAtomJson(tmp, cs...)
+		if cmap != nil && len(cmap) > i {
+			cs, ok := cmap[i][atom.GetTable().TableName]
+			if !ok { return nil, fmt.Errorf("wrong data type %T", cmap[i]) }
+			atom, err = pFunc(tmp, cs...)
 			if err != nil { return nil, err }
 		}
 		atoms = append(atoms, atom)
 	}
 
-	return &Molecule{Atoms:atoms, DatabaseName: tmps.DatabaseName, DBDriver:tmps.DBDriver}, nil
+	return &Molecule{Atoms:atoms, DatabaseName: tmps.DatabaseName, DBDriver:tmps.DBDriver, pFunc: pFunc}, nil
 }
 
 func (self *Molecule) String() string {
