@@ -25,7 +25,7 @@ func (self *OneStepStopper) Sign(tableObj *godbi.Table, item interface{}) bool {
 	if self.token != "" {
 		pk := tableObj.Pks[0]
 		if val, ok := hash[pk]; ok {
-			hash[pk+SIGN] = digest(self.token, tableObj.TableName, pk, val)
+			hash[pk+SignPOSTFIX] = digest(self.token, tableObj.TableName, pk, val)
 		}
 	}
 	return true

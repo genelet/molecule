@@ -122,11 +122,9 @@ func (self *Molecule) GetAtom(atom string) Navigate {
 
 // RunContext runs action by atom and action string names.
 // It returns the searched data and optional error code.
-//
-// 'atom' is the atom name, and 'action' the action name.
-// The first extra is the input data, shared by all sub actions.
-// The rest are specific data for each action starting with the current one.
-//
+// atom is the atom name, and action the action name. rest are:
+//  - the input data, shared by all sub actions.
+//  - specific data list for sub actions, starting with the current one.
 func (self *Molecule) RunContext(ctx context.Context, db *sql.DB, atom, action string, rest ...interface{}) ([]interface{}, error) {
 	return self.generalContext(false, ctx, db, atom, action, rest...)
 }
