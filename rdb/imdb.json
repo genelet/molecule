@@ -2272,7 +2272,6 @@
       ]
     }
   ],
-  "databaseName": "imdb",
   "dbDriver": 2,
   "Stopper": null
 }

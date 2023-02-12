@@ -57,7 +57,7 @@ func newPostgresIO(databaseName string, src io.Reader) (*postgresIO, error) {
 		}
 	}
 
-	team := database{DBDriver: godbi.Postgres, DatabaseName: databaseName}
+	team := database{DBDriver: godbi.Postgres}
 	postgres := &postgresIO{database: team, tables: tables, fks: fks}
 	postgres.database.schema = postgres
 	return postgres, nil

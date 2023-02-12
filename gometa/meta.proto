@@ -1,5 +1,4 @@
 syntax = "proto3";
-import "google/protobuf/any.proto";
 
 package molecule;
 option go_package = "./gometa";
@@ -54,7 +53,6 @@ message Node {
 			repeated Connection prepareConnects = 2;
 			repeated Connection nextpageConnects = 3;
 			bool isDo = 4;
-			repeated google.protobuf.Any appendix = 15;	
 		}
 		Insert insertItem = 7;
 	
@@ -64,7 +62,6 @@ message Node {
 			repeated Connection nextpageConnects = 3;
 			bool isDo = 4;
 			repeated string empties = 5;
-			repeated google.protobuf.Any appendix = 15;	
 		}
 		Update updateItem = 9;
 	
@@ -73,7 +70,6 @@ message Node {
 			repeated Connection prepareConnects = 2;
 			repeated Connection nextpageConnects = 3;
 			bool isDo = 4;
-			repeated google.protobuf.Any appendix = 15;	
 		}
 		Insupd insupdItem = 10;
 	
@@ -82,7 +78,6 @@ message Node {
 			repeated Connection prepareConnects = 2;
 			repeated Connection nextpageConnects = 3;
 			bool isDo = 4;
-			repeated google.protobuf.Any appendix = 15;	
 		}
 		Delete deleteItem = 12;
 	
@@ -91,7 +86,6 @@ message Node {
 			repeated Connection prepareConnects = 2;
 			repeated Connection nextpageConnects = 3;
 			bool isDo = 4;
-			repeated google.protobuf.Any appendix = 15;	
 		}
 		Delecs delecsItem = 13;
 	
@@ -111,7 +105,6 @@ message Node {
 			bool isDo = 4;
    		 	repeated Joint joints = 5;
    		 	string FIELDS = 14;
-			repeated google.protobuf.Any appendix = 15;	
 		}
 		Edit editItem = 14;
 	
@@ -129,7 +122,6 @@ message Node {
    			string SORTBY    = 12;
    			string SORTREVERSE = 13;
    		 	string FIELDS = 14;
-			repeated google.protobuf.Any appendix = 15;	
 		}
 		Topics topicsItem = 15;
 	}
@@ -142,11 +134,10 @@ message Node {
 message Graph {
   string packageName = 1;
   string goPackageName = 2;
-  string databaseName = 3;
-  int32 dBDriver = 4;
-  string pkTable = 5;
-  string pkName = 6;
-  map<string, string> pksTable = 7;
-  map<string, string> pks = 8;
-  repeated Node nodes = 9;
+  int32 dBDriver = 3;
+  string pkTable = 4;
+  string pkName = 5;
+  map<string, string> pksTable = 6;
+  map<string, string> pks = 7;
+  repeated Node nodes = 8;
 }

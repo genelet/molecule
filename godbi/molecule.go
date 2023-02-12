@@ -16,7 +16,6 @@ type Stopper interface {
 //
 type Molecule struct {
 	Atoms []Navigate `json:"atoms" hcl:"atoms"`
-	DatabaseName string `json:"databaseName" hcl:"databaseName"`
 	DBDriver DBType `json:"dbDriver" hcl:"dbDriver"`
 	argsMap map[string]interface{}
 	extraMap map[string]interface{}
@@ -34,7 +33,6 @@ func NewMoleculeJsonFile(fn string, args ...interface{}) (*Molecule, error) {
 
 type g struct {
 	Atoms []json.RawMessage `json:"atoms" hcl:"atoms"`
-	DatabaseName string     `json:"databaseName" hcl:"databaseName"`
 	DBDriver DBType         `json:"dbDriver" hcl:"dbDriver"`
 }
 
@@ -94,7 +92,7 @@ func NewMoleculeJson(dat json.RawMessage, args ...interface{}) (*Molecule, error
 		atoms = append(atoms, atom)
 	}
 
-	return &Molecule{Atoms:atoms, DatabaseName: tmps.DatabaseName, DBDriver:tmps.DBDriver, pFunc: pFunc}, nil
+	return &Molecule{Atoms:atoms, DBDriver:tmps.DBDriver, pFunc: pFunc}, nil
 }
 
 func (self *Molecule) String() string {

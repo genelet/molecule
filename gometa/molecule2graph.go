@@ -52,7 +52,7 @@ func MoleculeToGraph(molecule *godbi.Molecule, args ...interface{}) *Graph {
 		nodes = append(nodes, node)
 	}
 
-	return &Graph{PackageName: packageName, DatabaseName: molecule.DatabaseName, PkTable: pkTable, PkName: pkName, GoPackageName: goPackageName, DBDriver: int32(molecule.DBDriver), PksTable: pksTable, Pks: pks, Nodes: nodes}
+	return &Graph{PackageName: packageName, PkTable: pkTable, PkName: pkName, GoPackageName: goPackageName, DBDriver: int32(molecule.DBDriver), PksTable: pksTable, Pks: pks, Nodes: nodes}
 }
 
 func atomToNode(atom godbi.Navigate, oneofs ...map[string][]string) *Node {

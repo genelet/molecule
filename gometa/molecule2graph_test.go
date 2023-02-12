@@ -16,10 +16,6 @@ func tryit(m *godbi.Molecule, t *testing.T) {
 			t.Errorf("%s",  g.PackageName)
 			t.Errorf("%s", g1.PackageName)
 		}
-		if g.DatabaseName != g1.DatabaseName {
-			t.Errorf("%s",  g.DatabaseName)
-			t.Errorf("%s", g1.DatabaseName)
-		}
 		for i, n := range g.Nodes {
 			n1 := g1.Nodes[i]
 			if !proto.Equal(n, n1) {

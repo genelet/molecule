@@ -59,7 +59,7 @@ func (self *database) GetMolecule(db *sql.DB) (*godbi.Molecule, error) {
 		newAtoms = append(newAtoms, &godbi.Atom{Table: atom.Table, Actions: actions})
 	}
 
-	return &godbi.Molecule{Atoms: newAtoms, DatabaseName: self.DatabaseName, DBDriver: self.DBDriver}, nil
+	return &godbi.Molecule{Atoms: newAtoms, DBDriver: self.DBDriver}, nil
 }
 
 func autoAtom(table *godbi.Table) *godbi.Atom {
