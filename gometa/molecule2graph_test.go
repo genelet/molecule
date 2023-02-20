@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/genelet/molecule/godbi"
-	"google.golang.org/protobuf"
+	"google.golang.org/protobuf/proto"
 )
 
 func tryit(m *godbi.Molecule, t *testing.T) {
