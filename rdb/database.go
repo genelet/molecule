@@ -55,6 +55,13 @@ func (self *database) GetMolecule(db *sql.DB) (*godbi.Molecule, error) {
 
 	var newAtoms []godbi.Navigate
 	for _, atom := range atoms {
+		tableObj := atom.GetTable()
+        if tableObj.Fks != nil && len(tableObj.Fks) == 2 {
+        	if refPk[tableObj.Fks[0].FkTable] == tableObj.Fks[0].FkColumn &&
+            	refPk[tableObj.Fks[1].FkTable] == tableObj.Fks[1].FkColumn {
+            	tableObj.IsBridge = true
+        	}
+		}
 		actions := setConnections(atom, nextpages, prepares)
 		newAtoms = append(newAtoms, &godbi.Atom{Table: atom.Table, Actions: actions})
 	}

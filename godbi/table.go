@@ -34,6 +34,7 @@ type Table struct {
 	IdAuto    string   `json:"idAuto,omitempty" hcl:"idAuto,optional"`
 	Fks       []*Fk    `json:"fks,omitempty" hcl:"fks,optional"`
 	Uniques   []string `json:"uniques,omitempty" hcl:"uniques,optional"`
+	IsBridge  bool     `json:"is_bridge,omitempty" hcl:"is_bridge,optional"`
 	dbDriver DBType
 }
 

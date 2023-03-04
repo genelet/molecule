@@ -1,8 +1,8 @@
 package godbi
 
 import (
-"encoding/json"
-"io/ioutil"
+	"encoding/json"
+	"io/ioutil"
 	"testing"
 )
 

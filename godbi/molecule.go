@@ -118,6 +118,25 @@ func (self *Molecule) GetAtom(atom string) Navigate {
 	return nil
 }
 
+func (self *Molecule) BuildBridges() {
+	pks := make(map[string]string)
+	for _, item := range self.Atoms {
+		tableObj := item.GetTable()
+		if tableObj.Pks == nil { continue }
+		pks[tableObj.TableName] = tableObj.Pks[0]
+	}
+	for _, item := range self.Atoms {
+		tableObj := item.GetTable()
+		if tableObj.Fks == nil || len(tableObj.Fks) != 2 {
+			continue
+		}
+		if pks[tableObj.Fks[0].FkTable] == tableObj.Fks[0].FkColumn &&
+			pks[tableObj.Fks[1].FkTable] == tableObj.Fks[1].FkColumn {
+			tableObj.IsBridge = true
+		}
+	}
+}
+
 // RunContext runs action by atom and action string names.
 // It returns the searched data and optional error code.
 // atom is the atom name, and action the action name. rest are:
