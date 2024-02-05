@@ -3,10 +3,6 @@ package godbi
 import (
 	"context"
 	"database/sql"
-    "encoding/json"
-    "fmt"
-
-    "github.com/genelet/determined/dethcl"
 )
 
 type PreStopper interface {
@@ -34,22 +30,6 @@ type Molecule struct {
 func (self *Molecule) Initialize(args map[string]interface{}, extra map[string]interface{}) {
 	self.argsMap = args
 	self.extraMap = extra
-}
-
-func (self *Molecule) String() string {
-	bs, err := json.MarshalIndent(self, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-	return fmt.Sprintf("%s", bs)
-}
-
-func (self *Molecule) HCLString() string {
-	bs, err := dethcl.Marshal(self)
-	if err != nil {
-		panic(err)
-	}
-	return fmt.Sprintf("%s", bs)
 }
 
 // GetAtom returns the atom by atom name

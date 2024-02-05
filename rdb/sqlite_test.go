@@ -33,7 +33,7 @@ func TestSQLite(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if string(data) != molecule.String() {
-		t.Errorf("not equal: %s", molecule.String())
+	if string(data) != String(molecule) {
+		t.Errorf("not equal: %s", String(molecule))
 	}
 }

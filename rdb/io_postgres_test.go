@@ -21,7 +21,7 @@ func TestPostgresIO(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = os.WriteFile(dbname+".json", []byte(molecule.String()), 0666)
+	err = os.WriteFile(dbname+".json", []byte(String(molecule)), 0666)
 	if err != nil {
 		t.Fatal(err)
 	}

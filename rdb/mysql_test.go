@@ -2,11 +2,31 @@ package rdb
 
 import (
 	"database/sql"
+	"encoding/json"
+	"fmt"
 	"os"
 	"testing"
 
+	"github.com/genelet/determined/dethcl"
+	"github.com/genelet/molecule/godbi"
 	_ "github.com/go-sql-driver/mysql"
 )
+
+func String(self *godbi.Molecule) string {
+	bs, err := json.MarshalIndent(self, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	return fmt.Sprintf("%s", bs)
+}
+
+func HCLString(self *godbi.Molecule) string {
+	bs, err := dethcl.Marshal(self)
+	if err != nil {
+		panic(err)
+	}
+	return fmt.Sprintf("%s", bs)
+}
 
 func TestMySQL(t *testing.T) {
 	dbUser := os.Getenv("DBUSER")
@@ -35,7 +55,7 @@ func TestMySQL(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if string(data) != molecule.String() {
-		t.Errorf("not equal: %s", molecule.String())
+	if string(data) != String(molecule) {
+		t.Errorf("not equal: %s", String(molecule))
 	}
 }
