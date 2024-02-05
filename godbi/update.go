@@ -11,15 +11,15 @@ type Update struct {
 	Empties []string `json:"empties,omitempty" hcl:"empties,optional"`
 }
 
+var _ Capability = (*Update)(nil)
+
 func (self *Update) RunAction(db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
 	return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
 }
 
 func (self *Update) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
-	if self.IsDo {
-		if err := t.checkNull(ARGS); err != nil {
-			return nil, err
-		}
+	if err := t.checkNull(ARGS); err != nil {
+		return nil, err
 	}
 
 	ids := t.getIdVal(ARGS)
@@ -27,13 +27,18 @@ func (self *Update) RunActionContext(ctx context.Context, db *sql.DB, t *Table, 
 		return nil, errorMissingPk(t.TableName)
 	}
 
-	fieldValues, allAuto := t.getFv(ARGS)
+	fieldValues, allAuto := t.getFv(ARGS, self.getAllowed())
 	if allAuto {
 		return fromFv(fieldValues), nil
 	}
 	if !hasValue(fieldValues) {
 		return nil, errorEmptyInput(t.TableName)
-	} else if len(fieldValues) == 1 && fieldValues[t.Pks[0]] != nil {
+	} else if len(fieldValues) == 1 && t.Pks != nil {
+		for _, pk := range t.Pks {
+			if _, ok := fieldValues[pk]; ok {
+				return fromFv(fieldValues), nil
+			}
+		}
 		return fromFv(fieldValues), nil
 	}
 

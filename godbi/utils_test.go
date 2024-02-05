@@ -45,26 +45,26 @@ func TestUtils(t *testing.T) {
 }
 
 func TestMapUtils(t *testing.T) {
-	map1 := map[string]interface{}{"a":"x", "b":"y", "c":"z"}
-	map2 := map[string]interface{}{"a":"x", "b":"y", "c":"z"}
+	map1 := map[string]interface{}{"a": "x", "b": "y", "c": "z"}
+	map2 := map[string]interface{}{"a": "x", "b": "y", "c": "z"}
 	identical, keyFound := compareMap(map1, map2)
 	if !identical {
 		t.Errorf("identical: %t, keyFound: %t", identical, keyFound)
 	}
 
-	map2 = map[string]interface{}{"a":"x", "b":"y", "c":"zz"}
+	map2 = map[string]interface{}{"a": "x", "b": "y", "c": "zz"}
 	identical, keyFound = compareMap(map1, map2)
 	if identical || !keyFound {
 		t.Errorf("identical: %t, keyFound: %t", identical, keyFound)
 	}
 
-	map2 = map[string]interface{}{"a1":"x", "b1":"y", "c1":"z"}
+	map2 = map[string]interface{}{"a1": "x", "b1": "y", "c1": "z"}
 	identical, keyFound = compareMap(map1, map2)
 	if identical || keyFound {
 		t.Errorf("identical: %t, keyFound: %t", identical, keyFound)
 	}
 
-	lists := []map[string]interface{}{{"a":"x1", "b":"y", "c":"z"}, {"a":"x", "b":"y"}, {"a":"x3", "b":"y3", "c":"z3"}, {"a1":"x", "b1":"y", "c1":"z"}}
+	lists := []map[string]interface{}{{"a": "x1", "b": "y", "c": "z"}, {"a": "x", "b": "y"}, {"a": "x3", "b": "y3", "c": "z3"}, {"a1": "x", "b1": "y", "c1": "z"}}
 	got := grepMap(lists, map1)
 	if got {
 		t.Errorf("got: %t, lists: %v, item: %v", got, lists, map1)
@@ -74,54 +74,54 @@ func TestMapUtils(t *testing.T) {
 		t.Errorf("got: %t, lists: %v, item: %v", got, lists, map2)
 	}
 
-	map1 = map[string]interface{}{"a":"x", "b":"y", "c":"z"}
-	cmap1 := CloneMap(map1)
+	map1 = map[string]interface{}{"a": "x", "b": "y", "c": "z"}
+	cmap1 := cloneMap(map1)
 	identical, keyFound = compareMap(map1, cmap1)
 	if !identical {
 		t.Errorf("identical: %t, keyFound: %t", identical, keyFound)
 	}
 
-	map2 = map[string]interface{}{"a":"x1", "b":"y1", "c":"z1"}
-	cmap12 := MergeMap(map1, map2) // map2 will replace all values in map1
+	map2 = map[string]interface{}{"a": "x1", "b": "y1", "c": "z1"}
+	cmap12 := mergeMap(map1, map2) // map2 will replace all values in map1
 	identical, keyFound = compareMap(cmap12, map2)
 	if !identical {
 		t.Errorf("identical: %t, keyFound: %t", identical, keyFound)
 	}
 
-	map2 = map[string]interface{}{"a1":"x1", "b1":"y1", "c1":"z1"}
-	cmap12 = MergeMap(map1, map2)
-	identical, keyFound = compareMap(cmap12, map[string]interface{}{"a1":"x1", "b1":"y1", "c1":"z1","a":"x", "b":"y", "c":"z"})
+	map2 = map[string]interface{}{"a1": "x1", "b1": "y1", "c1": "z1"}
+	cmap12 = mergeMap(map1, map2)
+	identical, keyFound = compareMap(cmap12, map[string]interface{}{"a1": "x1", "b1": "y1", "c1": "z1", "a": "x", "b": "y", "c": "z"})
 	if !identical {
 		t.Errorf("identical: %t, keyFound: %t", identical, keyFound)
 	}
 
-	map2 = map[string]interface{}{"a":"x1", "b1":"y1", "c1":"z1"}
-	cmap12 = MergeMap(map1, map2)
-	identical, keyFound = compareMap(cmap12, map[string]interface{}{"a":"x1", "b1":"y1", "c1":"z1", "b":"y", "c":"z"})
+	map2 = map[string]interface{}{"a": "x1", "b1": "y1", "c1": "z1"}
+	cmap12 = mergeMap(map1, map2)
+	identical, keyFound = compareMap(cmap12, map[string]interface{}{"a": "x1", "b1": "y1", "c1": "z1", "b": "y", "c": "z"})
 	if !identical {
 		t.Errorf("identical: %t, keyFound: %t", identical, keyFound)
 	}
 
-	map1 = map[string]interface{}{"a":"x", "b":"y", "c":"z"}
-	map2 = map[string]interface{}{"a":"x", "b":"y", "c":"z1"}
+	map1 = map[string]interface{}{"a": "x", "b": "y", "c": "z"}
+	map2 = map[string]interface{}{"a": "x", "b": "y", "c": "z1"}
 	map12 := mergeMapOr(map1, map2)
 	if len(map12.([]map[string]interface{})) != 2 {
 		t.Errorf("%v", map12)
 	}
-	map2 = map[string]interface{}{"a1":"x", "b":"y", "c":"z"}
+	map2 = map[string]interface{}{"a1": "x", "b": "y", "c": "z"}
 	map12 = mergeMapOr(map1, map2)
 	if len(map12.([]map[string]interface{})) != 2 {
 		t.Errorf("%v", map12)
 	}
 
-	map2 = map[string]interface{}{"a":"x", "b":"y", "c":"z"}
+	map2 = map[string]interface{}{"a": "x", "b": "y", "c": "z"}
 	map12 = mergeMapOr(map1, map2) // identical
 	if len(map12.(map[string]interface{})) != 3 {
 		t.Errorf("%v", map12)
 	}
-	map2 = map[string]interface{}{"a1":"x1", "b1":"y1", "c1":"z1"}
-	map12 = MergeMap(map1, map2) // no common key
-	identical, keyFound = compareMap(map12.(map[string]interface{}), map[string]interface{}{"a1":"x1", "b1":"y1", "c1":"z1", "a":"x", "b":"y", "c":"z"})
+	map2 = map[string]interface{}{"a1": "x1", "b1": "y1", "c1": "z1"}
+	map12 = mergeMap(map1, map2) // no common key
+	identical, keyFound = compareMap(map12.(map[string]interface{}), map[string]interface{}{"a1": "x1", "b1": "y1", "c1": "z1", "a": "x", "b": "y", "c": "z"})
 	if !identical {
 		t.Errorf("identical: %t, keyFound: %t", identical, keyFound)
 	}

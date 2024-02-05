@@ -1,7 +1,7 @@
 {"atoms":[
 
 {
-"table":{
+	"atomName": "m_a",
 	"tableName": "m_a",
 	"pks": [ "id" ],
 	"idAuto": "id",
@@ -11,15 +11,13 @@
 {"columnName":"z", "label":"z", "typeName":"string" },
 {"columnName":"id", "label":"id", "typeName":"int", "auto":true }
     ],
-    "uniques":["x","y"]
-},
+    "uniques":["x","y"],
 	"actions": [
 		{
 			"actionName": "insupd",
-			"isDo": true,
 			"nextpages": [
 				{
-					"tableName": "m_b",
+					"atomName": "m_b",
 					"actionName": "insert",
 					"relateArgs": { "id": "id" },
 					"marker": "m_b"
@@ -28,10 +26,9 @@
 		},
 		{
 			"actionName": "insert",
-			"isDo": true,
 			"nextpages": [
 				{
-					"tableName": "m_b",
+					"atomName": "m_b",
 					"actionName": "insert",
 					"relateArgs": { "id": "id" },
 					"marker": "m_b"
@@ -42,7 +39,7 @@
 			"actionName": "edit",
 			"nextpages": [
 				{
-					"tableName": "m_b",
+					"atomName": "m_b",
 					"actionName": "topics",
 					"relateExtra": { "id": "id" }
 				}
@@ -52,7 +49,7 @@
 			"actionName": "delete",
 			"prepares": [
 				{
-					"tableName": "m_b",
+					"atomName": "m_b",
 					"actionName": "delecs",
 					"relateArgs": { "id": "id" }
 				}
@@ -62,7 +59,7 @@
 			"actionName": "topics",
 			"nextpages": [
 				{
-					"tableName": "m_a",
+					"atomName": "m_a",
 					"actionName": "edit",
 					"relateExtra": { "id": "id" }
 				}
@@ -71,7 +68,7 @@
 	]
 },
 {
-"table":{
+	"atomName": "m_b",
 	"tableName": "m_b",
 	"pks": [ "tid" ],
 	"fks": [ {"fkTable":"m_a", "fkColumn":"id", "column":"id"} ],
@@ -80,31 +77,17 @@
 {"columnName":"tid", "label":"tid", "typeName":"int", "notnull": true, "auto":true},
 {"columnName":"child", "label":"child", "typeName":"string"},
 {"columnName":"id", "label":"id", "typeName":"int", "notnull": true}
-	]
-},
+	],
 	"actions": [
-		{
-			"isDo": true,
-			"actionName": "insert"
-		},
-		{
-			"actionName": "edit"
-		},
-		{
-			"actionName": "delete"
-		},
 		{
 			"actionName": "delecs",
 			"nextpages": [
 				{
-					"tableName": "m_b",
+					"atomName": "m_b",
 					"actionName": "delete",
 					"relateArgs": { "tid": "tid" }
 				}
 			]
-		},
-		{
-			"actionName": "topics"
 		}
 	]
 }

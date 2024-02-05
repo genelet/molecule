@@ -53,17 +53,10 @@ func (self *database) GetMolecule(db *sql.DB) (*godbi.Molecule, error) {
 		atoms = append(atoms, atom)
 	}
 
-	var newAtoms []godbi.Navigate
+	var newAtoms []*godbi.Atom
 	for _, atom := range atoms {
-		tableObj := atom.GetTable()
-        if tableObj.Fks != nil && len(tableObj.Fks) == 2 {
-        	if refPk[tableObj.Fks[0].FkTable] == tableObj.Fks[0].FkColumn &&
-            	refPk[tableObj.Fks[1].FkTable] == tableObj.Fks[1].FkColumn {
-            	tableObj.IsBridge = true
-        	}
-		}
 		actions := setConnections(atom, nextpages, prepares)
-		newAtoms = append(newAtoms, &godbi.Atom{Table: atom.Table, Actions: actions})
+		newAtoms = append(newAtoms, &godbi.Atom{AtomName: atom.AtomName, Table: atom.Table, Actions: actions})
 	}
 
 	return &godbi.Molecule{Atoms: newAtoms, DBDriver: self.DBDriver}, nil
@@ -76,28 +69,28 @@ func autoAtom(table *godbi.Table) *godbi.Atom {
 	topics.ActionName = "topics"
 	insert := new(godbi.Insert)
 	insert.ActionName = "insert"
-	insert.IsDo = true
+	insert.SetIsDo(true)
 	update := new(godbi.Update)
 	update.ActionName = "update"
-	update.IsDo = true
+	update.SetIsDo(true)
 	insupd := new(godbi.Insupd)
 	insupd.ActionName = "insupd"
-	insupd.IsDo = true
+	insupd.SetIsDo(true)
 	delett := new(godbi.Delete)
 	delett.ActionName = "delete"
-	delett.IsDo = true
+	delett.SetIsDo(true)
 	capas := []godbi.Capability{edit, topics, insert, update, insupd, delett}
 	if table.IdAuto != "" {
-		delecs := new(godbi.Delete)
+		delecs := new(godbi.Delecs)
 		delecs.ActionName = "delecs"
-		delecs.IsDo = true
+		delecs.SetIsDo(true)
 		delecs.Nextpages = []*godbi.Connection{{
-			TableName:  table.TableName,
+			AtomName:   table.TableName,
 			ActionName: "delete",
 			RelateArgs: map[string]string{table.IdAuto: table.IdAuto}}}
 		capas = append(capas, delecs)
 	}
-	return &godbi.Atom{Table: *table, Actions: capas}
+	return &godbi.Atom{AtomName: table.TableName, Table: *table, Actions: capas}
 }
 
 func autoConnection(table *godbi.Table, fk *godbi.Fk, nextpages, prepares map[string]map[string][]*godbi.Connection) {
@@ -113,26 +106,27 @@ func autoConnection(table *godbi.Table, fk *godbi.Fk, nextpages, prepares map[st
 		prepares[tatom] = make(map[string][]*godbi.Connection)
 	}
 	for _, actionName := range []string{"topics", "edit"} {
-		nextpage := &godbi.Connection{TableName: tatom, ActionName: "topics", Marker: tatom}
+		def := "topics"
+		nextpage := &godbi.Connection{AtomName: tatom, ActionName: def, Marker: tatom}
 		nextpage.RelateExtra = map[string]string{fk.FkColumn: fk.Column}
 		nextpages[patom][actionName] = append(nextpages[patom][actionName], nextpage)
 	}
 	for _, actionName := range []string{"insert", "insupd", "update"} {
-		nextpage := &godbi.Connection{TableName: tatom, ActionName: actionName, Marker: tatom}
+		nextpage := &godbi.Connection{AtomName: tatom, ActionName: actionName, Marker: tatom}
 		nextpage.RelateArgs = map[string]string{fk.FkColumn: fk.Column}
 		nextpages[patom][actionName] = append(nextpages[patom][actionName], nextpage)
 
-		prepare := &godbi.Connection{TableName: patom, ActionName: actionName, Marker: patom}
+		prepare := &godbi.Connection{AtomName: patom, ActionName: actionName, Marker: patom}
 		prepare.RelateArgs = map[string]string{fk.FkColumn: fk.Column}
 		prepares[tatom][actionName] = append(prepares[tatom][actionName], prepare)
 	}
 
-	prepare := &godbi.Connection{TableName: tatom, ActionName: "delecs", RelateArgs: map[string]string{fk.FkColumn: fk.Column}}
+	prepare := &godbi.Connection{AtomName: tatom, ActionName: "delecs", RelateArgs: map[string]string{fk.FkColumn: fk.Column}}
 	prepares[patom]["delete"] = append(prepares[patom]["delete"], prepare)
 }
 
 func setConnections(atom *godbi.Atom, nextpages, prepares map[string]map[string][]*godbi.Connection) []godbi.Capability {
-	atomName := atom.TableName
+	atomName := atom.Table.TableName
 	actions := atom.Actions
 	for tableName, actionMap := range nextpages {
 		if tableName != atomName {

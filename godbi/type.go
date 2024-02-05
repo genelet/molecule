@@ -1,8 +1,5 @@
 package godbi
 
-import (
-)
-
 type DBType int32
 
 const (
@@ -11,10 +8,10 @@ const (
 	SQLite
 	MySQL
 	Postgres
-	TSMillisecond
-	TSMicrosecond
+	TSNano
 )
 
+// LowerName returns the lower case name of the DBType
 func (self DBType) LowerName() string {
 	switch self {
 	case SQLite:
@@ -24,10 +21,11 @@ func (self DBType) LowerName() string {
 	case Postgres:
 		return "postgres"
 	default:
-    }
+	}
 	return ""
 }
 
+// DBTypeByName returns the DBType by name
 func DBTypeByName(str string) DBType {
 	switch str {
 	case "sqlite3", "sqlite", "SQLite3", "SQLite":

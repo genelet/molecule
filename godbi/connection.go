@@ -1,6 +1,7 @@
 package godbi
 
 type ConnectType int
+
 const (
 	CONNECTDefault ConnectType = iota
 	CONNECTOne
@@ -12,25 +13,24 @@ const (
 // Connection describes linked page
 // 1) for Nextpages, it maps item in lists to next ARGS and next Extra
 // 2) for Prepares, it maps current ARGS to the next ARGS and next Extra
-//
 type Connection struct {
-	// TableName: the name of the table
-	TableName   string            `json:"tableName" hcl:"tableName,label"`
+	// AtomName: the name of the table
+	AtomName string `json:"atomName" hcl:"atomName,label"`
 
 	// ActionName: the action on the atom
-	ActionName  string            `json:"actionName" hcl:"actionName,label"`
+	ActionName string `json:"actionName" hcl:"actionName,label"`
 
 	// RelateArgs: map current page's columns to nextpage's columns as input
-	RelateArgs  map[string]string `json:"relateArgs,omitempty" hcl:"relateArgs"`
+	RelateArgs map[string]string `json:"relateArgs,omitempty" hcl:"relateArgs,optional"`
 
 	// RelateExtra: map current page's columns to nextpage's columns (for Nextpages), or prepared page's columns to current page's columns (for Prepares) as constrains.
-	RelateExtra map[string]string `json:"relateExtra,omitempty" hcl:"relateExtra"`
+	RelateExtra map[string]string `json:"relateExtra,omitempty" hcl:"relateExtra,optional"`
 
 	// Dimension: for nextpage's output format
-	Dimension  ConnectType        `json:"dimension,omitempty" hcl:"dimension,label"`
+	Dimension ConnectType `json:"dimension,omitempty" hcl:"dimension,optional"`
 
 	// Marker: for input data, this marks a whole data set for the next or previous object; for output data, this is the key for the next whole data set.
-	Marker     string             `json:"marker,omitempty" hcl:"marker,label"`
+	Marker string `json:"marker,omitempty" hcl:"marker,optional"`
 }
 
 // Subname is the marker string used to store the output
@@ -38,15 +38,16 @@ func (self *Connection) Subname() string {
 	if self.Marker != "" {
 		return self.Marker
 	}
-	return self.TableName + "_" + self.ActionName
+	return self.AtomName + "_" + self.ActionName
 }
 
-// FindExtra returns the value if the input i.e. item contains 
+// findExrea returns the value if the input i.e. item contains
 // the current table name as key.
-//
-func (self *Connection) FindExtra(item map[string]interface{}) map[string]interface{} {
+func (self *Connection) findExrea(item map[string]interface{}) map[string]interface{} {
 	marker := self.Marker
-	if marker == "" { return nil }
+	if marker == "" {
+		return nil
+	}
 
 	if v, ok := item[marker]; ok {
 		switch t := v.(type) {
@@ -58,26 +59,27 @@ func (self *Connection) FindExtra(item map[string]interface{}) map[string]interf
 	return nil
 }
 
-// FindArgs returns the value if the input i.e. args contains 
+// findArgs returns the value if the input i.e. args contains
 // the current table name as key.
-//
-func (self *Connection) FindArgs(args interface{}) (interface{}, bool) {
+func (self *Connection) findArgs(args interface{}) (interface{}, bool) {
 	if args == nil {
 		return nil, true
 	}
 
 	marker := self.Marker
-	if marker == "" { return nil, false }
+	if marker == "" {
+		return nil, false
+	}
 
 	switch t := args.(type) {
 	case map[string]interface{}: // in practice, only this data type exists
 		if v, ok := t[marker]; ok {
 			switch s := v.(type) {
 			case map[string]interface{}:
-				if self.Dimension==CONNECTMap {
+				if self.Dimension == CONNECTMap {
 					var outs []map[string]interface{}
 					for key, value := range s {
-						outs = append(outs, map[string]interface{}{"key":key, "value":value})
+						outs = append(outs, map[string]interface{}{"key": key, "value": value})
 					}
 					return outs, true
 				}
@@ -91,7 +93,7 @@ func (self *Connection) FindArgs(args interface{}) (interface{}, bool) {
 					case map[string]interface{}:
 						outs = append(outs, x)
 					default: // native types
-						outs = append(outs, map[string]interface{}{marker:x})
+						outs = append(outs, map[string]interface{}{marker: x})
 					}
 				}
 				return outs, true
@@ -105,22 +107,25 @@ func (self *Connection) FindArgs(args interface{}) (interface{}, bool) {
 	return nil, true
 }
 
-// NextArg returns nextpage's args as the value of key  current args map
-//
-func (self *Connection) NextArgs(args interface{}) interface{} {
+// NextArg returns nextpage's args as the value of key using current args map
+func (self *Connection) nextArgs(args interface{}) interface{} {
 	if args == nil {
 		return nil
 	}
 	if _, ok := self.RelateArgs["ALL"]; ok {
 		smallerRelate := make(map[string]string)
 		for k, v := range self.RelateArgs {
-			if k=="ALL" { continue }
+			if k == "ALL" {
+				continue
+			}
 			smallerRelate[k] = v
 		}
-		if len(smallerRelate)==0 { return args }
+		if len(smallerRelate) == 0 {
+			return args
+		}
 		smallerArgs := nextArgsFromRelate(args, smallerRelate)
 		// keys in args will overrde exising keys in smallerArgs
-		return MergeArgs(smallerArgs, args, true)
+		return mergeArgs(smallerArgs, args, true)
 	}
 	return nextArgsFromRelate(args, self.RelateArgs)
 }
@@ -155,9 +160,8 @@ func nextArgsFromRelate(args interface{}, relate map[string]string) interface{} 
 	return nil
 }
 
-// NextExtra returns nextpage's extra using current extra map
-//
-func (self *Connection) NextExtra(args interface{}) map[string]interface{} {
+// nextExtra returns nextpage's extra using current extra map
+func (self *Connection) nextExtra(args interface{}) map[string]interface{} {
 	if _, ok := self.RelateExtra["ALL"]; ok {
 		if v, ok := args.(map[string]interface{}); ok {
 			return v
@@ -197,7 +201,7 @@ func createNextmap(which map[string]string, item map[string]interface{}) map[str
 	return args
 }
 
-func (self *Connection) Shorten(lists []interface{}) interface{} {
+func (self *Connection) shorten(lists []interface{}) interface{} {
 	if self.Dimension == CONNECTDefault || self.Marker == "" {
 		return lists
 	}
@@ -318,25 +322,25 @@ func shortRecursive(leader string, single map[string]interface{}) map[string]int
 			higher = make(map[string]interface{})
 			switch t := value.(type) {
 			case []interface{}:
-				if len(t)>1 {
+				if len(t) > 1 {
 					higher[key] = t
 					continue
 				} else {
-				for _, s := range t {
-				for k, v := range s.(map[string]interface{}) {
-					switch u := v.(type) {
-					case []interface{}:
-						old, ok := higher[k]
-						if ok {
-							higher[k] = append(old.([]interface{}), u...)
-						} else {
-							higher[k] = u
+					for _, s := range t {
+						for k, v := range s.(map[string]interface{}) {
+							switch u := v.(type) {
+							case []interface{}:
+								old, ok := higher[k]
+								if ok {
+									higher[k] = append(old.([]interface{}), u...)
+								} else {
+									higher[k] = u
+								}
+							default:
+								higher[k] = v
+							}
 						}
-					default:
-						higher[k] = v
 					}
-				}
-				}
 				}
 			case []map[string]interface{}:
 				for k, v := range t[0] {
@@ -363,7 +367,7 @@ func shortRecursive(leader string, single map[string]interface{}) map[string]int
 	return output
 }
 
-func (self *Connection) ShortenRecursive(lists []interface{}) interface{} {
+func (self *Connection) shortenRecursive(lists []interface{}) interface{} {
 	switch self.Dimension {
 	case CONNECTOne:
 		return shortRecursive(self.Marker, lists[0].(map[string]interface{}))
@@ -378,7 +382,7 @@ func (self *Connection) ShortenRecursive(lists []interface{}) interface{} {
 }
 
 // useless but put here for backup
-func ShortenX(leader string, lists []interface{}) []interface{} {
+func shortenX(leader string, lists []interface{}) []interface{} {
 	extra := make(map[string]interface{})
 
 	var higher map[string]interface{}
@@ -389,26 +393,26 @@ func ShortenX(leader string, lists []interface{}) []interface{} {
 			higher = make(map[string]interface{})
 			switch t := value.(type) {
 			case []interface{}:
-				if len(t)>1 {
+				if len(t) > 1 {
 					higher[key] = t
 				} else {
-				for _, s := range t {
-					tmp := make(map[string]interface{})
-					for k, v := range s.(map[string]interface{}) {
-						switch u := v.(type) {
-						case []interface{}:
-							old, ok := tmp[k]
-							if ok {
-								tmp[k] = append(old.([]interface{}), u...)
-							} else {
-								tmp[k] = u
+					for _, s := range t {
+						tmp := make(map[string]interface{})
+						for k, v := range s.(map[string]interface{}) {
+							switch u := v.(type) {
+							case []interface{}:
+								old, ok := tmp[k]
+								if ok {
+									tmp[k] = append(old.([]interface{}), u...)
+								} else {
+									tmp[k] = u
+								}
+							default:
+								tmp[k] = v
 							}
-						default:
-							tmp[k] = v
 						}
+						temp = append(temp, tmp)
 					}
-					temp = append(temp, tmp)
-				}
 				}
 			case []map[string]interface{}:
 				higher = make(map[string]interface{})

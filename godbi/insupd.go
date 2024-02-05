@@ -10,18 +10,18 @@ type Insupd struct {
 	Action
 }
 
+var _ Capability = (*Insupd)(nil)
+
 func (self *Insupd) RunAction(db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
 	return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
 }
 
 func (self *Insupd) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
-	if self.IsDo {
-		if err := t.checkNull(ARGS); err != nil {
-			return nil, err
-		}
+	if err := t.checkNull(ARGS); err != nil {
+		return nil, err
 	}
 
-	fieldValues, allAuto := t.getFv(ARGS)
+	fieldValues, allAuto := t.getFv(ARGS, self.getAllowed())
 	if !allAuto && !hasValue(fieldValues) {
 		return nil, errorEmptyInput(t.TableName)
 	}

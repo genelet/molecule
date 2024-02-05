@@ -1,14 +1,13 @@
 package godbi
 
-// CloneArgs clones args to a new args, keeping proper data type
-//
-func CloneArgs(args interface{}) interface{} {
+// cloneArgs clones args to a new args, keeping proper data type
+func cloneArgs(args interface{}) interface{} {
 	if args == nil {
 		return nil
 	}
 	switch t := args.(type) {
 	case map[string]interface{}:
-		return CloneMap(t)
+		return cloneMap(t)
 	case []map[string]interface{}:
 		var newArgs []interface{}
 		for _, each := range t {
@@ -37,14 +36,14 @@ func mergeArgsMap(args interface{}, item map[string]interface{}, force ...bool) 
 	switch t := args.(type) {
 	case map[string]interface{}:
 		if force != nil && force[0] {
-			return MergeMap(t, item)
+			return mergeMap(t, item)
 		}
 		return mergeMapOr(t, item)
 	case []map[string]interface{}:
 		var newArgs []interface{}
 		for _, each := range t {
 			if force != nil && force[0] {
-				newArgs = append(newArgs, MergeMap(each, item))
+				newArgs = append(newArgs, mergeMap(each, item))
 			} else {
 				newArgs = append(newArgs, mergeMapOr(each, item))
 			}
@@ -55,7 +54,7 @@ func mergeArgsMap(args interface{}, item map[string]interface{}, force ...bool) 
 		for _, each := range t {
 			if single, ok := each.(map[string]interface{}); ok {
 				if force != nil && force[0] {
-					newArgs = append(newArgs, MergeMap(single, item))
+					newArgs = append(newArgs, mergeMap(single, item))
 				} else {
 					newArgs = append(newArgs, mergeMapOr(single, item))
 				}
@@ -67,9 +66,8 @@ func mergeArgsMap(args interface{}, item map[string]interface{}, force ...bool) 
 	return nil
 }
 
-// MergeArgs merges map to either an existing map, or slice of map in which each element will be merged
-//
-func MergeArgs(args, items interface{}, force ...bool) interface{} {
+// mergeArgs merges map to either an existing map, or slice of map in which each element will be merged
+func mergeArgs(args, items interface{}, force ...bool) interface{} {
 	if !hasValue(args) {
 		return items
 	} else if !hasValue(items) {
@@ -96,16 +94,18 @@ func MergeArgs(args, items interface{}, force ...bool) interface{} {
 	case map[string]interface{}:
 		return mergeArgsMap(args, t, force...)
 	case []map[string]interface{}:
-		var newArgs = make([]interface{},0)
+		var newArgs = make([]interface{}, 0)
 		for _, item := range t {
 			middle(&newArgs, args, item, force...)
 		}
 		return newArgs
 	case []interface{}:
-		var newArgs = make([]interface{},0)
+		var newArgs = make([]interface{}, 0)
 		for _, each := range t {
 			item, ok := each.(map[string]interface{})
-			if !ok { continue }
+			if !ok {
+				continue
+			}
 			middle(&newArgs, args, item, force...)
 		}
 		return newArgs

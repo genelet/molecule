@@ -11,7 +11,7 @@ import (
 func getdb() (*sql.DB, error) {
 	dbUser := os.Getenv("DBUSER")
 	dbPass := os.Getenv("DBPASS")
-	dbName := os.Getenv("DBNAME")
+	dbName := "gotest"
 	if dbUser == "" { return nil, fmt.Errorf("missing DBUSER") }
 	if dbPass == "" { return nil, fmt.Errorf("missing DBPASS") }
 	if dbName == "" { return nil, fmt.Errorf("missing DBNAME") }

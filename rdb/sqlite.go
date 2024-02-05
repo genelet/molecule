@@ -91,6 +91,7 @@ func (self *sQLite) getTable(db *sql.DB, tableName string) (*godbi.Table, error)
 		notnull := item["notnull"].(int)
 		if notnull == 1 {
 			col.Notnull = true
+			col.Constraint = true
 		}
 		if pk == 1 {
 			pks = append(pks, field)

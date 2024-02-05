@@ -11,6 +11,8 @@ type Delecs struct {
 	Action
 }
 
+var _ Capability = (*Delecs)(nil)
+
 func (self *Delecs) RunAction(db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
 	return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
 }

@@ -1,7 +1,8 @@
 {"Atoms":[
 
 {
-"table":{
+	"atomName": "m_a",
+	"jung": "xxx",
 	"tableName": "m_a",
 	"pks": [ "id" ],
 	"idAuto": "id",
@@ -11,15 +12,13 @@
 {"columnName":"z", "label":"z", "typeName":"string" },
 {"columnName":"id", "label":"id", "typeName":"int", "auto":true }
     ],
-    "uniques":["x","y"]
-},
+    "uniques":["x","y"],
 	"actions": [
 		{
 			"actionName": "insupd",
-			"isDo": true,
 			"nextpages": [
 				{
-					"tableName": "m_b",
+					"atomName": "m_b",
 					"actionName": "insert",
 					"relateArgs": { "id": "id" }
 				}
@@ -27,10 +26,9 @@
 		},
 		{
 			"actionName": "insert",
-			"isDo": true,
 			"nextpages": [
 				{
-					"tableName": "m_b",
+					"atomName": "m_b",
 					"actionName": "insert",
 					"relateArgs": { "id": "id" }
 				}
@@ -40,20 +38,17 @@
 			"actionName": "edit",
 			"nextpages": [
 				{
-					"tableName": "m_b",
+					"atomName": "m_b",
 					"actionName": "topics",
 					"relateExtra": { "id": "id" }
 				}
 			]
 		},
 		{
-			"actionName": "delete"
-		},
-		{
 			"actionName": "topics",
 			"nextpages": [
 				{
-					"tableName": "m_a",
+					"atomName": "m_a",
 					"actionName": "edit",
 					"relateExtra": { "id": "id" }
 				}
@@ -62,7 +57,7 @@
 	]
 },
 {
-"table":{
+	"atomName": "m_b",
 	"tableName": "m_b",
 	"pks": [ "tid" ],
 	"idAuto": "tid",
@@ -70,22 +65,6 @@
 {"columnName":"tid", "label":"tid", "typeName":"int", "notnull": true, "auto":true},
 {"columnName":"child", "label":"child", "typeName":"string"},
 {"columnName":"id", "label":"id", "typeName":"int", "notnull": true}
-	]
-},
-	"actions": [
-		{
-			"isDo": true,
-			"actionName": "insert"
-		},
-		{
-			"actionName": "edit"
-		},
-		{
-			"actionName": "delete"
-		},
-		{
-			"actionName": "topics"
-		}
 	]
 }
 

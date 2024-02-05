@@ -10,6 +10,8 @@ type Insert struct {
 	Action
 }
 
+var _ Capability = (*Insert)(nil)
+
 // Run inserts a row using data passed in ARGS.
 //
 func (self *Insert) RunAction(db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
@@ -19,13 +21,11 @@ func (self *Insert) RunAction(db *sql.DB, t *Table, ARGS map[string]interface{},
 // InsertContext inserts a row using data passed in ARGS.
 //
 func (self *Insert) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
-	if self.IsDo {
-		if err := t.checkNull(ARGS); err != nil {
-			return nil, err
-		}
+	if err := t.checkNull(ARGS); err != nil {
+		return nil, err
 	}
 
-	fieldValues, allAuto := t.getFv(ARGS)
+	fieldValues, allAuto := t.getFv(ARGS, self.getAllowed())
 	if !allAuto && !hasValue(fieldValues) {
 		return nil, errorEmptyInput(t.TableName)
 	}

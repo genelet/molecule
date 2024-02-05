@@ -1,6 +1,7 @@
 {"Atoms":[
 
 {
+	"atomName": "m_a",
 	"tableName": "m_a",
 	"pks": [ "id" ],
 	"idAuto": "id",
@@ -60,6 +61,7 @@
 	]
 },
 {
+	"atomName": "m_b",
 	"tableName": "m_b",
 	"pks": [ "tid" ],
 	"idAuto": "tid",

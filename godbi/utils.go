@@ -3,8 +3,8 @@ package godbi
 import (
 	"fmt"
 	"regexp"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 func questionMarkerNumber(query string) string {
@@ -98,7 +98,6 @@ func grep(vs []string, t string) bool {
 
 // return 1st bool: yes, the maps are identical
 // 2nd bool: no, the maps are completely different (no common key)
-//
 func compareMap(extra, item map[string]interface{}) (bool, bool) {
 	if extra == nil || item == nil {
 		return false, false
@@ -130,9 +129,8 @@ func grepMap(lists []map[string]interface{}, item map[string]interface{}) bool {
 	return false
 }
 
-// CloneMap clones extra to a new extra
-//
-func CloneMap(hash map[string]interface{}) map[string]interface{} {
+// cloneMap clones extra to a new extra
+func cloneMap(hash map[string]interface{}) map[string]interface{} {
 	if hash == nil {
 		return nil
 	}
@@ -143,15 +141,14 @@ func CloneMap(hash map[string]interface{}) map[string]interface{} {
 	return newHash
 }
 
-// MergeMap merges two maps
-//
-func MergeMap(extra, item map[string]interface{}) map[string]interface{} {
+// mergeMap merges two maps
+func mergeMap(extra, item map[string]interface{}) map[string]interface{} {
 	if extra == nil {
 		return item
 	} else if item == nil {
 		return extra
 	}
-	newExtra := CloneMap(extra)
+	newExtra := cloneMap(extra)
 	for k, v := range item {
 		newExtra[k] = v
 	}
@@ -159,7 +156,6 @@ func MergeMap(extra, item map[string]interface{}) map[string]interface{} {
 }
 
 // mergeMapOr merges two maps
-//
 func mergeMapOr(extra, item map[string]interface{}) interface{} {
 	if extra == nil {
 		return item
@@ -170,7 +166,7 @@ func mergeMapOr(extra, item map[string]interface{}) interface{} {
 	identical, keyFound := compareMap(extra, item)
 
 	if identical {
-		return CloneMap(extra)
+		return cloneMap(extra)
 	}
 
 	if keyFound {
@@ -178,5 +174,5 @@ func mergeMapOr(extra, item map[string]interface{}) interface{} {
 	}
 
 	// all keys are different
-	return MergeMap(extra, item)
+	return mergeMap(extra, item)
 }

@@ -1,4 +1,5 @@
 {
+	"atomName": "m_a",
 	"tableName": "m_a",
 	"pks": [ "id" ],
 	"idAuto": "id",

@@ -4,12 +4,88 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"os"
 	"testing"
+
+	"github.com/genelet/determined/dethcl"
 )
+
+// newAtomJsonFile parse a disk file to atom
+func newAtomJsonFile(fn string, custom ...Capability) (*Atom, error) {
+	dat, err := os.ReadFile(fn)
+	if err != nil {
+		return nil, err
+	}
+	atom := new(Atom)
+	err = json.Unmarshal(dat, atom)
+	if err != nil {
+		return nil, err
+	}
+
+	atom.MergeCustomActions(custom...)
+	return atom, nil
+}
+
+func TestHCLAtomMarshal(t *testing.T) {
+	atom, err := newAtomJsonFile("short.json", new(SQL))
+	if err != nil {
+		t.Fatal(err)
+	}
+	bs, err := dethcl.Marshal(atom)
+	if err != nil {
+		t.Errorf("%s", bs)
+		t.Fatal(err)
+	}
+}
+
+// NewAtomHclFile parse a HCL file to atom
+func newAtomHclFile(fn string, custom ...Capability) (*Atom, error) {
+	dat, err := os.ReadFile(fn)
+	if err != nil {
+		return nil, err
+	}
+
+	atom := new(Atom)
+	err = dethcl.Unmarshal(dat, atom)
+	if err != nil {
+		return nil, err
+	}
+
+	atom.MergeCustomActions(custom...)
+	return atom, nil
+}
+
+func TestHCLAtomUnmarshal(t *testing.T) {
+	atom, err := newAtomHclFile("m_a.hcl")
+	if err != nil {
+		t.Fatal(err)
+	}
+	bs, err := json.Marshal(atom)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(bs) != `{"tableName":"m_a","columns":[{"columnName":"x","typeName":"string","label":"x","notnull":true},{"columnName":"y","typeName":"string","label":"y","notnull":true},{"columnName":"z","typeName":"string","label":"z"},{"columnName":"id","typeName":"int","label":"id","auto":true}],"pks":["id"],"idAuto":"id","uniques":["x","y"],"actions":[{"actionName":"topics","nextpages":[{"atomName":"m_a","actionName":"edit","relateExtra":{"id":"id"}}]},{"actionName":"insert","nextpages":[{"atomName":"m_b","actionName":"insert","relateArgs":{"id":"id"}}]},{"actionName":"insupd","nextpages":[{"atomName":"m_b","actionName":"insert","relateArgs":{"id":"id"}}]},{"actionName":"edit","nextpages":[{"atomName":"m_b","actionName":"topics","relateExtra":{"id":"id"}}]},{"actionName":"update"},{"actionName":"delete"},{"actionName":"delecs"},{"actionName":"stmt","statement":""}]}` {
+		t.Errorf("%s", bs)
+	}
+}
+
+func TestAtomJsonParse(t *testing.T) {
+	atom, err := newAtomJsonFile("m_a.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	bs, err := json.Marshal(atom)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(bs) != `{"atomName":"m_a","tableName":"m_a","columns":[{"columnName":"x","typeName":"string","label":"x","notnull":true},{"columnName":"y","typeName":"string","label":"y","notnull":true},{"columnName":"z","typeName":"string","label":"z"},{"columnName":"id","typeName":"int","label":"id","auto":true}],"pks":["id"],"idAuto":"id","uniques":["x","y"],"actions":[{"actionName":"insert","nextpages":[{"atomName":"m_b","actionName":"insert","relateArgs":{"id":"id"}}]},{"actionName":"update"},{"actionName":"insupd","nextpages":[{"atomName":"m_b","actionName":"insert","relateArgs":{"id":"id"}}]},{"actionName":"delete"},{"actionName":"delecs"},{"actionName":"topics","nextpages":[{"atomName":"m_a","actionName":"edit","relateExtra":{"id":"id"}}]},{"actionName":"edit","nextpages":[{"atomName":"m_b","actionName":"topics","relateExtra":{"id":"id"}}]},{"actionName":"stmt","statement":""}]}` {
+		t.Errorf("%s", bs)
+	}
+}
 
 type SQL struct {
 	Action
-	Statement string   `json:"statement"`
+	Statement string `json:"statement"`
 }
 
 func (self *SQL) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
@@ -24,12 +100,11 @@ func (self *SQL) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARG
 }
 
 func TestAtom(t *testing.T) {
-	custom := new(SQL)
-	custom.ActionName = "sql"
-	atom, err := NewAtomJsonFile("atom.json", custom)
+	atom, err := newAtomJsonFile("atom.json", new(SQL))
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	for _, v := range atom.Actions {
 		k := v.GetActionName()
 		switch k {
@@ -37,7 +112,7 @@ func TestAtom(t *testing.T) {
 			topics := v.(*Topics)
 			if topics.Nextpages != nil {
 				for i, page := range topics.Nextpages {
-					if (i == 0 && (page.TableName != "adv_campaign")) ||
+					if (i == 0 && (page.AtomName != "adv_campaign")) ||
 						(i == 1 && (page.RelateExtra["campaign_id"] != "campaign_id")) {
 						t.Errorf("%#v", page)
 					}
@@ -50,7 +125,8 @@ func TestAtom(t *testing.T) {
 			}
 		case "sql":
 			sql := v.(*SQL)
-			if atom.TableName != "adv_campaign" ||
+			if atom.AtomName != "adv_campaign" ||
+				atom.TableName != "adv_campaign" ||
 				atom.Pks[0] != "campaign_id" ||
 				sql.Nextpages[0].ActionName != "topics" ||
 				sql.Statement != "SELECT x, y, z FROM a WHERE b=?" {
@@ -73,7 +149,6 @@ func TestAtomRun(t *testing.T) {
         x varchar(8), y varchar(8), z varchar(8))`)
 
 	str := `{
-"table": {
     "tableName":"m_a",
     "pks":["id"],
     "idAuto":"id",
@@ -84,37 +159,9 @@ func TestAtomRun(t *testing.T) {
 {"columnName":"id", "label":"id", "typeName":"int", "auto":true }
     ],
 	"uniques":["x","y"]
-},
-	"actions": [
-	{
-		"isDo":true,
-		"actionName": "insert"
-	},
-	{
-		"isDo":true,
-		"actionName": "insupd"
-	},
-	{
-		"actionName": "delete"
-	},
-	{
-		"actionName": "topics"
-	},
-	{
-		"actionName": "edit"
-	}
-]}`
-	x := Atom{}
-	err = json.Unmarshal([]byte(str), &x)
-	if x.Actions[0].GetActionName() != "insert" ||
-	x.Actions[1].GetActionName() != "insupd" ||
-	x.Actions[2].GetActionName() != "delete" ||
-	x.Actions[3].GetActionName() != "topics" ||
-	x.Actions[4].GetActionName() != "edit" {
-		t.Errorf("%#v", x)
-	}
-
-	atom, err := NewAtomJson([]byte(str))
+}`
+	atom := new(Atom)
+	err = json.Unmarshal([]byte(str), atom)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -216,7 +263,6 @@ func TestAtomRunMultiple(t *testing.T) {
         x varchar(8), y varchar(8), z varchar(8))`)
 
 	str := `{
-"table": {
     "tableName":"m_a",
     "pks":["id"],
     "idAuto":"id",
@@ -227,25 +273,9 @@ func TestAtomRunMultiple(t *testing.T) {
 {"columnName":"id", "label":"id", "typeName":"int", "auto":true }
     ],
 	"uniques":["x","y"]
-},
-	"actions": [
-	{
-		"actionName": "insert"
-	},
-	{
-		"actionName": "insupd"
-	},
-	{
-		"actionName": "delete"
-	},
-	{
-		"actionName": "topics"
-	},
-	{
-		"actionName": "edit"
-	}
-]}`
-	atom, err := NewAtomJson([]byte(str))
+}`
+	atom := new(Atom)
+	err = json.Unmarshal([]byte(str), atom)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -305,7 +335,7 @@ func TestAtomRunMultiple(t *testing.T) {
 	// [map[id:1 tb_topics:[map[child:john id:1 tid:1] map[child:sam id:1 tid:2]] x:a1234567 y:b1234567 z:zzzzz]]
 
 	// DELETE
-	argss= []map[string]interface{}{{"id": 1}}
+	argss = []map[string]interface{}{{"id": 1}}
 	lists, err = atom.RunAtom(db, "delete", args)
 	if err != nil {
 		t.Fatal(err)

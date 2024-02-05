@@ -3,6 +3,8 @@ package godbi
 import (
 	"encoding/json"
 	"testing"
+
+//	"github.com/genelet/determined/dethcl"
 )
 
 func TestTable(t *testing.T) {
@@ -39,8 +41,50 @@ func TestTable(t *testing.T) {
 	if table.TableName != "adv_campaign" {
 		t.Errorf("%v", table)
 	}
-	inCols := table.insertCols()
+	inCols := table.insertCols(nil)
 	if inCols["adv_id"] != "adv_id" || inCols["campaign_name"] != "campaign_name" {
 		t.Errorf("%v", table)
 	}
+}
+
+func TestHCLTable(t *testing.T) {
+	str := `{
+    "fks":[{"fkColumn":"adv_id","column":"adv_id"}],
+    "tableName":"adv_campaign",
+    "pks":["campaign_id"],
+    "idAuto":"campaign_id",
+	"columns":[{
+		"columnName":"adv_id",
+		"label":"adv_id",
+		"typeName":"int",
+		"notnull":true,
+		"auto":false
+		},{
+		"columnName":"campaign_name",
+		"label":"campaign_name",
+		"typeName":"string",
+		"notnull":true
+		},{
+		"columnName":"campaign_id",
+		"label":"campaign_id",
+		"typeName":"int",
+		"notnull":true,
+		"auto":true
+		}
+	]
+	}`
+	table := new(Table)
+	err := json.Unmarshal([]byte(str), table)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+/*
+	t.Errorf("%#v", table)
+	bs, err := dethcl.Marshal(table)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Errorf("%s", bs)
+*/
 }

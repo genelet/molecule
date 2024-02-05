@@ -375,9 +375,9 @@ func main() {
     ],
     "uniques":["x","y"],
     "actions": [
-        { "isDo":true, "actionName": "insert" },
-        { "isDo":true, "actionName": "insupd" },
-        { "isDo":true, "actionName": "delete" },
+        { "actionName": "insert" },
+        { "actionName": "insupd" },
+        { "actionName": "delete" },
         { "actionName": "topics" },
         { "actionName": "edit" }
     ]}`
@@ -528,9 +528,8 @@ where _TableName_ is the database table name. _ActionName_ is the action name. _
 ```go
 type Action struct {
     ActionName string `json:"actionName,omitempty" hcl:"actionName,optional"`
-    Prepares  []*Connection `json:"Prepares,omitempty" hcl:"Prepares,block"`
+    Prepares  []*Connection `json:"prepares,omitempty" hcl:"prepares,block"`
     Nextpages []*Connection `json:"nextpages,omitempty" hcl:"nextpages,block"`
-    IsDo      bool          `json:"isDo,omitempty" hcl:"isDo,optional"`
 }
 ```
 
@@ -623,10 +622,10 @@ type Topics struct {
     Joints []*Joint    `json:"joints,omitempty" hcl:"joints,block"`
     FIELDS string      `json:"fields,omitempty" hcl:"fields"`
 
-    TotalForce  int    `json:"total_force,omitempty" hcl:"total_force,optional"`
+    Totalforce  int    `json:"totalforce,omitempty" hcl:"totalforce,optional"`
     MAXPAGENO   string `json:"maxpageno,omitempty" hcl:"maxpageno,optional"`
     TOTALNO     string `json:"totalno,omitempty" hcl:"totalno,optional"`
-    ROWCOUNT    string `json:"rawcount,omitempty" hcl:"rawcount,optional"`
+    PAGESIZE    string `json:"pagesize,omitempty" hcl:"pagesize,optional"`
     PAGENO      string `json:"pageno,omitempty" hcl:"pageno,optional"`
     SORTBY      string `json:"sortby,omitempty" hcl:"sortby,optional"`
     SORTREVERSE string `json:"sortreverse,omitempty" hcl:"sortreverse,optional"`
@@ -639,12 +638,12 @@ Field | Default | Meaning in Input Data `ARGS`
 --------- | ------- | -----------------------
 _MAXPAGENO_ | "maxpageno" | how many pages in total
 _TOTALNO_ | "totalno" | how many records in total
-_ROWCOUNT_ | "rowcount" | how many record in each page
+_PAGESIZE_ | "pagesize" | how many record in each page
 _PAGENO_ | "pageno" | return only data of the specific page
 _SORTBY_ | "sortby" | sort the returned data by this
 _SORTREVERSE_ | "sortreverse" | 1 to return the data in reverse
 
-and _TotalForce_ is: 0 for not calculating total number of records; -1 for calculating; and 1 for optionally calculating. In the last case, if there is no input data for `ROWCOUNT` or `PAGENO`, there is no pagination information.
+and _Totalforce_ is: 0 for not calculating total number of records; -1 for calculating; and 1 for optionally calculating. In the last case, if there is no input data for `PAGESIZE` or `PAGENO`, there is no pagination information.
 
 ### 4.6) Delete
 
@@ -675,7 +674,7 @@ type Delecs struct {
 
 ```go
 type Molecule struct {
-    Atoms []Navigate `json:"atoms" hcl:"atoms"`
+    Atoms []*Atom `json:"atoms" hcl:"atoms"`
     DatabaseName string `json:"databaseName" hcl:"databaseName"`
     DBDriver DBType `json:"dbDriver" hcl:"dbDriver"`
 	Stopper
@@ -752,7 +751,6 @@ func main() {
     "uniques":["x","y"],
     "actions": [{
         "actionName": "insupd",
-        "isDo": true,
         "nextpages": [{
             "tableName": "m_b",
             "actionName": "insert",
@@ -761,7 +759,6 @@ func main() {
         }]
     },{
         "actionName": "insert",
-        "isDo": true,
         "nextpages": [{
             "tableName": "m_b",
             "actionName": "insert",
@@ -801,15 +798,6 @@ func main() {
         {"columnName":"id", "label":"id", "typeName":"int", "notnull": true}
     ],
     "actions": [{
-        "isDo": true,
-        "actionName": "insert"
-    },{
-        "actionName": "edit"
-    },{
-        "isDo": true,
-        "actionName": "delete"
-    },{
-        "isDo": true,
         "actionName": "delecs",
         "nextpages": [{
             "tableName": "m_b",

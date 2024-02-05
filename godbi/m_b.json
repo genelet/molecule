@@ -1,5 +1,5 @@
 {
-"table":{
+	"atomName": "m_b",	
 	"tableName": "m_b",
 	"pks": [ "tid" ],
 	"idAuto": "tid",
@@ -8,20 +8,4 @@
 {"columnName":"child", "label":"child", "typeName":"string"},
 {"columnName":"id", "label":"id", "typeName":"int", "notnull": true}
     ]
-},
-	"actions": [
-		{
-			"actionName": "insert",
-			"isDo": true
-		},
-		{
-			"actionName": "edit"
-		},
-		{
-			"actionName": "delete"
-		},
-		{
-			"actionName": "topics"
-		}
-	]
 }

@@ -3,7 +3,35 @@ package godbi
 import (
 	"encoding/json"
 	"testing"
+
+	"github.com/genelet/determined/dethcl"
+	"github.com/genelet/determined/utils"
 )
+
+func TestHCLAction(t *testing.T) {
+	data1 := `
+    nextpages m_b insert {
+      relateArgs = {
+        id = "id"
+      }
+    }
+`
+	spec, err := utils.NewStruct("Action", map[string]interface{}{
+		"Nextpages": []string{"Connection"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	a := new(Action)
+	err = dethcl.UnmarshalSpec([]byte(data1), a, spec, map[string]interface{}{
+		"Connection": new(Connection)})
+	if err != nil {
+		t.Fatal(err)
+	}
+	p := a.Nextpages[0]
+	if p.AtomName != "m_b" || p.ActionName != "insert" || p.RelateArgs["id"] != "id" {
+		t.Errorf("%#v", p)
+	}
+}
 
 func TestAction(t *testing.T) {
 	db, err := getdb()
@@ -35,9 +63,9 @@ func TestAction(t *testing.T) {
 	}
 
 	insert := new(Insert)
-	insert.IsDo = true
+	insert.SetIsDo(true)
 	insupd := new(Insupd)
-	insupd.IsDo = true
+	insupd.SetIsDo(true)
 	topics := new(Topics)
 	edit := new(Edit)
 	dele := new(Delete)

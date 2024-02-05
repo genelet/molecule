@@ -5,24 +5,26 @@ import (
 	"os"
 	"testing"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/go-sql-driver/mysql"
 )
 
-func TestSQLite(t *testing.T) {
-	var databaseName = "imdb"
-	db, err := sql.Open("sqlite3", databaseName+".sqlite")
+func TestMySQL(t *testing.T) {
+	dbUser := os.Getenv("DBUSER")
+	dbPass := os.Getenv("DBPASS")
+	databaseName := "classicmodels"
+	db, err := sql.Open("mysql", dbUser+":"+dbPass+"@/"+databaseName)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer db.Close()
-	object := newSQLite(databaseName)
+	object := newMySQL(databaseName)
 	molecule, err := object.GetMolecule(db)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	/*
-		err = os.WriteFile(databaseName + ".json", []byte(molecule.String()), 0666)
+		err = os.WriteFile(databaseName + "1.json", []byte(molecule.String()), 0666)
 		if err != nil {
 			t.Fatal(err)
 		}

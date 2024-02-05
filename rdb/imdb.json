@@ -1,63 +1,50 @@
 {
   "atoms": [
     {
-      "table": {
-        "tableName": "actor",
-        "columns": [
-          {
-            "columnName": "aid",
-            "typeName": "int",
-            "label": "aid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "gender",
-            "typeName": "string",
-            "label": "gender",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "name",
-            "typeName": "string",
-            "label": "name",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "nationality",
-            "typeName": "string",
-            "label": "nationality",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "birth_city",
-            "typeName": "string",
-            "label": "birth_city",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "birth_year",
-            "typeName": "int",
-            "label": "birth_year",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "aid"
-        ],
-        "idAuto": "rowid"
-      },
+      "atomName": "actor",
+      "tableName": "actor",
+      "columns": [
+        {
+          "columnName": "aid",
+          "typeName": "int",
+          "label": "aid"
+        },
+        {
+          "columnName": "gender",
+          "typeName": "string",
+          "label": "gender"
+        },
+        {
+          "columnName": "name",
+          "typeName": "string",
+          "label": "name"
+        },
+        {
+          "columnName": "nationality",
+          "typeName": "string",
+          "label": "nationality"
+        },
+        {
+          "columnName": "birth_city",
+          "typeName": "string",
+          "label": "birth_city"
+        },
+        {
+          "columnName": "birth_year",
+          "typeName": "int",
+          "label": "birth_year"
+        }
+      ],
+      "pks": [
+        "aid"
+      ],
+      "idAuto": "rowid",
       "actions": [
         {
           "actionName": "edit",
           "nextpages": [
             {
-              "tableName": "cast",
+              "atomName": "cast",
               "actionName": "topics",
               "relateExtra": {
                 "aid": "aid"
@@ -70,7 +57,7 @@
           "actionName": "topics",
           "nextpages": [
             {
-              "tableName": "cast",
+              "atomName": "cast",
               "actionName": "topics",
               "relateExtra": {
                 "aid": "aid"
@@ -83,109 +70,97 @@
           "actionName": "insert",
           "nextpages": [
             {
-              "tableName": "cast",
+              "atomName": "cast",
               "actionName": "insert",
               "relateArgs": {
                 "aid": "aid"
               },
               "marker": "cast"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "update",
           "nextpages": [
             {
-              "tableName": "cast",
+              "atomName": "cast",
               "actionName": "update",
               "relateArgs": {
                 "aid": "aid"
               },
               "marker": "cast"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "insupd",
           "nextpages": [
             {
-              "tableName": "cast",
+              "atomName": "cast",
               "actionName": "insupd",
               "relateArgs": {
                 "aid": "aid"
               },
               "marker": "cast"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delete",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "cast",
+              "atomName": "cast",
               "actionName": "delecs",
               "relateArgs": {
                 "aid": "aid"
               }
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "actor",
+              "atomName": "actor",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "copyright",
-        "columns": [
-          {
-            "columnName": "id",
-            "typeName": "int",
-            "label": "id",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "msid",
-            "typeName": "int",
-            "label": "msid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "cid",
-            "typeName": "int",
-            "label": "cid",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "id"
-        ],
-        "idAuto": "rowid"
-      },
+      "atomName": "copyright",
+      "tableName": "copyright",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id"
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid"
+        },
+        {
+          "columnName": "cid",
+          "typeName": "int",
+          "label": "cid"
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
       "actions": [
         {
           "actionName": "edit",
           "nextpages": [
             {
-              "tableName": "cast",
+              "atomName": "cast",
               "actionName": "topics",
               "relateExtra": {
                 "msid": "msid"
@@ -193,7 +168,7 @@
               "marker": "cast"
             },
             {
-              "tableName": "classification",
+              "atomName": "classification",
               "actionName": "topics",
               "relateExtra": {
                 "msid": "msid"
@@ -201,7 +176,7 @@
               "marker": "classification"
             },
             {
-              "tableName": "directed_by",
+              "atomName": "directed_by",
               "actionName": "topics",
               "relateExtra": {
                 "msid": "msid"
@@ -209,7 +184,7 @@
               "marker": "directed_by"
             },
             {
-              "tableName": "made_by",
+              "atomName": "made_by",
               "actionName": "topics",
               "relateExtra": {
                 "msid": "msid"
@@ -217,7 +192,7 @@
               "marker": "made_by"
             },
             {
-              "tableName": "tags",
+              "atomName": "tags",
               "actionName": "topics",
               "relateExtra": {
                 "msid": "msid"
@@ -225,7 +200,7 @@
               "marker": "tags"
             },
             {
-              "tableName": "written_by",
+              "atomName": "written_by",
               "actionName": "topics",
               "relateExtra": {
                 "msid": "msid"
@@ -238,7 +213,7 @@
           "actionName": "topics",
           "nextpages": [
             {
-              "tableName": "cast",
+              "atomName": "cast",
               "actionName": "topics",
               "relateExtra": {
                 "msid": "msid"
@@ -246,7 +221,7 @@
               "marker": "cast"
             },
             {
-              "tableName": "classification",
+              "atomName": "classification",
               "actionName": "topics",
               "relateExtra": {
                 "msid": "msid"
@@ -254,7 +229,7 @@
               "marker": "classification"
             },
             {
-              "tableName": "directed_by",
+              "atomName": "directed_by",
               "actionName": "topics",
               "relateExtra": {
                 "msid": "msid"
@@ -262,7 +237,7 @@
               "marker": "directed_by"
             },
             {
-              "tableName": "made_by",
+              "atomName": "made_by",
               "actionName": "topics",
               "relateExtra": {
                 "msid": "msid"
@@ -270,7 +245,7 @@
               "marker": "made_by"
             },
             {
-              "tableName": "tags",
+              "atomName": "tags",
               "actionName": "topics",
               "relateExtra": {
                 "msid": "msid"
@@ -278,7 +253,7 @@
               "marker": "tags"
             },
             {
-              "tableName": "written_by",
+              "atomName": "written_by",
               "actionName": "topics",
               "relateExtra": {
                 "msid": "msid"
@@ -291,7 +266,7 @@
           "actionName": "insert",
           "nextpages": [
             {
-              "tableName": "cast",
+              "atomName": "cast",
               "actionName": "insert",
               "relateArgs": {
                 "msid": "msid"
@@ -299,7 +274,7 @@
               "marker": "cast"
             },
             {
-              "tableName": "classification",
+              "atomName": "classification",
               "actionName": "insert",
               "relateArgs": {
                 "msid": "msid"
@@ -307,7 +282,7 @@
               "marker": "classification"
             },
             {
-              "tableName": "directed_by",
+              "atomName": "directed_by",
               "actionName": "insert",
               "relateArgs": {
                 "msid": "msid"
@@ -315,7 +290,7 @@
               "marker": "directed_by"
             },
             {
-              "tableName": "made_by",
+              "atomName": "made_by",
               "actionName": "insert",
               "relateArgs": {
                 "msid": "msid"
@@ -323,7 +298,7 @@
               "marker": "made_by"
             },
             {
-              "tableName": "tags",
+              "atomName": "tags",
               "actionName": "insert",
               "relateArgs": {
                 "msid": "msid"
@@ -331,21 +306,20 @@
               "marker": "tags"
             },
             {
-              "tableName": "written_by",
+              "atomName": "written_by",
               "actionName": "insert",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "written_by"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "update",
           "nextpages": [
             {
-              "tableName": "cast",
+              "atomName": "cast",
               "actionName": "update",
               "relateArgs": {
                 "msid": "msid"
@@ -353,7 +327,7 @@
               "marker": "cast"
             },
             {
-              "tableName": "classification",
+              "atomName": "classification",
               "actionName": "update",
               "relateArgs": {
                 "msid": "msid"
@@ -361,7 +335,7 @@
               "marker": "classification"
             },
             {
-              "tableName": "directed_by",
+              "atomName": "directed_by",
               "actionName": "update",
               "relateArgs": {
                 "msid": "msid"
@@ -369,7 +343,7 @@
               "marker": "directed_by"
             },
             {
-              "tableName": "made_by",
+              "atomName": "made_by",
               "actionName": "update",
               "relateArgs": {
                 "msid": "msid"
@@ -377,7 +351,7 @@
               "marker": "made_by"
             },
             {
-              "tableName": "tags",
+              "atomName": "tags",
               "actionName": "update",
               "relateArgs": {
                 "msid": "msid"
@@ -385,21 +359,20 @@
               "marker": "tags"
             },
             {
-              "tableName": "written_by",
+              "atomName": "written_by",
               "actionName": "update",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "written_by"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "insupd",
           "nextpages": [
             {
-              "tableName": "cast",
+              "atomName": "cast",
               "actionName": "insupd",
               "relateArgs": {
                 "msid": "msid"
@@ -407,7 +380,7 @@
               "marker": "cast"
             },
             {
-              "tableName": "classification",
+              "atomName": "classification",
               "actionName": "insupd",
               "relateArgs": {
                 "msid": "msid"
@@ -415,7 +388,7 @@
               "marker": "classification"
             },
             {
-              "tableName": "directed_by",
+              "atomName": "directed_by",
               "actionName": "insupd",
               "relateArgs": {
                 "msid": "msid"
@@ -423,7 +396,7 @@
               "marker": "directed_by"
             },
             {
-              "tableName": "made_by",
+              "atomName": "made_by",
               "actionName": "insupd",
               "relateArgs": {
                 "msid": "msid"
@@ -431,7 +404,7 @@
               "marker": "made_by"
             },
             {
-              "tableName": "tags",
+              "atomName": "tags",
               "actionName": "insupd",
               "relateArgs": {
                 "msid": "msid"
@@ -439,129 +412,117 @@
               "marker": "tags"
             },
             {
-              "tableName": "written_by",
+              "atomName": "written_by",
               "actionName": "insupd",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "written_by"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delete",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "cast",
+              "atomName": "cast",
               "actionName": "delecs",
               "relateArgs": {
                 "msid": "msid"
               }
             },
             {
-              "tableName": "classification",
+              "atomName": "classification",
               "actionName": "delecs",
               "relateArgs": {
                 "msid": "msid"
               }
             },
             {
-              "tableName": "directed_by",
+              "atomName": "directed_by",
               "actionName": "delecs",
               "relateArgs": {
                 "msid": "msid"
               }
             },
             {
-              "tableName": "made_by",
+              "atomName": "made_by",
               "actionName": "delecs",
               "relateArgs": {
                 "msid": "msid"
               }
             },
             {
-              "tableName": "tags",
+              "atomName": "tags",
               "actionName": "delecs",
               "relateArgs": {
                 "msid": "msid"
               }
             },
             {
-              "tableName": "written_by",
+              "atomName": "written_by",
               "actionName": "delecs",
               "relateArgs": {
                 "msid": "msid"
               }
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "cast",
-        "columns": [
-          {
-            "columnName": "id",
-            "typeName": "int",
-            "label": "id",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "msid",
-            "typeName": "int",
-            "label": "msid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "aid",
-            "typeName": "int",
-            "label": "aid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "role",
-            "typeName": "int",
-            "label": "role",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "id"
-        ],
-        "idAuto": "rowid",
-        "fks": [
-          {
-            "fkTable": "copyright",
-            "fkColumn": "msid",
-            "column": "msid"
-          },
-          {
-            "fkTable": "actor",
-            "fkColumn": "aid",
-            "column": "aid"
-          }
-        ]
-      },
+      "atomName": "cast",
+      "tableName": "cast",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id"
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid"
+        },
+        {
+          "columnName": "aid",
+          "typeName": "int",
+          "label": "aid"
+        },
+        {
+          "columnName": "role",
+          "typeName": "int",
+          "label": "role"
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
+      "fks": [
+        {
+          "fkTable": "copyright",
+          "fkColumn": "msid",
+          "column": "msid"
+        },
+        {
+          "fkTable": "actor",
+          "fkColumn": "aid",
+          "column": "aid"
+        }
+      ],
       "actions": [
         {
           "actionName": "edit"
@@ -571,9 +532,9 @@
         },
         {
           "actionName": "insert",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "insert",
               "relateArgs": {
                 "msid": "msid"
@@ -581,21 +542,20 @@
               "marker": "copyright"
             },
             {
-              "tableName": "actor",
+              "atomName": "actor",
               "actionName": "insert",
               "relateArgs": {
                 "aid": "aid"
               },
               "marker": "actor"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "update",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "update",
               "relateArgs": {
                 "msid": "msid"
@@ -603,21 +563,20 @@
               "marker": "copyright"
             },
             {
-              "tableName": "actor",
+              "atomName": "actor",
               "actionName": "update",
               "relateArgs": {
                 "aid": "aid"
               },
               "marker": "actor"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "insupd",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "insupd",
               "relateArgs": {
                 "msid": "msid"
@@ -625,65 +584,57 @@
               "marker": "copyright"
             },
             {
-              "tableName": "actor",
+              "atomName": "actor",
               "actionName": "insupd",
               "relateArgs": {
                 "aid": "aid"
               },
               "marker": "actor"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
-          "actionName": "delete",
-          "isDo": true
+          "actionName": "delete"
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "cast",
+              "atomName": "cast",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "genre",
-        "columns": [
-          {
-            "columnName": "gid",
-            "typeName": "int",
-            "label": "gid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "genre",
-            "typeName": "string",
-            "label": "genre",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "gid"
-        ],
-        "idAuto": "rowid"
-      },
+      "atomName": "genre",
+      "tableName": "genre",
+      "columns": [
+        {
+          "columnName": "gid",
+          "typeName": "int",
+          "label": "gid"
+        },
+        {
+          "columnName": "genre",
+          "typeName": "string",
+          "label": "genre"
+        }
+      ],
+      "pks": [
+        "gid"
+      ],
+      "idAuto": "rowid",
       "actions": [
         {
           "actionName": "edit",
           "nextpages": [
             {
-              "tableName": "classification",
+              "atomName": "classification",
               "actionName": "topics",
               "relateExtra": {
                 "gid": "gid"
@@ -696,7 +647,7 @@
           "actionName": "topics",
           "nextpages": [
             {
-              "tableName": "classification",
+              "atomName": "classification",
               "actionName": "topics",
               "relateExtra": {
                 "gid": "gid"
@@ -709,115 +660,103 @@
           "actionName": "insert",
           "nextpages": [
             {
-              "tableName": "classification",
+              "atomName": "classification",
               "actionName": "insert",
               "relateArgs": {
                 "gid": "gid"
               },
               "marker": "classification"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "update",
           "nextpages": [
             {
-              "tableName": "classification",
+              "atomName": "classification",
               "actionName": "update",
               "relateArgs": {
                 "gid": "gid"
               },
               "marker": "classification"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "insupd",
           "nextpages": [
             {
-              "tableName": "classification",
+              "atomName": "classification",
               "actionName": "insupd",
               "relateArgs": {
                 "gid": "gid"
               },
               "marker": "classification"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delete",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "classification",
+              "atomName": "classification",
               "actionName": "delecs",
               "relateArgs": {
                 "gid": "gid"
               }
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "genre",
+              "atomName": "genre",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "classification",
-        "columns": [
-          {
-            "columnName": "id",
-            "typeName": "int",
-            "label": "id",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "msid",
-            "typeName": "int",
-            "label": "msid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "gid",
-            "typeName": "int",
-            "label": "gid",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "id"
-        ],
-        "idAuto": "rowid",
-        "fks": [
-          {
-            "fkTable": "copyright",
-            "fkColumn": "msid",
-            "column": "msid"
-          },
-          {
-            "fkTable": "genre",
-            "fkColumn": "gid",
-            "column": "gid"
-          }
-        ]
-      },
+      "atomName": "classification",
+      "tableName": "classification",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id"
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid"
+        },
+        {
+          "columnName": "gid",
+          "typeName": "int",
+          "label": "gid"
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
+      "fks": [
+        {
+          "fkTable": "copyright",
+          "fkColumn": "msid",
+          "column": "msid"
+        },
+        {
+          "fkTable": "genre",
+          "fkColumn": "gid",
+          "column": "gid"
+        }
+      ],
       "actions": [
         {
           "actionName": "edit"
@@ -827,9 +766,9 @@
         },
         {
           "actionName": "insert",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "insert",
               "relateArgs": {
                 "msid": "msid"
@@ -837,21 +776,20 @@
               "marker": "copyright"
             },
             {
-              "tableName": "genre",
+              "atomName": "genre",
               "actionName": "insert",
               "relateArgs": {
                 "gid": "gid"
               },
               "marker": "genre"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "update",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "update",
               "relateArgs": {
                 "msid": "msid"
@@ -859,21 +797,20 @@
               "marker": "copyright"
             },
             {
-              "tableName": "genre",
+              "atomName": "genre",
               "actionName": "update",
               "relateArgs": {
                 "gid": "gid"
               },
               "marker": "genre"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "insupd",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "insupd",
               "relateArgs": {
                 "msid": "msid"
@@ -881,66 +818,56 @@
               "marker": "copyright"
             },
             {
-              "tableName": "genre",
+              "atomName": "genre",
               "actionName": "insupd",
               "relateArgs": {
                 "gid": "gid"
               },
               "marker": "genre"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
-          "actionName": "delete",
-          "isDo": true
+          "actionName": "delete"
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "classification",
+              "atomName": "classification",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "company",
-        "columns": [
-          {
-            "columnName": "id",
-            "typeName": "int",
-            "label": "id",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "name",
-            "typeName": "string",
-            "label": "name",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "country_code",
-            "typeName": "string",
-            "label": "country_code",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "id"
-        ],
-        "idAuto": "rowid"
-      },
+      "atomName": "company",
+      "tableName": "company",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id"
+        },
+        {
+          "columnName": "name",
+          "typeName": "string",
+          "label": "name"
+        },
+        {
+          "columnName": "country_code",
+          "typeName": "string",
+          "label": "country_code"
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
       "actions": [
         {
           "actionName": "edit"
@@ -949,94 +876,76 @@
           "actionName": "topics"
         },
         {
-          "actionName": "insert",
-          "isDo": true
+          "actionName": "insert"
         },
         {
-          "actionName": "update",
-          "isDo": true
+          "actionName": "update"
         },
         {
-          "actionName": "insupd",
-          "isDo": true
+          "actionName": "insupd"
         },
         {
-          "actionName": "delete",
-          "isDo": true
+          "actionName": "delete"
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "company",
+              "atomName": "company",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "director",
-        "columns": [
-          {
-            "columnName": "did",
-            "typeName": "int",
-            "label": "did",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "gender",
-            "typeName": "string",
-            "label": "gender",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "name",
-            "typeName": "string",
-            "label": "name",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "nationality",
-            "typeName": "string",
-            "label": "nationality",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "birth_city",
-            "typeName": "string",
-            "label": "birth_city",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "birth_year",
-            "typeName": "int",
-            "label": "birth_year",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "did"
-        ],
-        "idAuto": "rowid"
-      },
+      "atomName": "director",
+      "tableName": "director",
+      "columns": [
+        {
+          "columnName": "did",
+          "typeName": "int",
+          "label": "did"
+        },
+        {
+          "columnName": "gender",
+          "typeName": "string",
+          "label": "gender"
+        },
+        {
+          "columnName": "name",
+          "typeName": "string",
+          "label": "name"
+        },
+        {
+          "columnName": "nationality",
+          "typeName": "string",
+          "label": "nationality"
+        },
+        {
+          "columnName": "birth_city",
+          "typeName": "string",
+          "label": "birth_city"
+        },
+        {
+          "columnName": "birth_year",
+          "typeName": "int",
+          "label": "birth_year"
+        }
+      ],
+      "pks": [
+        "did"
+      ],
+      "idAuto": "rowid",
       "actions": [
         {
           "actionName": "edit",
           "nextpages": [
             {
-              "tableName": "directed_by",
+              "atomName": "directed_by",
               "actionName": "topics",
               "relateExtra": {
                 "did": "did"
@@ -1049,7 +958,7 @@
           "actionName": "topics",
           "nextpages": [
             {
-              "tableName": "directed_by",
+              "atomName": "directed_by",
               "actionName": "topics",
               "relateExtra": {
                 "did": "did"
@@ -1062,130 +971,112 @@
           "actionName": "insert",
           "nextpages": [
             {
-              "tableName": "directed_by",
+              "atomName": "directed_by",
               "actionName": "insert",
               "relateArgs": {
                 "did": "did"
               },
               "marker": "directed_by"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "update",
           "nextpages": [
             {
-              "tableName": "directed_by",
+              "atomName": "directed_by",
               "actionName": "update",
               "relateArgs": {
                 "did": "did"
               },
               "marker": "directed_by"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "insupd",
           "nextpages": [
             {
-              "tableName": "directed_by",
+              "atomName": "directed_by",
               "actionName": "insupd",
               "relateArgs": {
                 "did": "did"
               },
               "marker": "directed_by"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delete",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "directed_by",
+              "atomName": "directed_by",
               "actionName": "delecs",
               "relateArgs": {
                 "did": "did"
               }
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "director",
+              "atomName": "director",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "producer",
-        "columns": [
-          {
-            "columnName": "pid",
-            "typeName": "int",
-            "label": "pid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "gender",
-            "typeName": "string",
-            "label": "gender",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "name",
-            "typeName": "string",
-            "label": "name",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "nationality",
-            "typeName": "string",
-            "label": "nationality",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "birth_city",
-            "typeName": "string",
-            "label": "birth_city",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "birth_year",
-            "typeName": "int",
-            "label": "birth_year",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "pid"
-        ],
-        "idAuto": "rowid"
-      },
+      "atomName": "producer",
+      "tableName": "producer",
+      "columns": [
+        {
+          "columnName": "pid",
+          "typeName": "int",
+          "label": "pid"
+        },
+        {
+          "columnName": "gender",
+          "typeName": "string",
+          "label": "gender"
+        },
+        {
+          "columnName": "name",
+          "typeName": "string",
+          "label": "name"
+        },
+        {
+          "columnName": "nationality",
+          "typeName": "string",
+          "label": "nationality"
+        },
+        {
+          "columnName": "birth_city",
+          "typeName": "string",
+          "label": "birth_city"
+        },
+        {
+          "columnName": "birth_year",
+          "typeName": "int",
+          "label": "birth_year"
+        }
+      ],
+      "pks": [
+        "pid"
+      ],
+      "idAuto": "rowid",
       "actions": [
         {
           "actionName": "edit",
           "nextpages": [
             {
-              "tableName": "made_by",
+              "atomName": "made_by",
               "actionName": "topics",
               "relateExtra": {
                 "pid": "pid"
@@ -1198,7 +1089,7 @@
           "actionName": "topics",
           "nextpages": [
             {
-              "tableName": "made_by",
+              "atomName": "made_by",
               "actionName": "topics",
               "relateExtra": {
                 "pid": "pid"
@@ -1211,115 +1102,103 @@
           "actionName": "insert",
           "nextpages": [
             {
-              "tableName": "made_by",
+              "atomName": "made_by",
               "actionName": "insert",
               "relateArgs": {
                 "pid": "pid"
               },
               "marker": "made_by"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "update",
           "nextpages": [
             {
-              "tableName": "made_by",
+              "atomName": "made_by",
               "actionName": "update",
               "relateArgs": {
                 "pid": "pid"
               },
               "marker": "made_by"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "insupd",
           "nextpages": [
             {
-              "tableName": "made_by",
+              "atomName": "made_by",
               "actionName": "insupd",
               "relateArgs": {
                 "pid": "pid"
               },
               "marker": "made_by"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delete",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "made_by",
+              "atomName": "made_by",
               "actionName": "delecs",
               "relateArgs": {
                 "pid": "pid"
               }
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "producer",
+              "atomName": "producer",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "directed_by",
-        "columns": [
-          {
-            "columnName": "id",
-            "typeName": "int",
-            "label": "id",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "msid",
-            "typeName": "int",
-            "label": "msid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "did",
-            "typeName": "int",
-            "label": "did",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "id"
-        ],
-        "idAuto": "rowid",
-        "fks": [
-          {
-            "fkTable": "director",
-            "fkColumn": "did",
-            "column": "did"
-          },
-          {
-            "fkTable": "copyright",
-            "fkColumn": "msid",
-            "column": "msid"
-          }
-        ]
-      },
+      "atomName": "directed_by",
+      "tableName": "directed_by",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id"
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid"
+        },
+        {
+          "columnName": "did",
+          "typeName": "int",
+          "label": "did"
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
+      "fks": [
+        {
+          "fkTable": "director",
+          "fkColumn": "did",
+          "column": "did"
+        },
+        {
+          "fkTable": "copyright",
+          "fkColumn": "msid",
+          "column": "msid"
+        }
+      ],
       "actions": [
         {
           "actionName": "edit"
@@ -1329,9 +1208,9 @@
         },
         {
           "actionName": "insert",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "director",
+              "atomName": "director",
               "actionName": "insert",
               "relateArgs": {
                 "did": "did"
@@ -1339,21 +1218,20 @@
               "marker": "director"
             },
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "insert",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "copyright"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "update",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "director",
+              "atomName": "director",
               "actionName": "update",
               "relateArgs": {
                 "did": "did"
@@ -1361,21 +1239,20 @@
               "marker": "director"
             },
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "update",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "copyright"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "insupd",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "director",
+              "atomName": "director",
               "actionName": "insupd",
               "relateArgs": {
                 "did": "did"
@@ -1383,65 +1260,57 @@
               "marker": "director"
             },
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "insupd",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "copyright"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
-          "actionName": "delete",
-          "isDo": true
+          "actionName": "delete"
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "directed_by",
+              "atomName": "directed_by",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "keyword",
-        "columns": [
-          {
-            "columnName": "id",
-            "typeName": "int",
-            "label": "id",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "keyword",
-            "typeName": "string",
-            "label": "keyword",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "id"
-        ],
-        "idAuto": "rowid"
-      },
+      "atomName": "keyword",
+      "tableName": "keyword",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id"
+        },
+        {
+          "columnName": "keyword",
+          "typeName": "string",
+          "label": "keyword"
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
       "actions": [
         {
           "actionName": "edit",
           "nextpages": [
             {
-              "tableName": "tags",
+              "atomName": "tags",
               "actionName": "topics",
               "relateExtra": {
                 "kid": "kid"
@@ -1454,7 +1323,7 @@
           "actionName": "topics",
           "nextpages": [
             {
-              "tableName": "tags",
+              "atomName": "tags",
               "actionName": "topics",
               "relateExtra": {
                 "kid": "kid"
@@ -1467,115 +1336,103 @@
           "actionName": "insert",
           "nextpages": [
             {
-              "tableName": "tags",
+              "atomName": "tags",
               "actionName": "insert",
               "relateArgs": {
                 "kid": "kid"
               },
               "marker": "tags"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "update",
           "nextpages": [
             {
-              "tableName": "tags",
+              "atomName": "tags",
               "actionName": "update",
               "relateArgs": {
                 "kid": "kid"
               },
               "marker": "tags"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "insupd",
           "nextpages": [
             {
-              "tableName": "tags",
+              "atomName": "tags",
               "actionName": "insupd",
               "relateArgs": {
                 "kid": "kid"
               },
               "marker": "tags"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delete",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "tags",
+              "atomName": "tags",
               "actionName": "delecs",
               "relateArgs": {
                 "kid": "kid"
               }
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "keyword",
+              "atomName": "keyword",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "made_by",
-        "columns": [
-          {
-            "columnName": "id",
-            "typeName": "int",
-            "label": "id",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "msid",
-            "typeName": "int",
-            "label": "msid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "pid",
-            "typeName": "int",
-            "label": "pid",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "id"
-        ],
-        "idAuto": "rowid",
-        "fks": [
-          {
-            "fkTable": "producer",
-            "fkColumn": "pid",
-            "column": "pid"
-          },
-          {
-            "fkTable": "copyright",
-            "fkColumn": "msid",
-            "column": "msid"
-          }
-        ]
-      },
+      "atomName": "made_by",
+      "tableName": "made_by",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id"
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid"
+        },
+        {
+          "columnName": "pid",
+          "typeName": "int",
+          "label": "pid"
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
+      "fks": [
+        {
+          "fkTable": "producer",
+          "fkColumn": "pid",
+          "column": "pid"
+        },
+        {
+          "fkTable": "copyright",
+          "fkColumn": "msid",
+          "column": "msid"
+        }
+      ],
       "actions": [
         {
           "actionName": "edit"
@@ -1585,9 +1442,9 @@
         },
         {
           "actionName": "insert",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "producer",
+              "atomName": "producer",
               "actionName": "insert",
               "relateArgs": {
                 "pid": "pid"
@@ -1595,21 +1452,20 @@
               "marker": "producer"
             },
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "insert",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "copyright"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "update",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "producer",
+              "atomName": "producer",
               "actionName": "update",
               "relateArgs": {
                 "pid": "pid"
@@ -1617,21 +1473,20 @@
               "marker": "producer"
             },
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "update",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "copyright"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "insupd",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "producer",
+              "atomName": "producer",
               "actionName": "insupd",
               "relateArgs": {
                 "pid": "pid"
@@ -1639,80 +1494,135 @@
               "marker": "producer"
             },
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "insupd",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "copyright"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
-          "actionName": "delete",
-          "isDo": true
+          "actionName": "delete"
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "made_by",
+              "atomName": "made_by",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "movie",
-        "columns": [
-          {
-            "columnName": "mid",
-            "typeName": "int",
-            "label": "mid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "title",
-            "typeName": "string",
-            "label": "title",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "release_year",
-            "typeName": "int",
-            "label": "release_year",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "title_aka",
-            "typeName": "string",
-            "label": "title_aka",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "budget",
-            "typeName": "string",
-            "label": "budget",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "mid"
-        ],
-        "idAuto": "rowid"
-      },
+      "atomName": "movie",
+      "tableName": "movie",
+      "columns": [
+        {
+          "columnName": "mid",
+          "typeName": "int",
+          "label": "mid"
+        },
+        {
+          "columnName": "title",
+          "typeName": "string",
+          "label": "title"
+        },
+        {
+          "columnName": "release_year",
+          "typeName": "int",
+          "label": "release_year"
+        },
+        {
+          "columnName": "title_aka",
+          "typeName": "string",
+          "label": "title_aka"
+        },
+        {
+          "columnName": "budget",
+          "typeName": "string",
+          "label": "budget"
+        }
+      ],
+      "pks": [
+        "mid"
+      ],
+      "idAuto": "rowid",
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert"
+        },
+        {
+          "actionName": "update"
+        },
+        {
+          "actionName": "insupd"
+        },
+        {
+          "actionName": "delete"
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "movie",
+              "actionName": "delete",
+              "relateArgs": {
+                "rowid": "rowid"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "tags",
+      "tableName": "tags",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id"
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid"
+        },
+        {
+          "columnName": "kid",
+          "typeName": "int",
+          "label": "kid"
+        }
+      ],
+      "pks": [
+        "id"
+      ],
+      "idAuto": "rowid",
+      "fks": [
+        {
+          "fkTable": "keyword",
+          "fkColumn": "kid",
+          "column": "kid"
+        },
+        {
+          "fkTable": "copyright",
+          "fkColumn": "msid",
+          "column": "msid"
+        }
+      ],
       "actions": [
         {
           "actionName": "edit"
@@ -1722,90 +1632,9 @@
         },
         {
           "actionName": "insert",
-          "isDo": true
-        },
-        {
-          "actionName": "update",
-          "isDo": true
-        },
-        {
-          "actionName": "insupd",
-          "isDo": true
-        },
-        {
-          "actionName": "delete",
-          "isDo": true
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
+          "prepares": [
             {
-              "tableName": "movie",
-              "actionName": "delete",
-              "relateArgs": {
-                "rowid": "rowid"
-              }
-            }
-          ],
-          "isDo": true
-        }
-      ]
-    },
-    {
-      "table": {
-        "tableName": "tags",
-        "columns": [
-          {
-            "columnName": "id",
-            "typeName": "int",
-            "label": "id",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "msid",
-            "typeName": "int",
-            "label": "msid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "kid",
-            "typeName": "int",
-            "label": "kid",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "id"
-        ],
-        "idAuto": "rowid",
-        "fks": [
-          {
-            "fkTable": "keyword",
-            "fkColumn": "kid",
-            "column": "kid"
-          },
-          {
-            "fkTable": "copyright",
-            "fkColumn": "msid",
-            "column": "msid"
-          }
-        ]
-      },
-      "actions": [
-        {
-          "actionName": "edit"
-        },
-        {
-          "actionName": "topics"
-        },
-        {
-          "actionName": "insert",
-          "Prepares": [
-            {
-              "tableName": "keyword",
+              "atomName": "keyword",
               "actionName": "insert",
               "relateArgs": {
                 "kid": "kid"
@@ -1813,21 +1642,20 @@
               "marker": "keyword"
             },
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "insert",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "copyright"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "update",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "keyword",
+              "atomName": "keyword",
               "actionName": "update",
               "relateArgs": {
                 "kid": "kid"
@@ -1835,21 +1663,20 @@
               "marker": "keyword"
             },
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "update",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "copyright"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "insupd",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "keyword",
+              "atomName": "keyword",
               "actionName": "insupd",
               "relateArgs": {
                 "kid": "kid"
@@ -1857,94 +1684,76 @@
               "marker": "keyword"
             },
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "insupd",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "copyright"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
-          "actionName": "delete",
-          "isDo": true
+          "actionName": "delete"
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "tags",
+              "atomName": "tags",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "tv_series",
-        "columns": [
-          {
-            "columnName": "sid",
-            "typeName": "int",
-            "label": "sid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "title",
-            "typeName": "string",
-            "label": "title",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "release_year",
-            "typeName": "int",
-            "label": "release_year",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "num_of_seasons",
-            "typeName": "int",
-            "label": "num_of_seasons",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "num_of_episodes",
-            "typeName": "int",
-            "label": "num_of_episodes",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "title_aka",
-            "typeName": "string",
-            "label": "title_aka",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "budget",
-            "typeName": "string",
-            "label": "budget",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "sid"
-        ],
-        "idAuto": "rowid"
-      },
+      "atomName": "tv_series",
+      "tableName": "tv_series",
+      "columns": [
+        {
+          "columnName": "sid",
+          "typeName": "int",
+          "label": "sid"
+        },
+        {
+          "columnName": "title",
+          "typeName": "string",
+          "label": "title"
+        },
+        {
+          "columnName": "release_year",
+          "typeName": "int",
+          "label": "release_year"
+        },
+        {
+          "columnName": "num_of_seasons",
+          "typeName": "int",
+          "label": "num_of_seasons"
+        },
+        {
+          "columnName": "num_of_episodes",
+          "typeName": "int",
+          "label": "num_of_episodes"
+        },
+        {
+          "columnName": "title_aka",
+          "typeName": "string",
+          "label": "title_aka"
+        },
+        {
+          "columnName": "budget",
+          "typeName": "string",
+          "label": "budget"
+        }
+      ],
+      "pks": [
+        "sid"
+      ],
+      "idAuto": "rowid",
       "actions": [
         {
           "actionName": "edit"
@@ -1953,101 +1762,81 @@
           "actionName": "topics"
         },
         {
-          "actionName": "insert",
-          "isDo": true
+          "actionName": "insert"
         },
         {
-          "actionName": "update",
-          "isDo": true
+          "actionName": "update"
         },
         {
-          "actionName": "insupd",
-          "isDo": true
+          "actionName": "insupd"
         },
         {
-          "actionName": "delete",
-          "isDo": true
+          "actionName": "delete"
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "tv_series",
+              "atomName": "tv_series",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "writer",
-        "columns": [
-          {
-            "columnName": "wid",
-            "typeName": "int",
-            "label": "wid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "gender",
-            "typeName": "string",
-            "label": "gender",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "name",
-            "typeName": "int",
-            "label": "name",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "nationality",
-            "typeName": "int",
-            "label": "nationality",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "num_of_episodes",
-            "typeName": "int",
-            "label": "num_of_episodes",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "birth_city",
-            "typeName": "string",
-            "label": "birth_city",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "birth_year",
-            "typeName": "int",
-            "label": "birth_year",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "pks": [
-          "wid"
-        ],
-        "idAuto": "rowid"
-      },
+      "atomName": "writer",
+      "tableName": "writer",
+      "columns": [
+        {
+          "columnName": "wid",
+          "typeName": "int",
+          "label": "wid"
+        },
+        {
+          "columnName": "gender",
+          "typeName": "string",
+          "label": "gender"
+        },
+        {
+          "columnName": "name",
+          "typeName": "int",
+          "label": "name"
+        },
+        {
+          "columnName": "nationality",
+          "typeName": "int",
+          "label": "nationality"
+        },
+        {
+          "columnName": "num_of_episodes",
+          "typeName": "int",
+          "label": "num_of_episodes"
+        },
+        {
+          "columnName": "birth_city",
+          "typeName": "string",
+          "label": "birth_city"
+        },
+        {
+          "columnName": "birth_year",
+          "typeName": "int",
+          "label": "birth_year"
+        }
+      ],
+      "pks": [
+        "wid"
+      ],
+      "idAuto": "rowid",
       "actions": [
         {
           "actionName": "edit",
           "nextpages": [
             {
-              "tableName": "written_by",
+              "atomName": "written_by",
               "actionName": "topics",
               "relateExtra": {
                 "wid": "wid"
@@ -2060,7 +1849,7 @@
           "actionName": "topics",
           "nextpages": [
             {
-              "tableName": "written_by",
+              "atomName": "written_by",
               "actionName": "topics",
               "relateExtra": {
                 "wid": "wid"
@@ -2073,112 +1862,100 @@
           "actionName": "insert",
           "nextpages": [
             {
-              "tableName": "written_by",
+              "atomName": "written_by",
               "actionName": "insert",
               "relateArgs": {
                 "wid": "wid"
               },
               "marker": "written_by"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "update",
           "nextpages": [
             {
-              "tableName": "written_by",
+              "atomName": "written_by",
               "actionName": "update",
               "relateArgs": {
                 "wid": "wid"
               },
               "marker": "written_by"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "insupd",
           "nextpages": [
             {
-              "tableName": "written_by",
+              "atomName": "written_by",
               "actionName": "insupd",
               "relateArgs": {
                 "wid": "wid"
               },
               "marker": "written_by"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delete",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "written_by",
+              "atomName": "written_by",
               "actionName": "delecs",
               "relateArgs": {
                 "wid": "wid"
               }
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "writer",
+              "atomName": "writer",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     },
     {
-      "table": {
-        "tableName": "written_by",
-        "columns": [
-          {
-            "columnName": "id",
-            "typeName": "int",
-            "label": "id",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "msid",
-            "typeName": "int",
-            "label": "msid",
-            "notnull": false,
-            "auto": false
-          },
-          {
-            "columnName": "wid",
-            "typeName": "int",
-            "label": "wid",
-            "notnull": false,
-            "auto": false
-          }
-        ],
-        "idAuto": "rowid",
-        "fks": [
-          {
-            "fkTable": "writer",
-            "fkColumn": "wid",
-            "column": "wid"
-          },
-          {
-            "fkTable": "copyright",
-            "fkColumn": "msid",
-            "column": "msid"
-          }
-        ]
-      },
+      "atomName": "written_by",
+      "tableName": "written_by",
+      "columns": [
+        {
+          "columnName": "id",
+          "typeName": "int",
+          "label": "id"
+        },
+        {
+          "columnName": "msid",
+          "typeName": "int",
+          "label": "msid"
+        },
+        {
+          "columnName": "wid",
+          "typeName": "int",
+          "label": "wid"
+        }
+      ],
+      "idAuto": "rowid",
+      "fks": [
+        {
+          "fkTable": "writer",
+          "fkColumn": "wid",
+          "column": "wid"
+        },
+        {
+          "fkTable": "copyright",
+          "fkColumn": "msid",
+          "column": "msid"
+        }
+      ],
       "actions": [
         {
           "actionName": "edit"
@@ -2188,9 +1965,9 @@
         },
         {
           "actionName": "insert",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "writer",
+              "atomName": "writer",
               "actionName": "insert",
               "relateArgs": {
                 "wid": "wid"
@@ -2198,21 +1975,20 @@
               "marker": "writer"
             },
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "insert",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "copyright"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "update",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "writer",
+              "atomName": "writer",
               "actionName": "update",
               "relateArgs": {
                 "wid": "wid"
@@ -2220,21 +1996,20 @@
               "marker": "writer"
             },
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "update",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "copyright"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
           "actionName": "insupd",
-          "Prepares": [
+          "prepares": [
             {
-              "tableName": "writer",
+              "atomName": "writer",
               "actionName": "insupd",
               "relateArgs": {
                 "wid": "wid"
@@ -2242,36 +2017,34 @@
               "marker": "writer"
             },
             {
-              "tableName": "copyright",
+              "atomName": "copyright",
               "actionName": "insupd",
               "relateArgs": {
                 "msid": "msid"
               },
               "marker": "copyright"
             }
-          ],
-          "isDo": true
+          ]
         },
         {
-          "actionName": "delete",
-          "isDo": true
+          "actionName": "delete"
         },
         {
           "actionName": "delecs",
           "nextpages": [
             {
-              "tableName": "written_by",
+              "atomName": "written_by",
               "actionName": "delete",
               "relateArgs": {
                 "rowid": "rowid"
               }
             }
-          ],
-          "isDo": true
+          ]
         }
       ]
     }
   ],
   "dbDriver": 2,
-  "Stopper": null
+  "Stopper": null,
+  "PreStopper": null
 }

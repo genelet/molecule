@@ -1,0 +1,1320 @@
+{
+  "atoms": [
+    {
+      "atomName": "customers",
+      "tableName": "customers",
+      "columns": [
+        {
+          "columnName": "customerNumber",
+          "typeName": "int",
+          "label": "customerNumber",
+          "notnull": true,
+          "constraint": true
+        },
+        {
+          "columnName": "customerName",
+          "typeName": "string",
+          "label": "customerName",
+          "notnull": true
+        },
+        {
+          "columnName": "contactLastName",
+          "typeName": "string",
+          "label": "contactLastName",
+          "notnull": true
+        },
+        {
+          "columnName": "contactFirstName",
+          "typeName": "string",
+          "label": "contactFirstName",
+          "notnull": true
+        },
+        {
+          "columnName": "phone",
+          "typeName": "string",
+          "label": "phone",
+          "notnull": true
+        },
+        {
+          "columnName": "addressLine1",
+          "typeName": "string",
+          "label": "addressLine1",
+          "notnull": true
+        },
+        {
+          "columnName": "addressLine2",
+          "typeName": "string",
+          "label": "addressLine2"
+        },
+        {
+          "columnName": "city",
+          "typeName": "string",
+          "label": "city",
+          "notnull": true
+        },
+        {
+          "columnName": "state",
+          "typeName": "string",
+          "label": "state"
+        },
+        {
+          "columnName": "postalCode",
+          "typeName": "string",
+          "label": "postalCode"
+        },
+        {
+          "columnName": "country",
+          "typeName": "string",
+          "label": "country",
+          "notnull": true
+        },
+        {
+          "columnName": "salesRepEmployeeNumber",
+          "typeName": "int",
+          "label": "salesRepEmployeeNumber"
+        },
+        {
+          "columnName": "creditLimit",
+          "typeName": "",
+          "label": "creditLimit"
+        }
+      ],
+      "pks": [
+        "customerNumber"
+      ],
+      "fks": [
+        {
+          "fkTable": "employees",
+          "fkColumn": "employeeNumber",
+          "column": "salesRepEmployeeNumber"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "orders",
+              "actionName": "topics",
+              "relateExtra": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "orders"
+            },
+            {
+              "atomName": "payments",
+              "actionName": "topics",
+              "relateExtra": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "payments"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "orders",
+              "actionName": "topics",
+              "relateExtra": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "orders"
+            },
+            {
+              "atomName": "payments",
+              "actionName": "topics",
+              "relateExtra": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "payments"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "prepares": [
+            {
+              "atomName": "employees",
+              "actionName": "insert",
+              "relateArgs": {
+                "employeeNumber": "salesRepEmployeeNumber"
+              },
+              "marker": "employees"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "orders",
+              "actionName": "insert",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "orders"
+            },
+            {
+              "atomName": "payments",
+              "actionName": "insert",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "payments"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "prepares": [
+            {
+              "atomName": "employees",
+              "actionName": "update",
+              "relateArgs": {
+                "employeeNumber": "salesRepEmployeeNumber"
+              },
+              "marker": "employees"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "orders",
+              "actionName": "update",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "orders"
+            },
+            {
+              "atomName": "payments",
+              "actionName": "update",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "payments"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "prepares": [
+            {
+              "atomName": "employees",
+              "actionName": "insupd",
+              "relateArgs": {
+                "employeeNumber": "salesRepEmployeeNumber"
+              },
+              "marker": "employees"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "orders",
+              "actionName": "insupd",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "orders"
+            },
+            {
+              "atomName": "payments",
+              "actionName": "insupd",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "payments"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "orders",
+              "actionName": "delecs",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              }
+            },
+            {
+              "atomName": "payments",
+              "actionName": "delecs",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "employees",
+      "tableName": "employees",
+      "columns": [
+        {
+          "columnName": "employeeNumber",
+          "typeName": "int",
+          "label": "employeeNumber",
+          "notnull": true,
+          "constraint": true
+        },
+        {
+          "columnName": "lastName",
+          "typeName": "string",
+          "label": "lastName",
+          "notnull": true
+        },
+        {
+          "columnName": "firstName",
+          "typeName": "string",
+          "label": "firstName",
+          "notnull": true
+        },
+        {
+          "columnName": "extension",
+          "typeName": "string",
+          "label": "extension",
+          "notnull": true
+        },
+        {
+          "columnName": "email",
+          "typeName": "string",
+          "label": "email",
+          "notnull": true
+        },
+        {
+          "columnName": "officeCode",
+          "typeName": "string",
+          "label": "officeCode",
+          "notnull": true
+        },
+        {
+          "columnName": "reportsTo",
+          "typeName": "int",
+          "label": "reportsTo"
+        },
+        {
+          "columnName": "jobTitle",
+          "typeName": "string",
+          "label": "jobTitle",
+          "notnull": true
+        }
+      ],
+      "pks": [
+        "employeeNumber"
+      ],
+      "fks": [
+        {
+          "fkTable": "employees",
+          "fkColumn": "employeeNumber",
+          "column": "reportsTo"
+        },
+        {
+          "fkTable": "offices",
+          "fkColumn": "officeCode",
+          "column": "officeCode"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "customers",
+              "actionName": "topics",
+              "relateExtra": {
+                "employeeNumber": "salesRepEmployeeNumber"
+              },
+              "marker": "customers"
+            },
+            {
+              "atomName": "employees",
+              "actionName": "topics",
+              "relateExtra": {
+                "employeeNumber": "reportsTo"
+              },
+              "marker": "employees"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "customers",
+              "actionName": "topics",
+              "relateExtra": {
+                "employeeNumber": "salesRepEmployeeNumber"
+              },
+              "marker": "customers"
+            },
+            {
+              "atomName": "employees",
+              "actionName": "topics",
+              "relateExtra": {
+                "employeeNumber": "reportsTo"
+              },
+              "marker": "employees"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "prepares": [
+            {
+              "atomName": "employees",
+              "actionName": "insert",
+              "relateArgs": {
+                "employeeNumber": "reportsTo"
+              },
+              "marker": "employees"
+            },
+            {
+              "atomName": "offices",
+              "actionName": "insert",
+              "relateArgs": {
+                "officeCode": "officeCode"
+              },
+              "marker": "offices"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "customers",
+              "actionName": "insert",
+              "relateArgs": {
+                "employeeNumber": "salesRepEmployeeNumber"
+              },
+              "marker": "customers"
+            },
+            {
+              "atomName": "employees",
+              "actionName": "insert",
+              "relateArgs": {
+                "employeeNumber": "reportsTo"
+              },
+              "marker": "employees"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "prepares": [
+            {
+              "atomName": "employees",
+              "actionName": "update",
+              "relateArgs": {
+                "employeeNumber": "reportsTo"
+              },
+              "marker": "employees"
+            },
+            {
+              "atomName": "offices",
+              "actionName": "update",
+              "relateArgs": {
+                "officeCode": "officeCode"
+              },
+              "marker": "offices"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "customers",
+              "actionName": "update",
+              "relateArgs": {
+                "employeeNumber": "salesRepEmployeeNumber"
+              },
+              "marker": "customers"
+            },
+            {
+              "atomName": "employees",
+              "actionName": "update",
+              "relateArgs": {
+                "employeeNumber": "reportsTo"
+              },
+              "marker": "employees"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "prepares": [
+            {
+              "atomName": "employees",
+              "actionName": "insupd",
+              "relateArgs": {
+                "employeeNumber": "reportsTo"
+              },
+              "marker": "employees"
+            },
+            {
+              "atomName": "offices",
+              "actionName": "insupd",
+              "relateArgs": {
+                "officeCode": "officeCode"
+              },
+              "marker": "offices"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "customers",
+              "actionName": "insupd",
+              "relateArgs": {
+                "employeeNumber": "salesRepEmployeeNumber"
+              },
+              "marker": "customers"
+            },
+            {
+              "atomName": "employees",
+              "actionName": "insupd",
+              "relateArgs": {
+                "employeeNumber": "reportsTo"
+              },
+              "marker": "employees"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "customers",
+              "actionName": "delecs",
+              "relateArgs": {
+                "employeeNumber": "salesRepEmployeeNumber"
+              }
+            },
+            {
+              "atomName": "employees",
+              "actionName": "delecs",
+              "relateArgs": {
+                "employeeNumber": "reportsTo"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "offices",
+      "tableName": "offices",
+      "columns": [
+        {
+          "columnName": "officeCode",
+          "typeName": "string",
+          "label": "officeCode",
+          "notnull": true,
+          "constraint": true
+        },
+        {
+          "columnName": "city",
+          "typeName": "string",
+          "label": "city",
+          "notnull": true
+        },
+        {
+          "columnName": "phone",
+          "typeName": "string",
+          "label": "phone",
+          "notnull": true
+        },
+        {
+          "columnName": "addressLine1",
+          "typeName": "string",
+          "label": "addressLine1",
+          "notnull": true
+        },
+        {
+          "columnName": "addressLine2",
+          "typeName": "string",
+          "label": "addressLine2"
+        },
+        {
+          "columnName": "state",
+          "typeName": "string",
+          "label": "state"
+        },
+        {
+          "columnName": "country",
+          "typeName": "string",
+          "label": "country",
+          "notnull": true
+        },
+        {
+          "columnName": "postalCode",
+          "typeName": "string",
+          "label": "postalCode",
+          "notnull": true
+        },
+        {
+          "columnName": "territory",
+          "typeName": "string",
+          "label": "territory",
+          "notnull": true
+        }
+      ],
+      "pks": [
+        "officeCode"
+      ],
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "employees",
+              "actionName": "topics",
+              "relateExtra": {
+                "officeCode": "officeCode"
+              },
+              "marker": "employees"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "employees",
+              "actionName": "topics",
+              "relateExtra": {
+                "officeCode": "officeCode"
+              },
+              "marker": "employees"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "atomName": "employees",
+              "actionName": "insert",
+              "relateArgs": {
+                "officeCode": "officeCode"
+              },
+              "marker": "employees"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "atomName": "employees",
+              "actionName": "update",
+              "relateArgs": {
+                "officeCode": "officeCode"
+              },
+              "marker": "employees"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "atomName": "employees",
+              "actionName": "insupd",
+              "relateArgs": {
+                "officeCode": "officeCode"
+              },
+              "marker": "employees"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "employees",
+              "actionName": "delecs",
+              "relateArgs": {
+                "officeCode": "officeCode"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "orderdetails",
+      "tableName": "orderdetails",
+      "columns": [
+        {
+          "columnName": "orderNumber",
+          "typeName": "int",
+          "label": "orderNumber",
+          "notnull": true,
+          "constraint": true
+        },
+        {
+          "columnName": "productCode",
+          "typeName": "string",
+          "label": "productCode",
+          "notnull": true,
+          "constraint": true
+        },
+        {
+          "columnName": "quantityOrdered",
+          "typeName": "int",
+          "label": "quantityOrdered",
+          "notnull": true
+        },
+        {
+          "columnName": "priceEach",
+          "typeName": "",
+          "label": "priceEach",
+          "notnull": true
+        },
+        {
+          "columnName": "orderLineNumber",
+          "typeName": "int16",
+          "label": "orderLineNumber",
+          "notnull": true
+        }
+      ],
+      "pks": [
+        "orderNumber",
+        "productCode"
+      ],
+      "fks": [
+        {
+          "fkTable": "orders",
+          "fkColumn": "orderNumber",
+          "column": "orderNumber"
+        },
+        {
+          "fkTable": "products",
+          "fkColumn": "productCode",
+          "column": "productCode"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "prepares": [
+            {
+              "atomName": "orders",
+              "actionName": "insert",
+              "relateArgs": {
+                "orderNumber": "orderNumber"
+              },
+              "marker": "orders"
+            },
+            {
+              "atomName": "products",
+              "actionName": "insert",
+              "relateArgs": {
+                "productCode": "productCode"
+              },
+              "marker": "products"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "prepares": [
+            {
+              "atomName": "orders",
+              "actionName": "update",
+              "relateArgs": {
+                "orderNumber": "orderNumber"
+              },
+              "marker": "orders"
+            },
+            {
+              "atomName": "products",
+              "actionName": "update",
+              "relateArgs": {
+                "productCode": "productCode"
+              },
+              "marker": "products"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "prepares": [
+            {
+              "atomName": "orders",
+              "actionName": "insupd",
+              "relateArgs": {
+                "orderNumber": "orderNumber"
+              },
+              "marker": "orders"
+            },
+            {
+              "atomName": "products",
+              "actionName": "insupd",
+              "relateArgs": {
+                "productCode": "productCode"
+              },
+              "marker": "products"
+            }
+          ]
+        },
+        {
+          "actionName": "delete"
+        }
+      ]
+    },
+    {
+      "atomName": "orders",
+      "tableName": "orders",
+      "columns": [
+        {
+          "columnName": "orderNumber",
+          "typeName": "int",
+          "label": "orderNumber",
+          "notnull": true,
+          "constraint": true
+        },
+        {
+          "columnName": "orderDate",
+          "typeName": "",
+          "label": "orderDate",
+          "notnull": true
+        },
+        {
+          "columnName": "requiredDate",
+          "typeName": "",
+          "label": "requiredDate",
+          "notnull": true
+        },
+        {
+          "columnName": "shippedDate",
+          "typeName": "",
+          "label": "shippedDate"
+        },
+        {
+          "columnName": "status",
+          "typeName": "string",
+          "label": "status",
+          "notnull": true
+        },
+        {
+          "columnName": "comments",
+          "typeName": "string",
+          "label": "comments"
+        },
+        {
+          "columnName": "customerNumber",
+          "typeName": "int",
+          "label": "customerNumber",
+          "notnull": true
+        }
+      ],
+      "pks": [
+        "orderNumber"
+      ],
+      "fks": [
+        {
+          "fkTable": "customers",
+          "fkColumn": "customerNumber",
+          "column": "customerNumber"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "orderdetails",
+              "actionName": "topics",
+              "relateExtra": {
+                "orderNumber": "orderNumber"
+              },
+              "marker": "orderdetails"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "orderdetails",
+              "actionName": "topics",
+              "relateExtra": {
+                "orderNumber": "orderNumber"
+              },
+              "marker": "orderdetails"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "prepares": [
+            {
+              "atomName": "customers",
+              "actionName": "insert",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "customers"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "orderdetails",
+              "actionName": "insert",
+              "relateArgs": {
+                "orderNumber": "orderNumber"
+              },
+              "marker": "orderdetails"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "prepares": [
+            {
+              "atomName": "customers",
+              "actionName": "update",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "customers"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "orderdetails",
+              "actionName": "update",
+              "relateArgs": {
+                "orderNumber": "orderNumber"
+              },
+              "marker": "orderdetails"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "prepares": [
+            {
+              "atomName": "customers",
+              "actionName": "insupd",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "customers"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "orderdetails",
+              "actionName": "insupd",
+              "relateArgs": {
+                "orderNumber": "orderNumber"
+              },
+              "marker": "orderdetails"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "orderdetails",
+              "actionName": "delecs",
+              "relateArgs": {
+                "orderNumber": "orderNumber"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "payments",
+      "tableName": "payments",
+      "columns": [
+        {
+          "columnName": "customerNumber",
+          "typeName": "int",
+          "label": "customerNumber",
+          "notnull": true,
+          "constraint": true
+        },
+        {
+          "columnName": "checkNumber",
+          "typeName": "string",
+          "label": "checkNumber",
+          "notnull": true,
+          "constraint": true
+        },
+        {
+          "columnName": "paymentDate",
+          "typeName": "",
+          "label": "paymentDate",
+          "notnull": true
+        },
+        {
+          "columnName": "amount",
+          "typeName": "",
+          "label": "amount",
+          "notnull": true
+        }
+      ],
+      "pks": [
+        "customerNumber",
+        "checkNumber"
+      ],
+      "fks": [
+        {
+          "fkTable": "customers",
+          "fkColumn": "customerNumber",
+          "column": "customerNumber"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "prepares": [
+            {
+              "atomName": "customers",
+              "actionName": "insert",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "customers"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "prepares": [
+            {
+              "atomName": "customers",
+              "actionName": "update",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "customers"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "prepares": [
+            {
+              "atomName": "customers",
+              "actionName": "insupd",
+              "relateArgs": {
+                "customerNumber": "customerNumber"
+              },
+              "marker": "customers"
+            }
+          ]
+        },
+        {
+          "actionName": "delete"
+        }
+      ]
+    },
+    {
+      "atomName": "productlines",
+      "tableName": "productlines",
+      "columns": [
+        {
+          "columnName": "productLine",
+          "typeName": "string",
+          "label": "productLine",
+          "notnull": true,
+          "constraint": true
+        },
+        {
+          "columnName": "textDescription",
+          "typeName": "string",
+          "label": "textDescription"
+        },
+        {
+          "columnName": "htmlDescription",
+          "typeName": "",
+          "label": "htmlDescription"
+        },
+        {
+          "columnName": "image",
+          "typeName": "",
+          "label": "image"
+        }
+      ],
+      "pks": [
+        "productLine"
+      ],
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "products",
+              "actionName": "topics",
+              "relateExtra": {
+                "productLine": "productLine"
+              },
+              "marker": "products"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "products",
+              "actionName": "topics",
+              "relateExtra": {
+                "productLine": "productLine"
+              },
+              "marker": "products"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "atomName": "products",
+              "actionName": "insert",
+              "relateArgs": {
+                "productLine": "productLine"
+              },
+              "marker": "products"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "atomName": "products",
+              "actionName": "update",
+              "relateArgs": {
+                "productLine": "productLine"
+              },
+              "marker": "products"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "atomName": "products",
+              "actionName": "insupd",
+              "relateArgs": {
+                "productLine": "productLine"
+              },
+              "marker": "products"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "products",
+              "actionName": "delecs",
+              "relateArgs": {
+                "productLine": "productLine"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "products",
+      "tableName": "products",
+      "columns": [
+        {
+          "columnName": "productCode",
+          "typeName": "string",
+          "label": "productCode",
+          "notnull": true,
+          "constraint": true
+        },
+        {
+          "columnName": "productName",
+          "typeName": "string",
+          "label": "productName",
+          "notnull": true
+        },
+        {
+          "columnName": "productLine",
+          "typeName": "string",
+          "label": "productLine",
+          "notnull": true
+        },
+        {
+          "columnName": "productScale",
+          "typeName": "string",
+          "label": "productScale",
+          "notnull": true
+        },
+        {
+          "columnName": "productVendor",
+          "typeName": "string",
+          "label": "productVendor",
+          "notnull": true
+        },
+        {
+          "columnName": "productDescription",
+          "typeName": "string",
+          "label": "productDescription",
+          "notnull": true
+        },
+        {
+          "columnName": "quantityInStock",
+          "typeName": "int16",
+          "label": "quantityInStock",
+          "notnull": true
+        },
+        {
+          "columnName": "buyPrice",
+          "typeName": "",
+          "label": "buyPrice",
+          "notnull": true
+        },
+        {
+          "columnName": "MSRP",
+          "typeName": "",
+          "label": "MSRP",
+          "notnull": true
+        }
+      ],
+      "pks": [
+        "productCode"
+      ],
+      "fks": [
+        {
+          "fkTable": "productlines",
+          "fkColumn": "productLine",
+          "column": "productLine"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "orderdetails",
+              "actionName": "topics",
+              "relateExtra": {
+                "productCode": "productCode"
+              },
+              "marker": "orderdetails"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "orderdetails",
+              "actionName": "topics",
+              "relateExtra": {
+                "productCode": "productCode"
+              },
+              "marker": "orderdetails"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "prepares": [
+            {
+              "atomName": "productlines",
+              "actionName": "insert",
+              "relateArgs": {
+                "productLine": "productLine"
+              },
+              "marker": "productlines"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "orderdetails",
+              "actionName": "insert",
+              "relateArgs": {
+                "productCode": "productCode"
+              },
+              "marker": "orderdetails"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "prepares": [
+            {
+              "atomName": "productlines",
+              "actionName": "update",
+              "relateArgs": {
+                "productLine": "productLine"
+              },
+              "marker": "productlines"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "orderdetails",
+              "actionName": "update",
+              "relateArgs": {
+                "productCode": "productCode"
+              },
+              "marker": "orderdetails"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "prepares": [
+            {
+              "atomName": "productlines",
+              "actionName": "insupd",
+              "relateArgs": {
+                "productLine": "productLine"
+              },
+              "marker": "productlines"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "orderdetails",
+              "actionName": "insupd",
+              "relateArgs": {
+                "productCode": "productCode"
+              },
+              "marker": "orderdetails"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "orderdetails",
+              "actionName": "delecs",
+              "relateArgs": {
+                "productCode": "productCode"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dbDriver": 3,
+  "Stopper": null,
+  "PreStopper": null
+}

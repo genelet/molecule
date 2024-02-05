@@ -6,14 +6,13 @@ import (
 
 // MoleculeToGraph translates molecule into protobuf. args:
 //
-//  - oneofs format: map[atomName][oneofName][list of fields]
-//  - package name
-//  - goPackage name
-//  - primary table name
-//  - primary table's pk
-//  - child to parent table mapping
-//  - table name to pk mapping
-//
+//   - oneofs format: map[atomName][oneofName][list of fields]
+//   - package name
+//   - goPackage name
+//   - primary table name
+//   - primary table's pk
+//   - child to parent table mapping
+//   - table name to pk mapping
 func MoleculeToGraph(molecule *godbi.Molecule, args ...interface{}) *Graph {
 	var oneofs map[string]map[string][]string
 	var packageName, goPackageName, pkTable, pkName string
@@ -45,7 +44,7 @@ func MoleculeToGraph(molecule *godbi.Molecule, args ...interface{}) *Graph {
 	for _, atom := range molecule.Atoms {
 		var node *Node
 		if oneofs != nil {
-			node = atomToNode(atom, oneofs[atom.GetTable().TableName])
+			node = atomToNode(atom, oneofs[atom.AtomName])
 		} else {
 			node = atomToNode(atom)
 		}
@@ -55,14 +54,16 @@ func MoleculeToGraph(molecule *godbi.Molecule, args ...interface{}) *Graph {
 	return &Graph{PackageName: packageName, PkTable: pkTable, PkName: pkName, GoPackageName: goPackageName, DBDriver: int32(molecule.DBDriver), PksTable: pksTable, Pks: pks, Nodes: nodes}
 }
 
-func atomToNode(atom godbi.Navigate, oneofs ...map[string][]string) *Node {
-	nodeTable := atomTableToNodeTable(atom.GetTable(), oneofs...)
+func atomToNode(atom *godbi.Atom, oneofs ...map[string][]string) *Node {
+	nodeTable := atomTableToNodeTable(atom.Table, oneofs...)
 	nodeActions := atomActionsToNodeActions(atom)
-	return &Node{AtomTable:nodeTable, AtomActions:nodeActions}
+	return &Node{AtomName: atom.AtomName, AtomTable: nodeTable, AtomActions: nodeActions}
 }
 
 func getOneof(name string, oneofs ...map[string][]string) string {
-	if oneofs == nil || oneofs[0] == nil { return "" }
+	if oneofs == nil || oneofs[0] == nil {
+		return ""
+	}
 	for k, vs := range oneofs[0] {
 		for _, v := range vs {
 			if v == name {
@@ -73,28 +74,29 @@ func getOneof(name string, oneofs ...map[string][]string) string {
 	return ""
 }
 
-func atomTableToNodeTable(table *godbi.Table, oneofs ...map[string][]string) *Node_Table {
-    nodeTable := &Node_Table{}
+func atomTableToNodeTable(table godbi.Table, oneofs ...map[string][]string) *Node_Table {
+	nodeTable := &Node_Table{}
 
 	nodeTable.TableName = table.TableName
 	for _, col := range table.Columns {
 		nodeCol := &Node_Table_Col{
 			ColumnName: col.ColumnName,
-			TypeName: col.TypeName,
-			Label: col.Label,
-			InOneof: getOneof(col.ColumnName, oneofs...),
-			Notnull: col.Notnull,
-			Auto: col.Auto,
-			Recurse: col.Recurse}
+			TypeName:   col.TypeName,
+			Label:      col.Label,
+			InOneof:    getOneof(col.ColumnName, oneofs...),
+			Notnull:    col.Notnull,
+			Constraint: col.Constraint,
+			Auto:       col.Auto,
+			Recurse:    col.Recurse}
 		nodeTable.Columns = append(nodeTable.Columns, nodeCol)
 	}
-    nodeTable.Pks = table.Pks
+	nodeTable.Pks = table.Pks
 	nodeTable.IdAuto = table.IdAuto
 	for _, fk := range table.Fks {
 		nodeFk := &Node_Table_Fk{
-			FkTable: fk.FkTable,
+			FkTable:  fk.FkTable,
 			FkColumn: fk.FkColumn,
-			Column: fk.Column}
+			Column:   fk.Column}
 		nodeTable.Fks = append(nodeTable.Fks, nodeFk)
 	}
 	nodeTable.Uniques = table.Uniques
@@ -102,21 +104,24 @@ func atomTableToNodeTable(table *godbi.Table, oneofs ...map[string][]string) *No
 	return nodeTable
 }
 
-func atomActionsToNodeActions(atom godbi.Navigate) *Node_Actions {
+func atomActionsToNodeActions(atom *godbi.Atom) *Node_Actions {
 	nodeActions := &Node_Actions{}
 
 	dbiConnection := func(conn *godbi.Connection) *Node_Actions_Connection {
 		return &Node_Actions_Connection{
-			TableName: conn.TableName,
-			ActionName: conn.ActionName,
-			Dimension: Node_Actions_ConnectType(conn.Dimension),
-			Marker: conn.Marker,
-			RelateArgs: conn.RelateArgs,
+			AtomName:    conn.AtomName,
+			ActionName:  conn.ActionName,
+			Dimension:   Node_Actions_ConnectType(conn.Dimension),
+			Marker:      conn.Marker,
+			RelateArgs:  conn.RelateArgs,
 			RelateExtra: conn.RelateExtra}
 	}
 
 	if insert := atom.GetAction("insert"); insert != nil {
-		nodeInsert := &Node_Actions_Insert{ActionName: "insert", IsDo: insert.GetIsDo()}
+		nodeInsert := &Node_Actions_Insert{
+			ActionName: "insert",
+			Picked:     insert.(*godbi.Insert).Picked,
+			IsDo:       insert.GetIsDo()}
 		for _, prepare := range insert.GetPrepares() {
 			nodeInsert.PrepareConnects = append(nodeInsert.PrepareConnects, dbiConnection(prepare))
 		}
@@ -127,7 +132,10 @@ func atomActionsToNodeActions(atom godbi.Navigate) *Node_Actions {
 	}
 
 	if insupd := atom.GetAction("insupd"); insupd != nil {
-		nodeInsupd := &Node_Actions_Insupd{ActionName: "insupd", IsDo: insupd.GetIsDo()}
+		nodeInsupd := &Node_Actions_Insupd{
+			ActionName: "insupd",
+			Picked:     insupd.(*godbi.Insupd).Picked,
+			IsDo:       insupd.GetIsDo()}
 		for _, prepare := range insupd.GetPrepares() {
 			nodeInsupd.PrepareConnects = append(nodeInsupd.PrepareConnects, dbiConnection(prepare))
 		}
@@ -141,8 +149,9 @@ func atomActionsToNodeActions(atom godbi.Navigate) *Node_Actions {
 		update := iupdate.(*godbi.Update)
 		nodeUpdate := &Node_Actions_Update{
 			ActionName: "update",
-			IsDo: update.GetIsDo(),
-			Empties: update.Empties}
+			IsDo:       update.GetIsDo(),
+			Picked:     update.Picked,
+			Empties:    update.Empties}
 		for _, prepare := range update.GetPrepares() {
 			nodeUpdate.PrepareConnects = append(nodeUpdate.PrepareConnects, dbiConnection(prepare))
 		}
@@ -177,25 +186,17 @@ func atomActionsToNodeActions(atom godbi.Navigate) *Node_Actions {
 	if itopics := atom.GetAction("topics"); itopics != nil {
 		topics := itopics.(*godbi.Topics)
 		nodeTopics := &Node_Actions_Topics{
-			IsDo: topics.GetIsDo(),
-			ActionName: "topics",
-			FIELDS: topics.FIELDS,
-			TotalForce: int32(topics.TotalForce),
-			MAXPAGENO: topics.MAXPAGENO,
-			TOTALNO: topics.TOTALNO,
-			ROWCOUNT: topics.ROWCOUNT,
-			PAGENO: topics.PAGENO,
-			SORTBY: topics.SORTBY,
+			IsDo:        topics.GetIsDo(),
+			ActionName:  "topics",
+			Picked:      topics.Picked,
+			FIELDS:      topics.FIELDS,
+			Totalforce:  int32(topics.Totalforce),
+			MAXPAGENO:   topics.MAXPAGENO,
+			TOTALNO:     topics.TOTALNO,
+			PAGESIZE:    topics.PAGESIZE,
+			PAGENO:      topics.PAGENO,
+			SORTBY:      topics.SORTBY,
 			SORTREVERSE: topics.SORTREVERSE}
-		for _, joint := range topics.Joints {
-			nodeTopics.Joints = append(nodeTopics.Joints, &Node_Actions_Joint{
-				TableName: joint.TableName,
-				Alias: joint.Alias,
-				JoinType: joint.JoinType,
-				JoinUsing: joint.JoinUsing,
-				JoinOn: joint.JoinOn,
-				Sortby: joint.Sortby})
-		}
 		for _, prepare := range topics.GetPrepares() {
 			nodeTopics.PrepareConnects = append(nodeTopics.PrepareConnects, dbiConnection(prepare))
 		}
@@ -208,18 +209,10 @@ func atomActionsToNodeActions(atom godbi.Navigate) *Node_Actions {
 	if iedit := atom.GetAction("edit"); iedit != nil {
 		edit := iedit.(*godbi.Edit)
 		nodeEdit := &Node_Actions_Edit{
-			IsDo: edit.GetIsDo(),
+			IsDo:       edit.GetIsDo(),
 			ActionName: "edit",
-			FIELDS: edit.FIELDS}
-		for _, joint := range edit.Joints {
-			nodeEdit.Joints = append(nodeEdit.Joints, &Node_Actions_Joint{
-				TableName: joint.TableName,
-				Alias: joint.Alias,
-				JoinType: joint.JoinType,
-				JoinUsing: joint.JoinUsing,
-				JoinOn: joint.JoinOn,
-				Sortby: joint.Sortby})
-		}
+			Picked:     edit.Picked,
+			FIELDS:     edit.FIELDS}
 		for _, prepare := range edit.GetPrepares() {
 			nodeEdit.PrepareConnects = append(nodeEdit.PrepareConnects, dbiConnection(prepare))
 		}

@@ -1,7 +1,7 @@
 {"atoms":[
 
 {
-"table":{
+	"atomName": "m_a",
 	"tableName": "m_a",
 	"pks": [ "id" ],
 	"idAuto": "id",
@@ -11,15 +11,13 @@
 {"columnName":"z", "label":"z", "typeName":"string" },
 {"columnName":"id", "label":"id", "typeName":"int", "auto":true }
     ],
-    "uniques":["x","y"]
-},
+    "uniques":["x","y"],
 	"actions": [
 		{
 			"actionName": "insupd",
-			"isDo":true,
 			"nextpages": [
 				{
-					"tableName": "m_ab",
+					"atomName": "m_ab",
 					"actionName": "insupd",
 					"relateArgs": { "id": "id" }
 				}
@@ -27,10 +25,9 @@
 		},
 		{
 			"actionName": "insert",
-			"isDo":true,
 			"nextpages": [
 				{
-					"tableName": "m_ab",
+					"atomName": "m_ab",
 					"actionName": "insert",
 					"relateArgs": { "id": "id" }
 				}
@@ -40,7 +37,7 @@
 			"actionName": "edit",
 			"nextpages": [
 				{
-					"tableName": "m_ab",
+					"atomName": "m_ab",
 					"actionName": "topics",
 					"relateExtra": { "id": "id" }
 				}
@@ -50,7 +47,7 @@
 			"actionName": "delete",
 			"prepares": [
 				{
-					"tableName": "m_ab",
+					"atomName": "m_ab",
 					"actionName": "delecs",
 					"relateArgs": { "id": "id" }
 				}
@@ -60,7 +57,7 @@
 			"actionName": "topics",
 			"nextpages": [
 				{
-					"tableName": "m_ab",
+					"atomName": "m_ab",
 					"actionName": "topics",
 					"relateExtra": { "id": "id" }
 				}
@@ -69,7 +66,7 @@
 	]
 },
 {
-"table":{
+	"atomName": "m_ab",
 	"tableName": "m_ab",
 	"pks": [ "abid" ],
 	"fks": [
@@ -82,15 +79,13 @@
 {"columnName":"abid", "label":"abid", "typeName":"int", "notnull": true, "auto":true},
 {"columnName":"tid", "label":"tid", "typeName":"int", "notnull": true},
 {"columnName":"id", "label":"id", "typeName":"int", "notnull": true}
-	]
-},
+	],
 	"actions": [
 		{
 			"actionName": "insert",
-			"isDo":true,
 			"prepares": [
 				{
-					"tableName": "m_b",
+					"atomName": "m_b",
 					"actionName": "insert",
 					"relateArgs": { "ALL": "ALL" }
 				}
@@ -98,10 +93,9 @@
 		},
 		{
 			"actionName": "insupd",
-			"isDo":true,
 			"prepares": [
 				{
-					"tableName": "m_b",
+					"atomName": "m_b",
 					"actionName": "insupd",
 					"relateArgs": { "ALL": "ALL" }
 				}
@@ -111,7 +105,7 @@
 			"actionName": "edit",
 			"nextpages": [
 				{
-					"tableName": "m_b",
+					"atomName": "m_b",
 					"actionName": "topics",
 					"relateExtra": { "tid": "tid" }
 				}
@@ -121,7 +115,7 @@
 			"actionName": "delete",
 			"prepares": [
 				{
-					"tableName": "m_b",
+					"atomName": "m_b",
 					"actionName": "delete",
 					"relateArgs": { "tid": "tid" }
 				}
@@ -131,7 +125,7 @@
 			"actionName": "delecs",
 			"nextpages": [
 				{
-					"tableName": "m_ab",
+					"atomName": "m_ab",
 					"actionName": "delete",
 					"relateArgs": { "abid": "abid", "tid": "tid" }
 				}
@@ -141,7 +135,7 @@
 			"actionName": "topics",
 			"nextpages": [
 				{
-					"tableName": "m_b",
+					"atomName": "m_b",
 					"actionName": "topics",
 					"relateExtra": { "tid": "tid" }
 				}
@@ -150,7 +144,7 @@
 	]
 },
 {
-"table":{
+	"atomName": "m_b",
 	"tableName": "m_b",
 	"pks": [ "tid" ],
 	"idAuto": "tid",
@@ -158,26 +152,6 @@
 	"columns": [
 {"columnName":"tid", "label":"tid", "typeName":"int", "notnull": true, "auto":true},
 {"columnName":"child", "label":"child", "typeName":"string"}
-	]
-},
-	"actions": [
-		{
-			"isDo":true,
-			"actionName": "insert"
-		},
-		{
-			"isDo":true,
-			"actionName": "insupd"
-		},
-		{
-			"actionName": "edit"
-		},
-		{
-			"actionName": "delete"
-		},
-		{
-			"actionName": "topics"
-		}
 	]
 }
 

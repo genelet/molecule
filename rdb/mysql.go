@@ -69,6 +69,7 @@ func (self *mySQL) getTable(db *sql.DB, tableName string) (*godbi.Table, error) 
 		if item["Key"].(string) == "PRI" {
 			pks = append(pks, field)
 			col.Notnull = true
+			col.Constraint = true
 		}
 		if item["Extra"].(string) == "auto_increment" {
 			idauto = field

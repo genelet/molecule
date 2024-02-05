@@ -10,7 +10,8 @@
 		{"columnName":"campaign_name","label":"campaign_name","typeName":"VARCHAR","notnull":true}
 	],
 	"uniques":["adv_id","campaign_id"],
-	"actions": [
+
+	"actions":[
 		{
 			"actionName": "topics",
 			"nextpages": [

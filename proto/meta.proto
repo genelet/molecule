@@ -11,10 +11,11 @@ message Node {
    		 	string columnName = 1;
    		 	string typeName = 2;
    		 	string label = 3;
-   		 	bool notnull = 4;
-   		 	bool auto = 5;
-			bool recurse = 6;
-			string inOneof = 7;
+			bool notnull = 4;
+			bool constraint = 5;
+			bool auto = 6;
+			bool recurse = 7;
+			string inOneof = 8;
 		}
 		repeated Col columns = 2;
 
@@ -40,7 +41,7 @@ message Node {
 		}
 	
 		message Connection {
-			string tableName = 1;
+			string atomName = 1;
 			string actionName = 2;	
 			map<string, string> relateArgs = 3;
 			map<string, string> relateExtra = 4;
@@ -53,6 +54,7 @@ message Node {
 			repeated Connection prepareConnects = 2;
 			repeated Connection nextpageConnects = 3;
 			bool isDo = 4;
+			repeated string picked = 7;
 		}
 		Insert insertItem = 7;
 	
@@ -62,6 +64,7 @@ message Node {
 			repeated Connection nextpageConnects = 3;
 			bool isDo = 4;
 			repeated string empties = 5;
+			repeated string picked = 7;
 		}
 		Update updateItem = 9;
 	
@@ -70,6 +73,7 @@ message Node {
 			repeated Connection prepareConnects = 2;
 			repeated Connection nextpageConnects = 3;
 			bool isDo = 4;
+			repeated string picked = 7;
 		}
 		Insupd insupdItem = 10;
 	
@@ -103,8 +107,8 @@ message Node {
 			repeated Connection prepareConnects = 2;
 			repeated Connection nextpageConnects = 3;
 			bool isDo = 4;
-   		 	repeated Joint joints = 5;
-   		 	string FIELDS = 14;
+			repeated string picked = 7;
+   		 	string FIELDS = 15;
 		}
 		Edit editItem = 14;
 	
@@ -113,21 +117,22 @@ message Node {
 			repeated Connection prepareConnects = 2;
 			repeated Connection nextpageConnects = 3;
 			bool isDo = 4;
-   		 	repeated Joint joints = 5;
-   		 	int32 totalForce = 7;
-   			string MAXPAGENO = 8;
-   			string TOTALNO   = 9;
-   			string ROWCOUNT  = 10;
-   			string PAGENO    = 11;
-   			string SORTBY    = 12;
-   			string SORTREVERSE = 13;
-   		 	string FIELDS = 14;
+			repeated string picked = 7;
+   		 	int32 totalforce = 8;
+   			string MAXPAGENO = 9;
+   			string TOTALNO   = 10;
+   			string PAGESIZE  = 11;
+   			string PAGENO    = 12;
+   			string SORTBY    = 13;
+   			string SORTREVERSE = 14;
+   		 	string FIELDS = 15;
 		}
 		Topics topicsItem = 15;
 	}
 
-	Table atomTable = 1;
-	Actions atomActions = 2;
+	string atomName = 1;
+	Table atomTable = 2;
+	Actions atomActions = 3;
 }
 
 // Graph

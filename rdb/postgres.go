@@ -84,6 +84,7 @@ ORDER BY kcu.ordinal_position`, self.DatabaseName, tableName)
 		field := item["column_name"].(string)
 		col := ref[field]
 		col.Notnull = true
+		col.Constraint = true
 		ref[field] = col
 		pks = append(pks, field)
 	}

@@ -10,7 +10,7 @@
 		{"columnName":"campaign_name","label":"campaign_name","typeName":"VARCHAR","notnull":true}
 	],
 	"uniques":["adv_id","campaign_id"],
-	"actions": [
+	"actions":[
 		{
 			"actionName": "topics",
 			"nextpages": [
@@ -24,11 +24,10 @@
 			"empties":["created"]
 		},
 		{
-			"actionName": "sql",
-			"statement":"SELECT x, y, z FROM a WHERE b=?",
-			"nextpages": [
-				{"atomName":"adv_creative", "actionName":"topics", "relateExtra":{"nick":"nickname"}}
-			]
+			"actionName": "stmt",
+			"pars": ["adv_email"],
+			"labels": [["id","int"], ["name","string"]],	
+			"statement":"SELECT adv.adv_id, campaign_name FROM adv_campain INNER JOIN adv USING adv_id WHERE adv_email=?"
 		}
 	]
 }
