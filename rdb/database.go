@@ -80,14 +80,14 @@ func autoAtom(table *godbi.Table) *godbi.Atom {
 	delett.ActionName = "delete"
 	delett.SetIsDo(true)
 	capas := []godbi.Capability{edit, topics, insert, update, insupd, delett}
-	if table.IdAuto != "" {
+	if table.IDAuto != "" {
 		delecs := new(godbi.Delecs)
 		delecs.ActionName = "delecs"
 		delecs.SetIsDo(true)
 		delecs.Nextpages = []*godbi.Connection{{
 			AtomName:   table.TableName,
 			ActionName: "delete",
-			RelateArgs: map[string]string{table.IdAuto: table.IdAuto}}}
+			RelateArgs: map[string]string{table.IDAuto: table.IDAuto}}}
 		capas = append(capas, delecs)
 	}
 	return &godbi.Atom{AtomName: table.TableName, Table: *table, Actions: capas}

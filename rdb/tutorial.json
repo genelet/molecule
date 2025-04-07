@@ -1,6 +1,1857 @@
 {
   "atoms": [
     {
+      "atomName": "PersonSkillsEntry",
+      "tableName": "PersonSkillsEntry",
+      "columns": [
+        {
+          "columnName": "PersonSkillsEntry_id",
+          "typeName": "int",
+          "label": "PersonSkillsEntry_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "keyEscape",
+          "typeName": "string",
+          "label": "keyEscape"
+        },
+        {
+          "columnName": "value",
+          "typeName": "string",
+          "label": "value"
+        }
+      ],
+      "pks": [
+        "PersonSkillsEntry_id"
+      ],
+      "idAuto": "PersonSkillsEntry_id",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "Person_Skills",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonSkillsEntry_id": "skills"
+              },
+              "marker": "Person_Skills"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "Person_Skills",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonSkillsEntry_id": "skills"
+              },
+              "marker": "Person_Skills"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "atomName": "Person_Skills",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonSkillsEntry_id": "skills"
+              },
+              "marker": "Person_Skills"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "atomName": "Person_Skills",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonSkillsEntry_id": "skills"
+              },
+              "marker": "Person_Skills"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "atomName": "Person_Skills",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonSkillsEntry_id": "skills"
+              },
+              "marker": "Person_Skills"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "Person_Skills",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonSkillsEntry_id": "skills"
+              }
+            }
+          ]
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "PersonSkillsEntry",
+              "actionName": "delete",
+              "relateArgs": {
+                "PersonSkillsEntry_id": "PersonSkillsEntry_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "PersonCar",
+      "tableName": "PersonCar",
+      "columns": [
+        {
+          "columnName": "PersonCar_id",
+          "typeName": "int",
+          "label": "PersonCar_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "maker",
+          "typeName": "string",
+          "label": "maker"
+        },
+        {
+          "columnName": "model",
+          "typeName": "string",
+          "label": "model"
+        },
+        {
+          "columnName": "year",
+          "typeName": "int",
+          "label": "year"
+        }
+      ],
+      "pks": [
+        "PersonCar_id"
+      ],
+      "idAuto": "PersonCar_id",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonCar_id": "vehicle"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonCar_id": "vehicle"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "atomName": "Person",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonCar_id": "vehicle"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "atomName": "Person",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonCar_id": "vehicle"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "atomName": "Person",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonCar_id": "vehicle"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonCar_id": "vehicle"
+              }
+            }
+          ]
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "PersonCar",
+              "actionName": "delete",
+              "relateArgs": {
+                "PersonCar_id": "PersonCar_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "Oneofs",
+      "tableName": "Oneofs",
+      "columns": [
+        {
+          "columnName": "Oneofs_id",
+          "typeName": "int",
+          "label": "Oneofs_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "columnNames",
+          "typeName": "string",
+          "label": "columnNames"
+        }
+      ],
+      "pks": [
+        "Oneofs_id"
+      ],
+      "idAuto": "Oneofs_id",
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert"
+        },
+        {
+          "actionName": "update"
+        },
+        {
+          "actionName": "insupd"
+        },
+        {
+          "actionName": "delete"
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "Oneofs",
+              "actionName": "delete",
+              "relateArgs": {
+                "Oneofs_id": "Oneofs_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "Person_Degrees",
+      "tableName": "Person_Degrees",
+      "columns": [
+        {
+          "columnName": "Person_Degrees_id",
+          "typeName": "int",
+          "label": "Person_Degrees_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "Person_id",
+          "typeName": "int",
+          "label": "Person_id",
+          "notnull": true
+        },
+        {
+          "columnName": "degrees",
+          "typeName": "int",
+          "label": "degrees"
+        }
+      ],
+      "pks": [
+        "Person_Degrees_id"
+      ],
+      "idAuto": "Person_Degrees_id",
+      "fks": [
+        {
+          "fkTable": "PersonDegreesEntry",
+          "fkColumn": "PersonDegreesEntry_id",
+          "column": "degrees"
+        },
+        {
+          "fkTable": "Person",
+          "fkColumn": "Person_id",
+          "column": "Person_id"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "prepares": [
+            {
+              "atomName": "PersonDegreesEntry",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonDegreesEntry_id": "degrees"
+              },
+              "marker": "PersonDegreesEntry"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insert",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "prepares": [
+            {
+              "atomName": "PersonDegreesEntry",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonDegreesEntry_id": "degrees"
+              },
+              "marker": "PersonDegreesEntry"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "update",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "prepares": [
+            {
+              "atomName": "PersonDegreesEntry",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonDegreesEntry_id": "degrees"
+              },
+              "marker": "PersonDegreesEntry"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insupd",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "delete"
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "Person_Degrees",
+              "actionName": "delete",
+              "relateArgs": {
+                "Person_Degrees_id": "Person_Degrees_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "PersonEducation",
+      "tableName": "PersonEducation",
+      "columns": [
+        {
+          "columnName": "PersonEducation_id",
+          "typeName": "int",
+          "label": "PersonEducation_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "year",
+          "typeName": "int",
+          "label": "year"
+        },
+        {
+          "columnName": "school",
+          "typeName": "string",
+          "label": "school"
+        },
+        {
+          "columnName": "name",
+          "typeName": "",
+          "label": "name"
+        },
+        {
+          "columnName": "major",
+          "typeName": "string",
+          "label": "major"
+        }
+      ],
+      "pks": [
+        "PersonEducation_id"
+      ],
+      "idAuto": "PersonEducation_id",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "PersonDegreesEntry",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonEducation_id": "value"
+              },
+              "marker": "PersonDegreesEntry"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "PersonDegreesEntry",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonEducation_id": "value"
+              },
+              "marker": "PersonDegreesEntry"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "atomName": "PersonDegreesEntry",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonEducation_id": "value"
+              },
+              "marker": "PersonDegreesEntry"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "atomName": "PersonDegreesEntry",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonEducation_id": "value"
+              },
+              "marker": "PersonDegreesEntry"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "atomName": "PersonDegreesEntry",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonEducation_id": "value"
+              },
+              "marker": "PersonDegreesEntry"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "PersonDegreesEntry",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonEducation_id": "value"
+              }
+            }
+          ]
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "PersonEducation",
+              "actionName": "delete",
+              "relateArgs": {
+                "PersonEducation_id": "PersonEducation_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "PersonTeacher_Advisors",
+      "tableName": "PersonTeacher_Advisors",
+      "columns": [
+        {
+          "columnName": "PersonTeacher_Advisors_id",
+          "typeName": "int",
+          "label": "PersonTeacher_Advisors_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "PersonTeacher_id",
+          "typeName": "int",
+          "label": "PersonTeacher_id",
+          "notnull": true
+        },
+        {
+          "columnName": "advisors",
+          "typeName": "int",
+          "label": "advisors"
+        }
+      ],
+      "pks": [
+        "PersonTeacher_Advisors_id"
+      ],
+      "idAuto": "PersonTeacher_Advisors_id",
+      "fks": [
+        {
+          "fkTable": "PersonTeacher",
+          "fkColumn": "PersonTeacher_id",
+          "column": "advisors"
+        },
+        {
+          "fkTable": "PersonTeacher",
+          "fkColumn": "PersonTeacher_id",
+          "column": "PersonTeacher_id"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "prepares": [
+            {
+              "atomName": "PersonTeacher",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonTeacher_id": "advisors"
+              },
+              "marker": "PersonTeacher"
+            },
+            {
+              "atomName": "PersonTeacher",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonTeacher_id": "PersonTeacher_id"
+              },
+              "marker": "PersonTeacher"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "prepares": [
+            {
+              "atomName": "PersonTeacher",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonTeacher_id": "advisors"
+              },
+              "marker": "PersonTeacher"
+            },
+            {
+              "atomName": "PersonTeacher",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonTeacher_id": "PersonTeacher_id"
+              },
+              "marker": "PersonTeacher"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "prepares": [
+            {
+              "atomName": "PersonTeacher",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonTeacher_id": "advisors"
+              },
+              "marker": "PersonTeacher"
+            },
+            {
+              "atomName": "PersonTeacher",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonTeacher_id": "PersonTeacher_id"
+              },
+              "marker": "PersonTeacher"
+            }
+          ]
+        },
+        {
+          "actionName": "delete"
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "PersonTeacher_Advisors",
+              "actionName": "delete",
+              "relateArgs": {
+                "PersonTeacher_Advisors_id": "PersonTeacher_Advisors_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "Person_Phones",
+      "tableName": "Person_Phones",
+      "columns": [
+        {
+          "columnName": "Person_Phones_id",
+          "typeName": "int",
+          "label": "Person_Phones_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "Person_id",
+          "typeName": "int",
+          "label": "Person_id",
+          "notnull": true
+        },
+        {
+          "columnName": "phones",
+          "typeName": "int",
+          "label": "phones"
+        }
+      ],
+      "pks": [
+        "Person_Phones_id"
+      ],
+      "idAuto": "Person_Phones_id",
+      "fks": [
+        {
+          "fkTable": "Person",
+          "fkColumn": "Person_id",
+          "column": "Person_id"
+        },
+        {
+          "fkTable": "PersonPhoneNumber",
+          "fkColumn": "PersonPhoneNumber_id",
+          "column": "phones"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "insert",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "PersonPhoneNumber",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonPhoneNumber_id": "phones"
+              },
+              "marker": "PersonPhoneNumber"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "update",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "PersonPhoneNumber",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonPhoneNumber_id": "phones"
+              },
+              "marker": "PersonPhoneNumber"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "insupd",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "PersonPhoneNumber",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonPhoneNumber_id": "phones"
+              },
+              "marker": "PersonPhoneNumber"
+            }
+          ]
+        },
+        {
+          "actionName": "delete"
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "Person_Phones",
+              "actionName": "delete",
+              "relateArgs": {
+                "Person_Phones_id": "Person_Phones_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "PersonSpouse",
+      "tableName": "PersonSpouse",
+      "columns": [
+        {
+          "columnName": "PersonSpouse_id",
+          "typeName": "int",
+          "label": "PersonSpouse_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "nameSpouse",
+          "typeName": "string",
+          "label": "nameSpouse"
+        },
+        {
+          "columnName": "emailSpouse",
+          "typeName": "string",
+          "label": "emailSpouse"
+        }
+      ],
+      "pks": [
+        "PersonSpouse_id"
+      ],
+      "idAuto": "PersonSpouse_id",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonSpouse_id": "partner"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonSpouse_id": "partner"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "atomName": "Person",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonSpouse_id": "partner"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "atomName": "Person",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonSpouse_id": "partner"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "atomName": "Person",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonSpouse_id": "partner"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonSpouse_id": "partner"
+              }
+            }
+          ]
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "PersonSpouse",
+              "actionName": "delete",
+              "relateArgs": {
+                "PersonSpouse_id": "PersonSpouse_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "Person_Snacks",
+      "tableName": "Person_Snacks",
+      "columns": [
+        {
+          "columnName": "Person_Snacks_id",
+          "typeName": "int",
+          "label": "Person_Snacks_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "Person_id",
+          "typeName": "int",
+          "label": "Person_id",
+          "notnull": true
+        },
+        {
+          "columnName": "snacks",
+          "typeName": "int",
+          "label": "snacks"
+        }
+      ],
+      "pks": [
+        "Person_Snacks_id"
+      ],
+      "idAuto": "Person_Snacks_id",
+      "fks": [
+        {
+          "fkTable": "Person",
+          "fkColumn": "Person_id",
+          "column": "Person_id"
+        },
+        {
+          "fkTable": "PersonEat",
+          "fkColumn": "PersonEat_id",
+          "column": "snacks"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "insert",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "PersonEat",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonEat_id": "snacks"
+              },
+              "marker": "PersonEat"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "update",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "PersonEat",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonEat_id": "snacks"
+              },
+              "marker": "PersonEat"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "insupd",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "PersonEat",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonEat_id": "snacks"
+              },
+              "marker": "PersonEat"
+            }
+          ]
+        },
+        {
+          "actionName": "delete"
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "Person_Snacks",
+              "actionName": "delete",
+              "relateArgs": {
+                "Person_Snacks_id": "Person_Snacks_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "PersonPhoneNumber",
+      "tableName": "PersonPhoneNumber",
+      "columns": [
+        {
+          "columnName": "PersonPhoneNumber_id",
+          "typeName": "int",
+          "label": "PersonPhoneNumber_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "numberEscape",
+          "typeName": "string",
+          "label": "numberEscape"
+        },
+        {
+          "columnName": "typeEscape",
+          "typeName": "",
+          "label": "typeEscape"
+        }
+      ],
+      "pks": [
+        "PersonPhoneNumber_id"
+      ],
+      "idAuto": "PersonPhoneNumber_id",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "Person_Phones",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonPhoneNumber_id": "phones"
+              },
+              "marker": "Person_Phones"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "Person_Phones",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonPhoneNumber_id": "phones"
+              },
+              "marker": "Person_Phones"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "atomName": "Person_Phones",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonPhoneNumber_id": "phones"
+              },
+              "marker": "Person_Phones"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "atomName": "Person_Phones",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonPhoneNumber_id": "phones"
+              },
+              "marker": "Person_Phones"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "atomName": "Person_Phones",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonPhoneNumber_id": "phones"
+              },
+              "marker": "Person_Phones"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "Person_Phones",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonPhoneNumber_id": "phones"
+              }
+            }
+          ]
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "PersonPhoneNumber",
+              "actionName": "delete",
+              "relateArgs": {
+                "PersonPhoneNumber_id": "PersonPhoneNumber_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "PersonTeacher",
+      "tableName": "PersonTeacher",
+      "columns": [
+        {
+          "columnName": "PersonTeacher_id",
+          "typeName": "int",
+          "label": "PersonTeacher_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "fullname",
+          "typeName": "string",
+          "label": "fullname"
+        },
+        {
+          "columnName": "school",
+          "typeName": "string",
+          "label": "school"
+        },
+        {
+          "columnName": "startYear",
+          "typeName": "int",
+          "label": "startYear"
+        },
+        {
+          "columnName": "endYear",
+          "typeName": "int",
+          "label": "endYear"
+        }
+      ],
+      "pks": [
+        "PersonTeacher_id"
+      ],
+      "idAuto": "PersonTeacher_id",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "PersonTeacher_Advisors",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonTeacher_id": "advisors"
+              },
+              "marker": "PersonTeacher_Advisors"
+            },
+            {
+              "atomName": "PersonTeacher_Advisors",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonTeacher_id": "PersonTeacher_id"
+              },
+              "marker": "PersonTeacher_Advisors"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonTeacher_id": "middleSchool"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonTeacher_id": "highSchool"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonTeacher_id": "primarySchool"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "PersonTeacher_Advisors",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonTeacher_id": "advisors"
+              },
+              "marker": "PersonTeacher_Advisors"
+            },
+            {
+              "atomName": "PersonTeacher_Advisors",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonTeacher_id": "PersonTeacher_id"
+              },
+              "marker": "PersonTeacher_Advisors"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonTeacher_id": "middleSchool"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonTeacher_id": "highSchool"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonTeacher_id": "primarySchool"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "atomName": "PersonTeacher_Advisors",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonTeacher_id": "advisors"
+              },
+              "marker": "PersonTeacher_Advisors"
+            },
+            {
+              "atomName": "PersonTeacher_Advisors",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonTeacher_id": "PersonTeacher_id"
+              },
+              "marker": "PersonTeacher_Advisors"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonTeacher_id": "middleSchool"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonTeacher_id": "highSchool"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonTeacher_id": "primarySchool"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "atomName": "PersonTeacher_Advisors",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonTeacher_id": "advisors"
+              },
+              "marker": "PersonTeacher_Advisors"
+            },
+            {
+              "atomName": "PersonTeacher_Advisors",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonTeacher_id": "PersonTeacher_id"
+              },
+              "marker": "PersonTeacher_Advisors"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonTeacher_id": "middleSchool"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonTeacher_id": "highSchool"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonTeacher_id": "primarySchool"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "atomName": "PersonTeacher_Advisors",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonTeacher_id": "advisors"
+              },
+              "marker": "PersonTeacher_Advisors"
+            },
+            {
+              "atomName": "PersonTeacher_Advisors",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonTeacher_id": "PersonTeacher_id"
+              },
+              "marker": "PersonTeacher_Advisors"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonTeacher_id": "middleSchool"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonTeacher_id": "highSchool"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonTeacher_id": "primarySchool"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "PersonTeacher_Advisors",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonTeacher_id": "advisors"
+              }
+            },
+            {
+              "atomName": "PersonTeacher_Advisors",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonTeacher_id": "PersonTeacher_id"
+              }
+            },
+            {
+              "atomName": "Person",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonTeacher_id": "middleSchool"
+              }
+            },
+            {
+              "atomName": "Person",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonTeacher_id": "highSchool"
+              }
+            },
+            {
+              "atomName": "Person",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonTeacher_id": "primarySchool"
+              }
+            }
+          ]
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "PersonTeacher",
+              "actionName": "delete",
+              "relateArgs": {
+                "PersonTeacher_id": "PersonTeacher_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "PersonEat",
+      "tableName": "PersonEat",
+      "columns": [
+        {
+          "columnName": "PersonEat_id",
+          "typeName": "int",
+          "label": "PersonEat_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "name",
+          "typeName": "string",
+          "label": "name"
+        },
+        {
+          "columnName": "descriptionText",
+          "typeName": "string",
+          "label": "descriptionText"
+        }
+      ],
+      "pks": [
+        "PersonEat_id"
+      ],
+      "idAuto": "PersonEat_id",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "Person_Snacks",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonEat_id": "snacks"
+              },
+              "marker": "Person_Snacks"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonEat_id": "breakfest"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonEat_id": "lunch"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonEat_id": "dinner"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "Person_Snacks",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonEat_id": "snacks"
+              },
+              "marker": "Person_Snacks"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonEat_id": "breakfest"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonEat_id": "lunch"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonEat_id": "dinner"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "atomName": "Person_Snacks",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonEat_id": "snacks"
+              },
+              "marker": "Person_Snacks"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonEat_id": "breakfest"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonEat_id": "lunch"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonEat_id": "dinner"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "atomName": "Person_Snacks",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonEat_id": "snacks"
+              },
+              "marker": "Person_Snacks"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonEat_id": "breakfest"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonEat_id": "lunch"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonEat_id": "dinner"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "atomName": "Person_Snacks",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonEat_id": "snacks"
+              },
+              "marker": "Person_Snacks"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonEat_id": "breakfest"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonEat_id": "lunch"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "Person",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonEat_id": "dinner"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "Person_Snacks",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonEat_id": "snacks"
+              }
+            },
+            {
+              "atomName": "Person",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonEat_id": "breakfest"
+              }
+            },
+            {
+              "atomName": "Person",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonEat_id": "lunch"
+              }
+            },
+            {
+              "atomName": "Person",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonEat_id": "dinner"
+              }
+            }
+          ]
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "PersonEat",
+              "actionName": "delete",
+              "relateArgs": {
+                "PersonEat_id": "PersonEat_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "AddressBook",
+      "tableName": "AddressBook",
+      "columns": [
+        {
+          "columnName": "AddressBook_id",
+          "typeName": "int",
+          "label": "AddressBook_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "title",
+          "typeName": "string",
+          "label": "title"
+        }
+      ],
+      "pks": [
+        "AddressBook_id"
+      ],
+      "idAuto": "AddressBook_id",
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "AddressBook_People",
+              "actionName": "topics",
+              "relateExtra": {
+                "AddressBook_id": "AddressBook_id"
+              },
+              "marker": "AddressBook_People"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "AddressBook_People",
+              "actionName": "topics",
+              "relateExtra": {
+                "AddressBook_id": "AddressBook_id"
+              },
+              "marker": "AddressBook_People"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "nextpages": [
+            {
+              "atomName": "AddressBook_People",
+              "actionName": "insert",
+              "relateArgs": {
+                "AddressBook_id": "AddressBook_id"
+              },
+              "marker": "AddressBook_People"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "nextpages": [
+            {
+              "atomName": "AddressBook_People",
+              "actionName": "update",
+              "relateArgs": {
+                "AddressBook_id": "AddressBook_id"
+              },
+              "marker": "AddressBook_People"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "nextpages": [
+            {
+              "atomName": "AddressBook_People",
+              "actionName": "insupd",
+              "relateArgs": {
+                "AddressBook_id": "AddressBook_id"
+              },
+              "marker": "AddressBook_People"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "AddressBook_People",
+              "actionName": "delecs",
+              "relateArgs": {
+                "AddressBook_id": "AddressBook_id"
+              }
+            }
+          ]
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "AddressBook",
+              "actionName": "delete",
+              "relateArgs": {
+                "AddressBook_id": "AddressBook_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "atomName": "Person",
       "tableName": "Person",
       "columns": [
@@ -140,20 +1991,12 @@
           "actionName": "edit",
           "nextpages": [
             {
-              "atomName": "Person_Snacks",
+              "atomName": "Person_Degrees",
               "actionName": "topics",
               "relateExtra": {
                 "Person_id": "Person_id"
               },
-              "marker": "Person_Snacks"
-            },
-            {
-              "atomName": "AddressBook_People",
-              "actionName": "topics",
-              "relateExtra": {
-                "Person_id": "people"
-              },
-              "marker": "AddressBook_People"
+              "marker": "Person_Degrees"
             },
             {
               "atomName": "Person_Phones",
@@ -164,20 +2007,12 @@
               "marker": "Person_Phones"
             },
             {
-              "atomName": "Person_Child",
+              "atomName": "Person_Snacks",
               "actionName": "topics",
               "relateExtra": {
                 "Person_id": "Person_id"
               },
-              "marker": "Person_Child"
-            },
-            {
-              "atomName": "Person_Degrees",
-              "actionName": "topics",
-              "relateExtra": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person_Degrees"
+              "marker": "Person_Snacks"
             },
             {
               "atomName": "PersonParent",
@@ -194,6 +2029,22 @@
                 "Person_id": "mother"
               },
               "marker": "PersonParent"
+            },
+            {
+              "atomName": "AddressBook_People",
+              "actionName": "topics",
+              "relateExtra": {
+                "Person_id": "people"
+              },
+              "marker": "AddressBook_People"
+            },
+            {
+              "atomName": "Person_Child",
+              "actionName": "topics",
+              "relateExtra": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person_Child"
             },
             {
               "atomName": "Person_Skills",
@@ -209,20 +2060,12 @@
           "actionName": "topics",
           "nextpages": [
             {
-              "atomName": "Person_Snacks",
+              "atomName": "Person_Degrees",
               "actionName": "topics",
               "relateExtra": {
                 "Person_id": "Person_id"
               },
-              "marker": "Person_Snacks"
-            },
-            {
-              "atomName": "AddressBook_People",
-              "actionName": "topics",
-              "relateExtra": {
-                "Person_id": "people"
-              },
-              "marker": "AddressBook_People"
+              "marker": "Person_Degrees"
             },
             {
               "atomName": "Person_Phones",
@@ -233,20 +2076,12 @@
               "marker": "Person_Phones"
             },
             {
-              "atomName": "Person_Child",
+              "atomName": "Person_Snacks",
               "actionName": "topics",
               "relateExtra": {
                 "Person_id": "Person_id"
               },
-              "marker": "Person_Child"
-            },
-            {
-              "atomName": "Person_Degrees",
-              "actionName": "topics",
-              "relateExtra": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person_Degrees"
+              "marker": "Person_Snacks"
             },
             {
               "atomName": "PersonParent",
@@ -263,6 +2098,22 @@
                 "Person_id": "mother"
               },
               "marker": "PersonParent"
+            },
+            {
+              "atomName": "AddressBook_People",
+              "actionName": "topics",
+              "relateExtra": {
+                "Person_id": "people"
+              },
+              "marker": "AddressBook_People"
+            },
+            {
+              "atomName": "Person_Child",
+              "actionName": "topics",
+              "relateExtra": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person_Child"
             },
             {
               "atomName": "Person_Skills",
@@ -352,20 +2203,12 @@
           ],
           "nextpages": [
             {
-              "atomName": "Person_Snacks",
+              "atomName": "Person_Degrees",
               "actionName": "insert",
               "relateArgs": {
                 "Person_id": "Person_id"
               },
-              "marker": "Person_Snacks"
-            },
-            {
-              "atomName": "AddressBook_People",
-              "actionName": "insert",
-              "relateArgs": {
-                "Person_id": "people"
-              },
-              "marker": "AddressBook_People"
+              "marker": "Person_Degrees"
             },
             {
               "atomName": "Person_Phones",
@@ -376,20 +2219,12 @@
               "marker": "Person_Phones"
             },
             {
-              "atomName": "Person_Child",
+              "atomName": "Person_Snacks",
               "actionName": "insert",
               "relateArgs": {
                 "Person_id": "Person_id"
               },
-              "marker": "Person_Child"
-            },
-            {
-              "atomName": "Person_Degrees",
-              "actionName": "insert",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person_Degrees"
+              "marker": "Person_Snacks"
             },
             {
               "atomName": "PersonParent",
@@ -406,6 +2241,22 @@
                 "Person_id": "mother"
               },
               "marker": "PersonParent"
+            },
+            {
+              "atomName": "AddressBook_People",
+              "actionName": "insert",
+              "relateArgs": {
+                "Person_id": "people"
+              },
+              "marker": "AddressBook_People"
+            },
+            {
+              "atomName": "Person_Child",
+              "actionName": "insert",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person_Child"
             },
             {
               "atomName": "Person_Skills",
@@ -495,20 +2346,12 @@
           ],
           "nextpages": [
             {
-              "atomName": "Person_Snacks",
+              "atomName": "Person_Degrees",
               "actionName": "update",
               "relateArgs": {
                 "Person_id": "Person_id"
               },
-              "marker": "Person_Snacks"
-            },
-            {
-              "atomName": "AddressBook_People",
-              "actionName": "update",
-              "relateArgs": {
-                "Person_id": "people"
-              },
-              "marker": "AddressBook_People"
+              "marker": "Person_Degrees"
             },
             {
               "atomName": "Person_Phones",
@@ -519,20 +2362,12 @@
               "marker": "Person_Phones"
             },
             {
-              "atomName": "Person_Child",
+              "atomName": "Person_Snacks",
               "actionName": "update",
               "relateArgs": {
                 "Person_id": "Person_id"
               },
-              "marker": "Person_Child"
-            },
-            {
-              "atomName": "Person_Degrees",
-              "actionName": "update",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person_Degrees"
+              "marker": "Person_Snacks"
             },
             {
               "atomName": "PersonParent",
@@ -549,6 +2384,22 @@
                 "Person_id": "mother"
               },
               "marker": "PersonParent"
+            },
+            {
+              "atomName": "AddressBook_People",
+              "actionName": "update",
+              "relateArgs": {
+                "Person_id": "people"
+              },
+              "marker": "AddressBook_People"
+            },
+            {
+              "atomName": "Person_Child",
+              "actionName": "update",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person_Child"
             },
             {
               "atomName": "Person_Skills",
@@ -638,20 +2489,12 @@
           ],
           "nextpages": [
             {
-              "atomName": "Person_Snacks",
+              "atomName": "Person_Degrees",
               "actionName": "insupd",
               "relateArgs": {
                 "Person_id": "Person_id"
               },
-              "marker": "Person_Snacks"
-            },
-            {
-              "atomName": "AddressBook_People",
-              "actionName": "insupd",
-              "relateArgs": {
-                "Person_id": "people"
-              },
-              "marker": "AddressBook_People"
+              "marker": "Person_Degrees"
             },
             {
               "atomName": "Person_Phones",
@@ -660,6 +2503,38 @@
                 "Person_id": "Person_id"
               },
               "marker": "Person_Phones"
+            },
+            {
+              "atomName": "Person_Snacks",
+              "actionName": "insupd",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person_Snacks"
+            },
+            {
+              "atomName": "PersonParent",
+              "actionName": "insupd",
+              "relateArgs": {
+                "Person_id": "father"
+              },
+              "marker": "PersonParent"
+            },
+            {
+              "atomName": "PersonParent",
+              "actionName": "insupd",
+              "relateArgs": {
+                "Person_id": "mother"
+              },
+              "marker": "PersonParent"
+            },
+            {
+              "atomName": "AddressBook_People",
+              "actionName": "insupd",
+              "relateArgs": {
+                "Person_id": "people"
+              },
+              "marker": "AddressBook_People"
             },
             {
               "atomName": "Person_Child",
@@ -670,30 +2545,6 @@
               "marker": "Person_Child"
             },
             {
-              "atomName": "Person_Degrees",
-              "actionName": "insupd",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person_Degrees"
-            },
-            {
-              "atomName": "PersonParent",
-              "actionName": "insupd",
-              "relateArgs": {
-                "Person_id": "father"
-              },
-              "marker": "PersonParent"
-            },
-            {
-              "atomName": "PersonParent",
-              "actionName": "insupd",
-              "relateArgs": {
-                "Person_id": "mother"
-              },
-              "marker": "PersonParent"
-            },
-            {
               "atomName": "Person_Skills",
               "actionName": "insupd",
               "relateArgs": {
@@ -707,17 +2558,10 @@
           "actionName": "delete",
           "prepares": [
             {
-              "atomName": "Person_Snacks",
+              "atomName": "Person_Degrees",
               "actionName": "delecs",
               "relateArgs": {
                 "Person_id": "Person_id"
-              }
-            },
-            {
-              "atomName": "AddressBook_People",
-              "actionName": "delecs",
-              "relateArgs": {
-                "Person_id": "people"
               }
             },
             {
@@ -728,14 +2572,7 @@
               }
             },
             {
-              "atomName": "Person_Child",
-              "actionName": "delecs",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              }
-            },
-            {
-              "atomName": "Person_Degrees",
+              "atomName": "Person_Snacks",
               "actionName": "delecs",
               "relateArgs": {
                 "Person_id": "Person_id"
@@ -756,2251 +2593,36 @@
               }
             },
             {
-              "atomName": "Person_Skills",
+              "atomName": "AddressBook_People",
               "actionName": "delecs",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              }
-            }
-          ]
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "delete",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "Person_Snacks",
-      "tableName": "Person_Snacks",
-      "columns": [
-        {
-          "columnName": "Person_Snacks_id",
-          "typeName": "int",
-          "label": "Person_Snacks_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "Person_id",
-          "typeName": "int",
-          "label": "Person_id",
-          "notnull": true
-        },
-        {
-          "columnName": "snacks",
-          "typeName": "int",
-          "label": "snacks"
-        }
-      ],
-      "pks": [
-        "Person_Snacks_id"
-      ],
-      "idAuto": "Person_Snacks_id",
-      "fks": [
-        {
-          "fkTable": "Person",
-          "fkColumn": "Person_id",
-          "column": "Person_id"
-        },
-        {
-          "fkTable": "PersonEat",
-          "fkColumn": "PersonEat_id",
-          "column": "snacks"
-        }
-      ],
-      "actions": [
-        {
-          "actionName": "edit"
-        },
-        {
-          "actionName": "topics"
-        },
-        {
-          "actionName": "insert",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "insert",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "PersonEat",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonEat_id": "snacks"
-              },
-              "marker": "PersonEat"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "update",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "PersonEat",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonEat_id": "snacks"
-              },
-              "marker": "PersonEat"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "insupd",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "PersonEat",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonEat_id": "snacks"
-              },
-              "marker": "PersonEat"
-            }
-          ]
-        },
-        {
-          "actionName": "delete"
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "Person_Snacks",
-              "actionName": "delete",
-              "relateArgs": {
-                "Person_Snacks_id": "Person_Snacks_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "PersonEducation",
-      "tableName": "PersonEducation",
-      "columns": [
-        {
-          "columnName": "PersonEducation_id",
-          "typeName": "int",
-          "label": "PersonEducation_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "year",
-          "typeName": "int",
-          "label": "year"
-        },
-        {
-          "columnName": "school",
-          "typeName": "string",
-          "label": "school"
-        },
-        {
-          "columnName": "name",
-          "typeName": "",
-          "label": "name"
-        },
-        {
-          "columnName": "major",
-          "typeName": "string",
-          "label": "major"
-        }
-      ],
-      "pks": [
-        "PersonEducation_id"
-      ],
-      "idAuto": "PersonEducation_id",
-      "actions": [
-        {
-          "actionName": "edit",
-          "nextpages": [
-            {
-              "atomName": "PersonDegreesEntry",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonEducation_id": "value"
-              },
-              "marker": "PersonDegreesEntry"
-            }
-          ]
-        },
-        {
-          "actionName": "topics",
-          "nextpages": [
-            {
-              "atomName": "PersonDegreesEntry",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonEducation_id": "value"
-              },
-              "marker": "PersonDegreesEntry"
-            }
-          ]
-        },
-        {
-          "actionName": "insert",
-          "nextpages": [
-            {
-              "atomName": "PersonDegreesEntry",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonEducation_id": "value"
-              },
-              "marker": "PersonDegreesEntry"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "nextpages": [
-            {
-              "atomName": "PersonDegreesEntry",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonEducation_id": "value"
-              },
-              "marker": "PersonDegreesEntry"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "nextpages": [
-            {
-              "atomName": "PersonDegreesEntry",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonEducation_id": "value"
-              },
-              "marker": "PersonDegreesEntry"
-            }
-          ]
-        },
-        {
-          "actionName": "delete",
-          "prepares": [
-            {
-              "atomName": "PersonDegreesEntry",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonEducation_id": "value"
-              }
-            }
-          ]
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "PersonEducation",
-              "actionName": "delete",
-              "relateArgs": {
-                "PersonEducation_id": "PersonEducation_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "AddressBook_People",
-      "tableName": "AddressBook_People",
-      "columns": [
-        {
-          "columnName": "AddressBook_People_id",
-          "typeName": "int",
-          "label": "AddressBook_People_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "AddressBook_id",
-          "typeName": "int",
-          "label": "AddressBook_id",
-          "notnull": true
-        },
-        {
-          "columnName": "people",
-          "typeName": "int",
-          "label": "people"
-        }
-      ],
-      "pks": [
-        "AddressBook_People_id"
-      ],
-      "idAuto": "AddressBook_People_id",
-      "fks": [
-        {
-          "fkTable": "Person",
-          "fkColumn": "Person_id",
-          "column": "people"
-        },
-        {
-          "fkTable": "AddressBook",
-          "fkColumn": "AddressBook_id",
-          "column": "AddressBook_id"
-        }
-      ],
-      "actions": [
-        {
-          "actionName": "edit"
-        },
-        {
-          "actionName": "topics"
-        },
-        {
-          "actionName": "insert",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "insert",
               "relateArgs": {
                 "Person_id": "people"
-              },
-              "marker": "Person"
+              }
             },
-            {
-              "atomName": "AddressBook",
-              "actionName": "insert",
-              "relateArgs": {
-                "AddressBook_id": "AddressBook_id"
-              },
-              "marker": "AddressBook"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "update",
-              "relateArgs": {
-                "Person_id": "people"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "AddressBook",
-              "actionName": "update",
-              "relateArgs": {
-                "AddressBook_id": "AddressBook_id"
-              },
-              "marker": "AddressBook"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "insupd",
-              "relateArgs": {
-                "Person_id": "people"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "AddressBook",
-              "actionName": "insupd",
-              "relateArgs": {
-                "AddressBook_id": "AddressBook_id"
-              },
-              "marker": "AddressBook"
-            }
-          ]
-        },
-        {
-          "actionName": "delete"
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "AddressBook_People",
-              "actionName": "delete",
-              "relateArgs": {
-                "AddressBook_People_id": "AddressBook_People_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "AddressBook",
-      "tableName": "AddressBook",
-      "columns": [
-        {
-          "columnName": "AddressBook_id",
-          "typeName": "int",
-          "label": "AddressBook_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "title",
-          "typeName": "string",
-          "label": "title"
-        }
-      ],
-      "pks": [
-        "AddressBook_id"
-      ],
-      "idAuto": "AddressBook_id",
-      "actions": [
-        {
-          "actionName": "edit",
-          "nextpages": [
-            {
-              "atomName": "AddressBook_People",
-              "actionName": "topics",
-              "relateExtra": {
-                "AddressBook_id": "AddressBook_id"
-              },
-              "marker": "AddressBook_People"
-            }
-          ]
-        },
-        {
-          "actionName": "topics",
-          "nextpages": [
-            {
-              "atomName": "AddressBook_People",
-              "actionName": "topics",
-              "relateExtra": {
-                "AddressBook_id": "AddressBook_id"
-              },
-              "marker": "AddressBook_People"
-            }
-          ]
-        },
-        {
-          "actionName": "insert",
-          "nextpages": [
-            {
-              "atomName": "AddressBook_People",
-              "actionName": "insert",
-              "relateArgs": {
-                "AddressBook_id": "AddressBook_id"
-              },
-              "marker": "AddressBook_People"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "nextpages": [
-            {
-              "atomName": "AddressBook_People",
-              "actionName": "update",
-              "relateArgs": {
-                "AddressBook_id": "AddressBook_id"
-              },
-              "marker": "AddressBook_People"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "nextpages": [
-            {
-              "atomName": "AddressBook_People",
-              "actionName": "insupd",
-              "relateArgs": {
-                "AddressBook_id": "AddressBook_id"
-              },
-              "marker": "AddressBook_People"
-            }
-          ]
-        },
-        {
-          "actionName": "delete",
-          "prepares": [
-            {
-              "atomName": "AddressBook_People",
-              "actionName": "delecs",
-              "relateArgs": {
-                "AddressBook_id": "AddressBook_id"
-              }
-            }
-          ]
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "AddressBook",
-              "actionName": "delete",
-              "relateArgs": {
-                "AddressBook_id": "AddressBook_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "PersonSpouse",
-      "tableName": "PersonSpouse",
-      "columns": [
-        {
-          "columnName": "PersonSpouse_id",
-          "typeName": "int",
-          "label": "PersonSpouse_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "nameSpouse",
-          "typeName": "string",
-          "label": "nameSpouse"
-        },
-        {
-          "columnName": "emailSpouse",
-          "typeName": "string",
-          "label": "emailSpouse"
-        }
-      ],
-      "pks": [
-        "PersonSpouse_id"
-      ],
-      "idAuto": "PersonSpouse_id",
-      "actions": [
-        {
-          "actionName": "edit",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonSpouse_id": "partner"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "topics",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonSpouse_id": "partner"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "insert",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonSpouse_id": "partner"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonSpouse_id": "partner"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonSpouse_id": "partner"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "delete",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonSpouse_id": "partner"
-              }
-            }
-          ]
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "PersonSpouse",
-              "actionName": "delete",
-              "relateArgs": {
-                "PersonSpouse_id": "PersonSpouse_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "PersonCar",
-      "tableName": "PersonCar",
-      "columns": [
-        {
-          "columnName": "PersonCar_id",
-          "typeName": "int",
-          "label": "PersonCar_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "maker",
-          "typeName": "string",
-          "label": "maker"
-        },
-        {
-          "columnName": "model",
-          "typeName": "string",
-          "label": "model"
-        },
-        {
-          "columnName": "year",
-          "typeName": "int",
-          "label": "year"
-        }
-      ],
-      "pks": [
-        "PersonCar_id"
-      ],
-      "idAuto": "PersonCar_id",
-      "actions": [
-        {
-          "actionName": "edit",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonCar_id": "vehicle"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "topics",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonCar_id": "vehicle"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "insert",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonCar_id": "vehicle"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonCar_id": "vehicle"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonCar_id": "vehicle"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "delete",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonCar_id": "vehicle"
-              }
-            }
-          ]
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "PersonCar",
-              "actionName": "delete",
-              "relateArgs": {
-                "PersonCar_id": "PersonCar_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "Person_Phones",
-      "tableName": "Person_Phones",
-      "columns": [
-        {
-          "columnName": "Person_Phones_id",
-          "typeName": "int",
-          "label": "Person_Phones_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "Person_id",
-          "typeName": "int",
-          "label": "Person_id",
-          "notnull": true
-        },
-        {
-          "columnName": "phones",
-          "typeName": "int",
-          "label": "phones"
-        }
-      ],
-      "pks": [
-        "Person_Phones_id"
-      ],
-      "idAuto": "Person_Phones_id",
-      "fks": [
-        {
-          "fkTable": "Person",
-          "fkColumn": "Person_id",
-          "column": "Person_id"
-        },
-        {
-          "fkTable": "PersonPhoneNumber",
-          "fkColumn": "PersonPhoneNumber_id",
-          "column": "phones"
-        }
-      ],
-      "actions": [
-        {
-          "actionName": "edit"
-        },
-        {
-          "actionName": "topics"
-        },
-        {
-          "actionName": "insert",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "insert",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "PersonPhoneNumber",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonPhoneNumber_id": "phones"
-              },
-              "marker": "PersonPhoneNumber"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "update",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "PersonPhoneNumber",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonPhoneNumber_id": "phones"
-              },
-              "marker": "PersonPhoneNumber"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "insupd",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "PersonPhoneNumber",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonPhoneNumber_id": "phones"
-              },
-              "marker": "PersonPhoneNumber"
-            }
-          ]
-        },
-        {
-          "actionName": "delete"
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "Person_Phones",
-              "actionName": "delete",
-              "relateArgs": {
-                "Person_Phones_id": "Person_Phones_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "Person_Child",
-      "tableName": "Person_Child",
-      "columns": [
-        {
-          "columnName": "Person_Child_id",
-          "typeName": "int",
-          "label": "Person_Child_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "Person_id",
-          "typeName": "int",
-          "label": "Person_id",
-          "notnull": true
-        },
-        {
-          "columnName": "child",
-          "typeName": "string",
-          "label": "child"
-        }
-      ],
-      "pks": [
-        "Person_Child_id"
-      ],
-      "idAuto": "Person_Child_id",
-      "fks": [
-        {
-          "fkTable": "Person",
-          "fkColumn": "Person_id",
-          "column": "Person_id"
-        }
-      ],
-      "actions": [
-        {
-          "actionName": "edit"
-        },
-        {
-          "actionName": "topics"
-        },
-        {
-          "actionName": "insert",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "insert",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "update",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "insupd",
-              "relateArgs": {
-                "Person_id": "Person_id"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "delete"
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
             {
               "atomName": "Person_Child",
-              "actionName": "delete",
-              "relateArgs": {
-                "Person_Child_id": "Person_Child_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "Person_Degrees",
-      "tableName": "Person_Degrees",
-      "columns": [
-        {
-          "columnName": "Person_Degrees_id",
-          "typeName": "int",
-          "label": "Person_Degrees_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "Person_id",
-          "typeName": "int",
-          "label": "Person_id",
-          "notnull": true
-        },
-        {
-          "columnName": "degrees",
-          "typeName": "int",
-          "label": "degrees"
-        }
-      ],
-      "pks": [
-        "Person_Degrees_id"
-      ],
-      "idAuto": "Person_Degrees_id",
-      "fks": [
-        {
-          "fkTable": "PersonDegreesEntry",
-          "fkColumn": "PersonDegreesEntry_id",
-          "column": "degrees"
-        },
-        {
-          "fkTable": "Person",
-          "fkColumn": "Person_id",
-          "column": "Person_id"
-        }
-      ],
-      "actions": [
-        {
-          "actionName": "edit"
-        },
-        {
-          "actionName": "topics"
-        },
-        {
-          "actionName": "insert",
-          "prepares": [
-            {
-              "atomName": "PersonDegreesEntry",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonDegreesEntry_id": "degrees"
-              },
-              "marker": "PersonDegreesEntry"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "insert",
+              "actionName": "delecs",
               "relateArgs": {
                 "Person_id": "Person_id"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "prepares": [
-            {
-              "atomName": "PersonDegreesEntry",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonDegreesEntry_id": "degrees"
-              },
-              "marker": "PersonDegreesEntry"
+              }
             },
             {
-              "atomName": "Person",
-              "actionName": "update",
+              "atomName": "Person_Skills",
+              "actionName": "delecs",
               "relateArgs": {
                 "Person_id": "Person_id"
-              },
-              "marker": "Person"
+              }
             }
           ]
         },
         {
-          "actionName": "insupd",
-          "prepares": [
-            {
-              "atomName": "PersonDegreesEntry",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonDegreesEntry_id": "degrees"
-              },
-              "marker": "PersonDegreesEntry"
-            },
+          "actionName": "delecs",
+          "nextpages": [
             {
               "atomName": "Person",
-              "actionName": "insupd",
+              "actionName": "delete",
               "relateArgs": {
                 "Person_id": "Person_id"
-              },
-              "marker": "Person"
-            }
-          ]
-        },
-        {
-          "actionName": "delete"
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "Person_Degrees",
-              "actionName": "delete",
-              "relateArgs": {
-                "Person_Degrees_id": "Person_Degrees_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "PersonTeacher",
-      "tableName": "PersonTeacher",
-      "columns": [
-        {
-          "columnName": "PersonTeacher_id",
-          "typeName": "int",
-          "label": "PersonTeacher_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "fullname",
-          "typeName": "string",
-          "label": "fullname"
-        },
-        {
-          "columnName": "school",
-          "typeName": "string",
-          "label": "school"
-        },
-        {
-          "columnName": "startYear",
-          "typeName": "int",
-          "label": "startYear"
-        },
-        {
-          "columnName": "endYear",
-          "typeName": "int",
-          "label": "endYear"
-        }
-      ],
-      "pks": [
-        "PersonTeacher_id"
-      ],
-      "idAuto": "PersonTeacher_id",
-      "actions": [
-        {
-          "actionName": "edit",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonTeacher_id": "middleSchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonTeacher_id": "highSchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonTeacher_id": "primarySchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "PersonTeacher_Advisors",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonTeacher_id": "advisors"
-              },
-              "marker": "PersonTeacher_Advisors"
-            },
-            {
-              "atomName": "PersonTeacher_Advisors",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonTeacher_id": "PersonTeacher_id"
-              },
-              "marker": "PersonTeacher_Advisors"
-            }
-          ]
-        },
-        {
-          "actionName": "topics",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonTeacher_id": "middleSchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonTeacher_id": "highSchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonTeacher_id": "primarySchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "PersonTeacher_Advisors",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonTeacher_id": "advisors"
-              },
-              "marker": "PersonTeacher_Advisors"
-            },
-            {
-              "atomName": "PersonTeacher_Advisors",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonTeacher_id": "PersonTeacher_id"
-              },
-              "marker": "PersonTeacher_Advisors"
-            }
-          ]
-        },
-        {
-          "actionName": "insert",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonTeacher_id": "middleSchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonTeacher_id": "highSchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonTeacher_id": "primarySchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "PersonTeacher_Advisors",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonTeacher_id": "advisors"
-              },
-              "marker": "PersonTeacher_Advisors"
-            },
-            {
-              "atomName": "PersonTeacher_Advisors",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonTeacher_id": "PersonTeacher_id"
-              },
-              "marker": "PersonTeacher_Advisors"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonTeacher_id": "middleSchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonTeacher_id": "highSchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonTeacher_id": "primarySchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "PersonTeacher_Advisors",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonTeacher_id": "advisors"
-              },
-              "marker": "PersonTeacher_Advisors"
-            },
-            {
-              "atomName": "PersonTeacher_Advisors",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonTeacher_id": "PersonTeacher_id"
-              },
-              "marker": "PersonTeacher_Advisors"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonTeacher_id": "middleSchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonTeacher_id": "highSchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonTeacher_id": "primarySchool"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "PersonTeacher_Advisors",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonTeacher_id": "advisors"
-              },
-              "marker": "PersonTeacher_Advisors"
-            },
-            {
-              "atomName": "PersonTeacher_Advisors",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonTeacher_id": "PersonTeacher_id"
-              },
-              "marker": "PersonTeacher_Advisors"
-            }
-          ]
-        },
-        {
-          "actionName": "delete",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonTeacher_id": "middleSchool"
-              }
-            },
-            {
-              "atomName": "Person",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonTeacher_id": "highSchool"
-              }
-            },
-            {
-              "atomName": "Person",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonTeacher_id": "primarySchool"
-              }
-            },
-            {
-              "atomName": "PersonTeacher_Advisors",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonTeacher_id": "advisors"
-              }
-            },
-            {
-              "atomName": "PersonTeacher_Advisors",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonTeacher_id": "PersonTeacher_id"
-              }
-            }
-          ]
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "PersonTeacher",
-              "actionName": "delete",
-              "relateArgs": {
-                "PersonTeacher_id": "PersonTeacher_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "PersonEat",
-      "tableName": "PersonEat",
-      "columns": [
-        {
-          "columnName": "PersonEat_id",
-          "typeName": "int",
-          "label": "PersonEat_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "name",
-          "typeName": "string",
-          "label": "name"
-        },
-        {
-          "columnName": "descriptionText",
-          "typeName": "string",
-          "label": "descriptionText"
-        }
-      ],
-      "pks": [
-        "PersonEat_id"
-      ],
-      "idAuto": "PersonEat_id",
-      "actions": [
-        {
-          "actionName": "edit",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonEat_id": "breakfest"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonEat_id": "lunch"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonEat_id": "dinner"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person_Snacks",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonEat_id": "snacks"
-              },
-              "marker": "Person_Snacks"
-            }
-          ]
-        },
-        {
-          "actionName": "topics",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonEat_id": "breakfest"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonEat_id": "lunch"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonEat_id": "dinner"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person_Snacks",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonEat_id": "snacks"
-              },
-              "marker": "Person_Snacks"
-            }
-          ]
-        },
-        {
-          "actionName": "insert",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonEat_id": "breakfest"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonEat_id": "lunch"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonEat_id": "dinner"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person_Snacks",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonEat_id": "snacks"
-              },
-              "marker": "Person_Snacks"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonEat_id": "breakfest"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonEat_id": "lunch"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonEat_id": "dinner"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person_Snacks",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonEat_id": "snacks"
-              },
-              "marker": "Person_Snacks"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "nextpages": [
-            {
-              "atomName": "Person",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonEat_id": "breakfest"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonEat_id": "lunch"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonEat_id": "dinner"
-              },
-              "marker": "Person"
-            },
-            {
-              "atomName": "Person_Snacks",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonEat_id": "snacks"
-              },
-              "marker": "Person_Snacks"
-            }
-          ]
-        },
-        {
-          "actionName": "delete",
-          "prepares": [
-            {
-              "atomName": "Person",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonEat_id": "breakfest"
-              }
-            },
-            {
-              "atomName": "Person",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonEat_id": "lunch"
-              }
-            },
-            {
-              "atomName": "Person",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonEat_id": "dinner"
-              }
-            },
-            {
-              "atomName": "Person_Snacks",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonEat_id": "snacks"
-              }
-            }
-          ]
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "PersonEat",
-              "actionName": "delete",
-              "relateArgs": {
-                "PersonEat_id": "PersonEat_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "PersonTeacher_Advisors",
-      "tableName": "PersonTeacher_Advisors",
-      "columns": [
-        {
-          "columnName": "PersonTeacher_Advisors_id",
-          "typeName": "int",
-          "label": "PersonTeacher_Advisors_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "PersonTeacher_id",
-          "typeName": "int",
-          "label": "PersonTeacher_id",
-          "notnull": true
-        },
-        {
-          "columnName": "advisors",
-          "typeName": "int",
-          "label": "advisors"
-        }
-      ],
-      "pks": [
-        "PersonTeacher_Advisors_id"
-      ],
-      "idAuto": "PersonTeacher_Advisors_id",
-      "fks": [
-        {
-          "fkTable": "PersonTeacher",
-          "fkColumn": "PersonTeacher_id",
-          "column": "advisors"
-        },
-        {
-          "fkTable": "PersonTeacher",
-          "fkColumn": "PersonTeacher_id",
-          "column": "PersonTeacher_id"
-        }
-      ],
-      "actions": [
-        {
-          "actionName": "edit"
-        },
-        {
-          "actionName": "topics"
-        },
-        {
-          "actionName": "insert",
-          "prepares": [
-            {
-              "atomName": "PersonTeacher",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonTeacher_id": "advisors"
-              },
-              "marker": "PersonTeacher"
-            },
-            {
-              "atomName": "PersonTeacher",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonTeacher_id": "PersonTeacher_id"
-              },
-              "marker": "PersonTeacher"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "prepares": [
-            {
-              "atomName": "PersonTeacher",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonTeacher_id": "advisors"
-              },
-              "marker": "PersonTeacher"
-            },
-            {
-              "atomName": "PersonTeacher",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonTeacher_id": "PersonTeacher_id"
-              },
-              "marker": "PersonTeacher"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "prepares": [
-            {
-              "atomName": "PersonTeacher",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonTeacher_id": "advisors"
-              },
-              "marker": "PersonTeacher"
-            },
-            {
-              "atomName": "PersonTeacher",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonTeacher_id": "PersonTeacher_id"
-              },
-              "marker": "PersonTeacher"
-            }
-          ]
-        },
-        {
-          "actionName": "delete"
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "PersonTeacher_Advisors",
-              "actionName": "delete",
-              "relateArgs": {
-                "PersonTeacher_Advisors_id": "PersonTeacher_Advisors_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "PersonDegreesEntry",
-      "tableName": "PersonDegreesEntry",
-      "columns": [
-        {
-          "columnName": "PersonDegreesEntry_id",
-          "typeName": "int",
-          "label": "PersonDegreesEntry_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "keyEscape",
-          "typeName": "string",
-          "label": "keyEscape"
-        },
-        {
-          "columnName": "value",
-          "typeName": "int",
-          "label": "value"
-        }
-      ],
-      "pks": [
-        "PersonDegreesEntry_id"
-      ],
-      "idAuto": "PersonDegreesEntry_id",
-      "fks": [
-        {
-          "fkTable": "PersonEducation",
-          "fkColumn": "PersonEducation_id",
-          "column": "value"
-        }
-      ],
-      "actions": [
-        {
-          "actionName": "edit",
-          "nextpages": [
-            {
-              "atomName": "Person_Degrees",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonDegreesEntry_id": "degrees"
-              },
-              "marker": "Person_Degrees"
-            }
-          ]
-        },
-        {
-          "actionName": "topics",
-          "nextpages": [
-            {
-              "atomName": "Person_Degrees",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonDegreesEntry_id": "degrees"
-              },
-              "marker": "Person_Degrees"
-            }
-          ]
-        },
-        {
-          "actionName": "insert",
-          "prepares": [
-            {
-              "atomName": "PersonEducation",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonEducation_id": "value"
-              },
-              "marker": "PersonEducation"
-            }
-          ],
-          "nextpages": [
-            {
-              "atomName": "Person_Degrees",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonDegreesEntry_id": "degrees"
-              },
-              "marker": "Person_Degrees"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "prepares": [
-            {
-              "atomName": "PersonEducation",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonEducation_id": "value"
-              },
-              "marker": "PersonEducation"
-            }
-          ],
-          "nextpages": [
-            {
-              "atomName": "Person_Degrees",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonDegreesEntry_id": "degrees"
-              },
-              "marker": "Person_Degrees"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "prepares": [
-            {
-              "atomName": "PersonEducation",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonEducation_id": "value"
-              },
-              "marker": "PersonEducation"
-            }
-          ],
-          "nextpages": [
-            {
-              "atomName": "Person_Degrees",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonDegreesEntry_id": "degrees"
-              },
-              "marker": "Person_Degrees"
-            }
-          ]
-        },
-        {
-          "actionName": "delete",
-          "prepares": [
-            {
-              "atomName": "Person_Degrees",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonDegreesEntry_id": "degrees"
-              }
-            }
-          ]
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "PersonDegreesEntry",
-              "actionName": "delete",
-              "relateArgs": {
-                "PersonDegreesEntry_id": "PersonDegreesEntry_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "Oneofs",
-      "tableName": "Oneofs",
-      "columns": [
-        {
-          "columnName": "Oneofs_id",
-          "typeName": "int",
-          "label": "Oneofs_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "columnNames",
-          "typeName": "string",
-          "label": "columnNames"
-        }
-      ],
-      "pks": [
-        "Oneofs_id"
-      ],
-      "idAuto": "Oneofs_id",
-      "actions": [
-        {
-          "actionName": "edit"
-        },
-        {
-          "actionName": "topics"
-        },
-        {
-          "actionName": "insert"
-        },
-        {
-          "actionName": "update"
-        },
-        {
-          "actionName": "insupd"
-        },
-        {
-          "actionName": "delete"
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "Oneofs",
-              "actionName": "delete",
-              "relateArgs": {
-                "Oneofs_id": "Oneofs_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "PersonPhoneNumber",
-      "tableName": "PersonPhoneNumber",
-      "columns": [
-        {
-          "columnName": "PersonPhoneNumber_id",
-          "typeName": "int",
-          "label": "PersonPhoneNumber_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "numberEscape",
-          "typeName": "string",
-          "label": "numberEscape"
-        },
-        {
-          "columnName": "typeEscape",
-          "typeName": "",
-          "label": "typeEscape"
-        }
-      ],
-      "pks": [
-        "PersonPhoneNumber_id"
-      ],
-      "idAuto": "PersonPhoneNumber_id",
-      "actions": [
-        {
-          "actionName": "edit",
-          "nextpages": [
-            {
-              "atomName": "Person_Phones",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonPhoneNumber_id": "phones"
-              },
-              "marker": "Person_Phones"
-            }
-          ]
-        },
-        {
-          "actionName": "topics",
-          "nextpages": [
-            {
-              "atomName": "Person_Phones",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonPhoneNumber_id": "phones"
-              },
-              "marker": "Person_Phones"
-            }
-          ]
-        },
-        {
-          "actionName": "insert",
-          "nextpages": [
-            {
-              "atomName": "Person_Phones",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonPhoneNumber_id": "phones"
-              },
-              "marker": "Person_Phones"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "nextpages": [
-            {
-              "atomName": "Person_Phones",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonPhoneNumber_id": "phones"
-              },
-              "marker": "Person_Phones"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "nextpages": [
-            {
-              "atomName": "Person_Phones",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonPhoneNumber_id": "phones"
-              },
-              "marker": "Person_Phones"
-            }
-          ]
-        },
-        {
-          "actionName": "delete",
-          "prepares": [
-            {
-              "atomName": "Person_Phones",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonPhoneNumber_id": "phones"
-              }
-            }
-          ]
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "PersonPhoneNumber",
-              "actionName": "delete",
-              "relateArgs": {
-                "PersonPhoneNumber_id": "PersonPhoneNumber_id"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "atomName": "PersonSkillsEntry",
-      "tableName": "PersonSkillsEntry",
-      "columns": [
-        {
-          "columnName": "PersonSkillsEntry_id",
-          "typeName": "int",
-          "label": "PersonSkillsEntry_id",
-          "notnull": true,
-          "auto": true
-        },
-        {
-          "columnName": "keyEscape",
-          "typeName": "string",
-          "label": "keyEscape"
-        },
-        {
-          "columnName": "value",
-          "typeName": "string",
-          "label": "value"
-        }
-      ],
-      "pks": [
-        "PersonSkillsEntry_id"
-      ],
-      "idAuto": "PersonSkillsEntry_id",
-      "actions": [
-        {
-          "actionName": "edit",
-          "nextpages": [
-            {
-              "atomName": "Person_Skills",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonSkillsEntry_id": "skills"
-              },
-              "marker": "Person_Skills"
-            }
-          ]
-        },
-        {
-          "actionName": "topics",
-          "nextpages": [
-            {
-              "atomName": "Person_Skills",
-              "actionName": "topics",
-              "relateExtra": {
-                "PersonSkillsEntry_id": "skills"
-              },
-              "marker": "Person_Skills"
-            }
-          ]
-        },
-        {
-          "actionName": "insert",
-          "nextpages": [
-            {
-              "atomName": "Person_Skills",
-              "actionName": "insert",
-              "relateArgs": {
-                "PersonSkillsEntry_id": "skills"
-              },
-              "marker": "Person_Skills"
-            }
-          ]
-        },
-        {
-          "actionName": "update",
-          "nextpages": [
-            {
-              "atomName": "Person_Skills",
-              "actionName": "update",
-              "relateArgs": {
-                "PersonSkillsEntry_id": "skills"
-              },
-              "marker": "Person_Skills"
-            }
-          ]
-        },
-        {
-          "actionName": "insupd",
-          "nextpages": [
-            {
-              "atomName": "Person_Skills",
-              "actionName": "insupd",
-              "relateArgs": {
-                "PersonSkillsEntry_id": "skills"
-              },
-              "marker": "Person_Skills"
-            }
-          ]
-        },
-        {
-          "actionName": "delete",
-          "prepares": [
-            {
-              "atomName": "Person_Skills",
-              "actionName": "delecs",
-              "relateArgs": {
-                "PersonSkillsEntry_id": "skills"
-              }
-            }
-          ]
-        },
-        {
-          "actionName": "delecs",
-          "nextpages": [
-            {
-              "atomName": "PersonSkillsEntry",
-              "actionName": "delete",
-              "relateArgs": {
-                "PersonSkillsEntry_id": "PersonSkillsEntry_id"
               }
             }
           ]
@@ -3197,6 +2819,229 @@
       ]
     },
     {
+      "atomName": "AddressBook_People",
+      "tableName": "AddressBook_People",
+      "columns": [
+        {
+          "columnName": "AddressBook_People_id",
+          "typeName": "int",
+          "label": "AddressBook_People_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "AddressBook_id",
+          "typeName": "int",
+          "label": "AddressBook_id",
+          "notnull": true
+        },
+        {
+          "columnName": "people",
+          "typeName": "int",
+          "label": "people"
+        }
+      ],
+      "pks": [
+        "AddressBook_People_id"
+      ],
+      "idAuto": "AddressBook_People_id",
+      "fks": [
+        {
+          "fkTable": "Person",
+          "fkColumn": "Person_id",
+          "column": "people"
+        },
+        {
+          "fkTable": "AddressBook",
+          "fkColumn": "AddressBook_id",
+          "column": "AddressBook_id"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "insert",
+              "relateArgs": {
+                "Person_id": "people"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "AddressBook",
+              "actionName": "insert",
+              "relateArgs": {
+                "AddressBook_id": "AddressBook_id"
+              },
+              "marker": "AddressBook"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "update",
+              "relateArgs": {
+                "Person_id": "people"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "AddressBook",
+              "actionName": "update",
+              "relateArgs": {
+                "AddressBook_id": "AddressBook_id"
+              },
+              "marker": "AddressBook"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "insupd",
+              "relateArgs": {
+                "Person_id": "people"
+              },
+              "marker": "Person"
+            },
+            {
+              "atomName": "AddressBook",
+              "actionName": "insupd",
+              "relateArgs": {
+                "AddressBook_id": "AddressBook_id"
+              },
+              "marker": "AddressBook"
+            }
+          ]
+        },
+        {
+          "actionName": "delete"
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "AddressBook_People",
+              "actionName": "delete",
+              "relateArgs": {
+                "AddressBook_People_id": "AddressBook_People_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "Person_Child",
+      "tableName": "Person_Child",
+      "columns": [
+        {
+          "columnName": "Person_Child_id",
+          "typeName": "int",
+          "label": "Person_Child_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "Person_id",
+          "typeName": "int",
+          "label": "Person_id",
+          "notnull": true
+        },
+        {
+          "columnName": "child",
+          "typeName": "string",
+          "label": "child"
+        }
+      ],
+      "pks": [
+        "Person_Child_id"
+      ],
+      "idAuto": "Person_Child_id",
+      "fks": [
+        {
+          "fkTable": "Person",
+          "fkColumn": "Person_id",
+          "column": "Person_id"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit"
+        },
+        {
+          "actionName": "topics"
+        },
+        {
+          "actionName": "insert",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "insert",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "update",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "prepares": [
+            {
+              "atomName": "Person",
+              "actionName": "insupd",
+              "relateArgs": {
+                "Person_id": "Person_id"
+              },
+              "marker": "Person"
+            }
+          ]
+        },
+        {
+          "actionName": "delete"
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "Person_Child",
+              "actionName": "delete",
+              "relateArgs": {
+                "Person_Child_id": "Person_Child_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "atomName": "Person_Skills",
       "tableName": "Person_Skills",
       "columns": [
@@ -3316,6 +3161,161 @@
               "actionName": "delete",
               "relateArgs": {
                 "Person_Skills_id": "Person_Skills_id"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "atomName": "PersonDegreesEntry",
+      "tableName": "PersonDegreesEntry",
+      "columns": [
+        {
+          "columnName": "PersonDegreesEntry_id",
+          "typeName": "int",
+          "label": "PersonDegreesEntry_id",
+          "notnull": true,
+          "auto": true
+        },
+        {
+          "columnName": "keyEscape",
+          "typeName": "string",
+          "label": "keyEscape"
+        },
+        {
+          "columnName": "value",
+          "typeName": "int",
+          "label": "value"
+        }
+      ],
+      "pks": [
+        "PersonDegreesEntry_id"
+      ],
+      "idAuto": "PersonDegreesEntry_id",
+      "fks": [
+        {
+          "fkTable": "PersonEducation",
+          "fkColumn": "PersonEducation_id",
+          "column": "value"
+        }
+      ],
+      "actions": [
+        {
+          "actionName": "edit",
+          "nextpages": [
+            {
+              "atomName": "Person_Degrees",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonDegreesEntry_id": "degrees"
+              },
+              "marker": "Person_Degrees"
+            }
+          ]
+        },
+        {
+          "actionName": "topics",
+          "nextpages": [
+            {
+              "atomName": "Person_Degrees",
+              "actionName": "topics",
+              "relateExtra": {
+                "PersonDegreesEntry_id": "degrees"
+              },
+              "marker": "Person_Degrees"
+            }
+          ]
+        },
+        {
+          "actionName": "insert",
+          "prepares": [
+            {
+              "atomName": "PersonEducation",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonEducation_id": "value"
+              },
+              "marker": "PersonEducation"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "Person_Degrees",
+              "actionName": "insert",
+              "relateArgs": {
+                "PersonDegreesEntry_id": "degrees"
+              },
+              "marker": "Person_Degrees"
+            }
+          ]
+        },
+        {
+          "actionName": "update",
+          "prepares": [
+            {
+              "atomName": "PersonEducation",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonEducation_id": "value"
+              },
+              "marker": "PersonEducation"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "Person_Degrees",
+              "actionName": "update",
+              "relateArgs": {
+                "PersonDegreesEntry_id": "degrees"
+              },
+              "marker": "Person_Degrees"
+            }
+          ]
+        },
+        {
+          "actionName": "insupd",
+          "prepares": [
+            {
+              "atomName": "PersonEducation",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonEducation_id": "value"
+              },
+              "marker": "PersonEducation"
+            }
+          ],
+          "nextpages": [
+            {
+              "atomName": "Person_Degrees",
+              "actionName": "insupd",
+              "relateArgs": {
+                "PersonDegreesEntry_id": "degrees"
+              },
+              "marker": "Person_Degrees"
+            }
+          ]
+        },
+        {
+          "actionName": "delete",
+          "prepares": [
+            {
+              "atomName": "Person_Degrees",
+              "actionName": "delecs",
+              "relateArgs": {
+                "PersonDegreesEntry_id": "degrees"
+              }
+            }
+          ]
+        },
+        {
+          "actionName": "delecs",
+          "nextpages": [
+            {
+              "atomName": "PersonDegreesEntry",
+              "actionName": "delete",
+              "relateArgs": {
+                "PersonDegreesEntry_id": "PersonDegreesEntry_id"
               }
             }
           ]

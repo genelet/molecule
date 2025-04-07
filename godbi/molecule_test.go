@@ -2,6 +2,7 @@ package godbi
 
 import (
 	"encoding/json"
+	"log/slog"
 	"os"
 	"testing"
 
@@ -22,11 +23,11 @@ func newMoleculeHclFile(fn string) (*Molecule, error) {
 }
 
 func TestMoleculeContext(t *testing.T) {
-	ta, err := newAtomJsonFile("m_a.json")
+	ta, err := newAtomJSONFile("m_a.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	tb, err := newAtomJsonFile("m_b.json")
+	tb, err := newAtomJSONFile("m_b.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -82,17 +83,17 @@ func TestHCLMoleculeOld(t *testing.T) {
 	}
 	m := new(Molecule)
 	spec, err := utils.NewStruct(
-		"Molecule", map[string]interface{}{
-			"Atoms": [][2]interface{}{
-				{"Atom", map[string]interface{}{"Actions": [][2]interface{}{
-					{"insert", map[string]interface{}{"Nextpages": []string{"Connection"}}},
-					{"update", map[string]interface{}{"Nextpages": []string{"Connection"}}},
-					{"insupd", map[string]interface{}{"Nextpages": []string{"Connection"}}},
-					{"delete", map[string]interface{}{"Nextpages": []string{"Connection"}}},
-					{"delecs", map[string]interface{}{"Nextpages": []string{"Connection"}}},
-					{"topics", map[string]interface{}{"Nextpages": []string{"Connection"}}},
-					{"edit", map[string]interface{}{"Nextpages": []string{"Connection"}}},
-					{"stmt", map[string]interface{}{"Nextpages": []string{"Connection"}}}}},
+		"Molecule", map[string]any{
+			"Atoms": [][2]any{
+				{"Atom", map[string]any{"Actions": [][2]any{
+					{"insert", map[string]any{"Nextpages": []string{"Connection"}}},
+					{"update", map[string]any{"Nextpages": []string{"Connection"}}},
+					{"insupd", map[string]any{"Nextpages": []string{"Connection"}}},
+					{"delete", map[string]any{"Nextpages": []string{"Connection"}}},
+					{"delecs", map[string]any{"Nextpages": []string{"Connection"}}},
+					{"topics", map[string]any{"Nextpages": []string{"Connection"}}},
+					{"edit", map[string]any{"Nextpages": []string{"Connection"}}},
+					{"stmt", map[string]any{"Nextpages": []string{"Connection"}}}}},
 				},
 			},
 		},
@@ -101,7 +102,7 @@ func TestHCLMoleculeOld(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ref := map[string]interface{}{
+	ref := map[string]any{
 		"Connection": new(Connection),
 		"insupd":     new(Insupd),
 		"update":     new(Update),
@@ -132,7 +133,7 @@ func TestHCLMoleculeOld(t *testing.T) {
 }
 
 // newMoleculeJson parses a JSON file into Molecule
-func newMoleculeJsonFile(fn string) (*Molecule, error) {
+func newMoleculeJSONFile(fn string) (*Molecule, error) {
 	dat, err := os.ReadFile(fn)
 	if err != nil {
 		return nil, err
@@ -144,7 +145,7 @@ func newMoleculeJsonFile(fn string) (*Molecule, error) {
 }
 
 func TestMoleculeParse(t *testing.T) {
-	molecule, err := newMoleculeJsonFile("molecule.json")
+	molecule, err := newMoleculeJSONFile("molecule.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -152,20 +153,21 @@ func TestMoleculeParse(t *testing.T) {
 }
 
 func TestMoleculeDelecs(t *testing.T) {
-	molecule, err := newMoleculeJsonFile("molecule2.json")
+	molecule, err := newMoleculeJSONFile("molecule2.json")
 	if err != nil {
 		t.Fatal(err)
 	}
+	molecule.SetLogger(DevelopLogger(os.Stdout, slog.LevelDebug))
 	db, ctx, METHODS := local2Vars()
-	var lists []interface{}
+	var lists []any
 
 	// the 1st web requests is assumed to create id=1 to the m_a and m_b tables:
 	//
-	args := map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john"}
-	data2 := []map[string]interface{}{{"child": "john"}, {"child": "john2"}}
-	molecule.Initialize(map[string]interface{}{
-		"m_a": map[string]interface{}{"insupd": args},
-		"m_b": map[string]interface{}{"insert": data2},
+	args := map[string]any{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john"}
+	data2 := []map[string]any{{"child": "john"}, {"child": "john2"}}
+	molecule.Initialize(map[string]any{
+		"m_a": map[string]any{"insupd": args},
+		"m_b": map[string]any{"insert": data2},
 	}, nil)
 	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"]); err != nil {
 		panic(err)
@@ -177,37 +179,37 @@ func TestMoleculeDelecs(t *testing.T) {
 	// the 2nd request just updates, becaues [x,y] is defined to the unique in ta.
 	// but create a new record to tb for id=1, since insupd triggers insert in tb
 	//
-	args = map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "zzzzz"}
-	data := map[string]interface{}{"child": "sam"}
-	molecule.Initialize(map[string]interface{}{
-		"m_a": map[string]interface{}{"insupd": args},
-		"m_b": map[string]interface{}{"insert": data},
+	args = map[string]any{"x": "a1234567", "y": "b1234567", "z": "zzzzz"}
+	data := map[string]any{"child": "sam"}
+	molecule.Initialize(map[string]any{
+		"m_a": map[string]any{"insupd": args},
+		"m_b": map[string]any{"insert": data},
 	}, nil)
-	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"]); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"]); err != nil {
 		panic(err)
 	}
 
 	// the 3rd request creates id=2
 	//
-	args = map[string]interface{}{"x": "c1234567", "y": "d1234567", "z": "e1234"}
-	data = map[string]interface{}{"child": "mary"}
-	molecule.Initialize(map[string]interface{}{
-		"m_a": map[string]interface{}{"insert": args},
-		"m_b": map[string]interface{}{"insert": data},
+	args = map[string]any{"x": "c1234567", "y": "d1234567", "z": "e1234"}
+	data = map[string]any{"child": "mary"}
+	molecule.Initialize(map[string]any{
+		"m_a": map[string]any{"insert": args},
+		"m_b": map[string]any{"insert": data},
 	}, nil)
-	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"]); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"]); err != nil {
 		panic(err)
 	}
 
 	// the 4th request creates id=3
 	//
-	args = map[string]interface{}{"x": "e1234567", "y": "f1234567", "z": "e1234"}
-	data = map[string]interface{}{"child": "marcus"}
-	molecule.Initialize(map[string]interface{}{
-		"m_a": map[string]interface{}{"insert": args},
-		"m_b": map[string]interface{}{"insert": data},
+	args = map[string]any{"x": "e1234567", "y": "f1234567", "z": "e1234"}
+	data = map[string]any{"child": "marcus"}
+	molecule.Initialize(map[string]any{
+		"m_a": map[string]any{"insert": args},
+		"m_b": map[string]any{"insert": data},
 	}, nil)
-	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"]); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"]); err != nil {
 		panic(err)
 	}
 
@@ -215,18 +217,18 @@ func TestMoleculeDelecs(t *testing.T) {
 }
 
 func TestMoleculeDelecs2(t *testing.T) {
-	molecule, err := newMoleculeJsonFile("molecule21.json")
+	molecule, err := newMoleculeJSONFile("molecule21.json")
 	if err != nil {
 		t.Fatal(err)
 	}
 	db, ctx, METHODS := local2Vars()
-	var lists []interface{}
+	var lists []any
 
 	// the 1st web requests is assumed to create id=1 to the m_a and m_b tables:
 	//
-	args := map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john", "m_b": []map[string]interface{}{{"child": "john"}, {"child": "john2"}}}
-	//molecule.Initialize(map[string]interface{}{
-	//"m_a":map[string]interface{}{"insupd": args},
+	args := map[string]any{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john", "m_b": []map[string]any{{"child": "john"}, {"child": "john2"}}}
+	//molecule.Initialize(map[string]any{
+	//"m_a":map[string]any{"insupd": args},
 	//, nil)
 	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], args); err != nil {
 		panic(err)
@@ -238,31 +240,31 @@ func TestMoleculeDelecs2(t *testing.T) {
 	// the 2nd request just updates, becaues [x,y] is defined to the unique in ta.
 	// but create a new record to tb for id=1, since insupd triggers insert in tb
 	//
-	args = map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "zzzzz", "m_b": map[string]interface{}{"child": "sam"}}
-	//raph.Initialize(map[string]interface{}{
-	//"m_a":map[string]interface{}{"insupd": args},
+	args = map[string]any{"x": "a1234567", "y": "b1234567", "z": "zzzzz", "m_b": map[string]any{"child": "sam"}}
+	//raph.Initialize(map[string]any{
+	//"m_a":map[string]any{"insupd": args},
 	//, nil)
-	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], args); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], args); err != nil {
 		panic(err)
 	}
 
 	// the 3rd request creates id=2
 	//
-	args = map[string]interface{}{"x": "c1234567", "y": "d1234567", "z": "e1234", "m_b": map[string]interface{}{"child": "mary"}}
-	//raph.Initialize(map[string]interface{}{
-	//"m_a":map[string]interface{}{"insert": args},
+	args = map[string]any{"x": "c1234567", "y": "d1234567", "z": "e1234", "m_b": map[string]any{"child": "mary"}}
+	//raph.Initialize(map[string]any{
+	//"m_a":map[string]any{"insert": args},
 	//, nil)
-	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args); err != nil {
 		panic(err)
 	}
 
 	// the 4th request creates id=3
 	//
-	args = map[string]interface{}{"x": "e1234567", "y": "f1234567", "z": "e1234", "m_b": map[string]interface{}{"child": "marcus"}}
-	//raph.Initialize(map[string]interface{}{
-	//"m_a":map[string]interface{}{"insert": args},
+	args = map[string]any{"x": "e1234567", "y": "f1234567", "z": "e1234", "m_b": map[string]any{"child": "marcus"}}
+	//raph.Initialize(map[string]any{
+	//"m_a":map[string]any{"insert": args},
 	//, nil)
-	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args); err != nil {
 		panic(err)
 	}
 
@@ -270,7 +272,7 @@ func TestMoleculeDelecs2(t *testing.T) {
 }
 
 func TestMoleculeThreeTables(t *testing.T) {
-	molecule, err := newMoleculeJsonFile("molecule3.json")
+	molecule, err := newMoleculeJSONFile("molecule3.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -278,7 +280,7 @@ func TestMoleculeThreeTables(t *testing.T) {
 }
 
 func TestMoleculeThreeTables2(t *testing.T) {
-	molecule, err := newMoleculeJsonFile("molecule31.json")
+	molecule, err := newMoleculeJSONFile("molecule31.json")
 	if err != nil {
 		t.Fatal(err)
 	}

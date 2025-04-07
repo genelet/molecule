@@ -19,7 +19,7 @@ func newPostgres(databaseName string) *postgres {
 
 func (self *postgres) getTable(db *sql.DB, tableName string) (*godbi.Table, error) {
 	dbi := &godbi.DBI{DB: db}
-	lists := make([]interface{}, 0)
+	lists := make([]any, 0)
 	err := dbi.Select(&lists,
 		`SELECT
 	pg_catalog.quote_ident(a.attname) AS "COLUMN_NAME"
@@ -43,7 +43,7 @@ AND pg_catalog.quote_ident(c.relname) = ?`, self.DatabaseName, tableName)
 	ref := make(map[string]*godbi.Col)
 
 	for _, iitem := range lists {
-		item := iitem.(map[string]interface{})
+		item := iitem.(map[string]any)
 		field := item["COLUMN_NAME"].(string)
 		col := &godbi.Col{
 			ColumnName: field,
@@ -62,7 +62,7 @@ AND pg_catalog.quote_ident(c.relname) = ?`, self.DatabaseName, tableName)
 		ref[field] = col
 	}
 
-	lists = make([]interface{}, 0)
+	lists = make([]any, 0)
 	err = dbi.Select(&lists,
 		`SELECT kcu.column_name
 FROM information_schema.table_constraints tco
@@ -80,7 +80,7 @@ ORDER BY kcu.ordinal_position`, self.DatabaseName, tableName)
 
 	var pks []string
 	for _, iitem := range lists {
-		item := iitem.(map[string]interface{})
+		item := iitem.(map[string]any)
 		field := item["column_name"].(string)
 		col := ref[field]
 		col.Notnull = true
@@ -98,12 +98,12 @@ ORDER BY kcu.ordinal_position`, self.DatabaseName, tableName)
 		TableName: tableName,
 		Columns:   cols,
 		Pks:       pks,
-		IdAuto:    idauto}, nil
+		IDAuto:    idauto}, nil
 }
 
 func (self *postgres) getFks(db *sql.DB, tableName string) ([]*godbi.Fk, error) {
 	dbi := &godbi.DBI{DB: db}
-	lists := make([]interface{}, 0)
+	lists := make([]any, 0)
 	// from child table: constraint_name | table_name  | column_name | foreign_table_name | foreign_column_name
 	// poll_choice_poll_id..poll_poll_id | poll_choice | poll_id     | poll_question      | poll_id
 	err := dbi.Select(&lists,
@@ -129,7 +129,7 @@ AND ccu.table_name=?`, self.DatabaseName, tableName)
 
 	var fks []*godbi.Fk
 	for _, iitem := range lists {
-		item := iitem.(map[string]interface{})
+		item := iitem.(map[string]any)
 		fkTable := item["foreign_table_name"].(string)
 		fkColumn := item["foreign_column_name"].(string)
 		column := item["column_name"].(string)
@@ -144,7 +144,7 @@ AND ccu.table_name=?`, self.DatabaseName, tableName)
 
 func (self *postgres) tableNames(db *sql.DB) ([]string, error) {
 	dbi := &godbi.DBI{DB: db}
-	lists := make([]interface{}, 0)
+	lists := make([]any, 0)
 	err := dbi.Select(&lists,
 		`SELECT table_name FROM information_schema.tables
 WHERE table_schema='public'
@@ -156,7 +156,7 @@ AND table_catalog=?`, self.DatabaseName)
 
 	names := make([]string, 0)
 	for _, iitem := range lists {
-		item := iitem.(map[string]interface{})
+		item := iitem.(map[string]any)
 		names = append(names, item["table_name"].(string))
 	}
 	return names, nil

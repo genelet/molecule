@@ -7,51 +7,59 @@ import (
 
 	"github.com/genelet/molecule/godbi"
 
-	"github.com/genelet/sqlproto/xlight"
-	"github.com/genelet/sqlproto/light"
-	"github.com/genelet/sqlproto/ast"
 	"github.com/akito0107/xsqlparser"
-	"github.com/akito0107/xsqlparser/sqlast"
 	"github.com/akito0107/xsqlparser/dialect"
+	"github.com/akito0107/xsqlparser/sqlast"
+	"github.com/genelet/sqlproto/ast"
+	"github.com/genelet/sqlproto/light"
+	"github.com/genelet/sqlproto/xlight"
 )
 
 type postgresIO struct {
 	database
 	tables map[string]*godbi.Table
-	fks map[string][]*godbi.Fk
+	fks    map[string][]*godbi.Fk
 }
 
 func newPostgresIO(databaseName string, src io.Reader) (*postgresIO, error) {
-	 parser, err := xsqlparser.NewParser(src, &dialect.PostgresqlDialect{}, xsqlparser.ParseComment())
-	if err != nil { return nil, err }
+	parser, err := xsqlparser.NewParser(src, &dialect.PostgresqlDialect{}, xsqlparser.ParseComment())
+	if err != nil {
+		return nil, err
+	}
 	stmts, err := parser.ParseSQL()
-	if err != nil { return nil, err }
+	if err != nil {
+		return nil, err
+	}
 
 	tables := make(map[string]*godbi.Table)
-	fks := make(map[string][]*godbi.Fk) 
+	fks := make(map[string][]*godbi.Fk)
 
 	for _, stmt := range stmts {
 		if c, ok := stmt.(*sqlast.CreateTableStmt); ok {
 			xcreateTable, err := ast.XCreateTableTo(c)
-			if err != nil { return nil, err }
+			if err != nil {
+				return nil, err
+			}
 			createTable := light.CreateTableTo(xcreateTable)
 			table := fromCreateTable(createTable)
 			tables[table.TableName] = table
-		} else if c, ok := stmt.(*sqlast.AlterTableStmt); ok {	
-			xalterTable,  err := ast.XAlterTableTo(c)
-			if err != nil { return nil, err }
+		} else if c, ok := stmt.(*sqlast.AlterTableStmt); ok {
+			xalterTable, err := ast.XAlterTableTo(c)
+			if err != nil {
+				return nil, err
+			}
 			alterTable := light.AlterTableTo(xalterTable)
 			tname := strings.Join(alterTable.TableName.Idents, ".")
 			if x := alterTable.Action.GetAddConstraintItem(); x != nil {
 				if y := x.Spec.GetReferenceItem(); y != nil {
 					if fks[tname] == nil {
-						fks[tname] = make([]*godbi.Fk,0)
+						fks[tname] = make([]*godbi.Fk, 0)
 					}
 					expr := y.KeyExpr
 					fks[tname] = append(fks[tname], &godbi.Fk{
-						FkTable: expr.TableName,
+						FkTable:  expr.TableName,
 						FkColumn: expr.Columns[0],
-						Column: y.Columns[0]})
+						Column:   y.Columns[0]})
 				}
 			}
 		}
@@ -85,7 +93,7 @@ func fromCreateTable(createTable *xlight.CreateTableStmt) *godbi.Table {
 		if x := item.GetColumnDefElement(); x != nil {
 			col := &godbi.Col{
 				ColumnName: x.Name,
-				Label: x.Name}
+				Label:      x.Name}
 			if y := x.DataType.GetCustomData(); y != nil {
 				if strings.Join(y.Idents, ".") == "SERIAL" {
 					col.TypeName = "int"
@@ -111,7 +119,7 @@ func fromCreateTable(createTable *xlight.CreateTableStmt) *godbi.Table {
 					uniques = append(uniques, x.Name)
 				}
 			}
-			cols = append(cols, col)		
+			cols = append(cols, col)
 		}
 	}
 
@@ -119,7 +127,7 @@ func fromCreateTable(createTable *xlight.CreateTableStmt) *godbi.Table {
 		TableName: strings.Join(createTable.Name.Idents, "."),
 		Columns:   cols,
 		Pks:       []string{pk},
-		IdAuto:    idauto}
+		IDAuto:    idauto}
 }
 
 func (self *postgresIO) tableNames(_ *sql.DB) ([]string, error) {

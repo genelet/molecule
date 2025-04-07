@@ -15,5 +15,9 @@ func getdb() (*sql.DB, error) {
 	if dbUser == "" { return nil, fmt.Errorf("missing DBUSER") }
 	if dbPass == "" { return nil, fmt.Errorf("missing DBPASS") }
 	if dbName == "" { return nil, fmt.Errorf("missing DBNAME") }
+	dbHOST := os.Getenv("DBHOST")
+ 	if dbHOST != "" {
+		return sql.Open("mysql", dbUser+":"+dbPass+"@tcp("+dbHOST+")/"+dbName)
+	}
 	return sql.Open("mysql", dbUser+":"+dbPass+"@/"+dbName)
 }

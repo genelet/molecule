@@ -8,7 +8,7 @@ import (
 )
 
 func TestStmt(t *testing.T) {
-	atom, err := newAtomJsonFile("stmt.json")
+	atom, err := newAtomJSONFile("stmt.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -19,7 +19,7 @@ func TestStmt(t *testing.T) {
 			stmt := v.(*Stmt)
 			if atom.TableName != "adv_campaign" ||
 				atom.Pks[0] != "campaign_id" ||
-				stmt.Labels[0].([]interface{})[0].(string) != "id" ||
+				stmt.Labels[0].([]any)[0].(string) != "id" ||
 				stmt.Statement != "SELECT adv.adv_id, campaign_name FROM adv_campain INNER JOIN adv USING adv_id WHERE adv_email=?" {
 				t.Errorf("%#v", stmt)
 			}
@@ -65,46 +65,46 @@ func TestStmtRun(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	var lists []interface{}
+	var lists []any
 	// the 1st web requests is assumed to create id=1 to the m_a table
 	//
-	args := map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john"}
-	lists, err = atom.RunAtom(db, "insert", args)
+	args := map[string]any{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john"}
+	_, err = atom.RunAtom(db, "insert", args)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// the 2nd request just updates, becaues [x,y] is defined to the unique
 	//
-	args = map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "zzzzz", "child": "sam"}
-	lists, err = atom.RunAtom(db, "insupd", args)
+	args = map[string]any{"x": "a1234567", "y": "b1234567", "z": "zzzzz", "child": "sam"}
+	_, err = atom.RunAtom(db, "insupd", args)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// the 3rd request creates id=2
 	//
-	args = map[string]interface{}{"x": "c1234567", "y": "d1234567", "z": "e1234", "child": "mary"}
-	lists, err = atom.RunAtom(db, "insert", args)
+	args = map[string]any{"x": "c1234567", "y": "d1234567", "z": "e1234", "child": "mary"}
+	_, err = atom.RunAtom(db, "insert", args)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// the 4th request creates id=3
 	//
-	args = map[string]interface{}{"x": "e1234567", "y": "f1234567", "z": "e1234", "child": "marcus"}
-	lists, err = atom.RunAtom(db, "insupd", args)
+	args = map[string]any{"x": "e1234567", "y": "f1234567", "z": "e1234", "child": "marcus"}
+	_, err = atom.RunAtom(db, "insupd", args)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// GET stmt
-	args = map[string]interface{}{"x": "e1234567"}
+	args = map[string]any{"x": "e1234567"}
 	lists, err = atom.RunAtom(db, "stmt", args)
 	if err != nil {
 		t.Fatal(err)
 	}
-	e1 := lists[0].(map[string]interface{})
+	e1 := lists[0].(map[string]any)
 	if len(lists) != 1 ||
 		e1["id"].(int) != 3 ||
 		e1["name"].(string) != "e1234567f1234567e1234" {

@@ -13,16 +13,16 @@ type Update struct {
 
 var _ Capability = (*Update)(nil)
 
-func (self *Update) RunAction(db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+func (self *Update) RunAction(db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
 	return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
 }
 
-func (self *Update) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+func (self *Update) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
 	if err := t.checkNull(ARGS); err != nil {
 		return nil, err
 	}
 
-	ids := t.getIdVal(ARGS)
+	ids := t.getIDVal(ARGS)
 	if !hasValue(ids) {
 		return nil, errorMissingPk(t.TableName)
 	}

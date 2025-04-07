@@ -16,13 +16,13 @@ func TestHCLAction(t *testing.T) {
       }
     }
 `
-	spec, err := utils.NewStruct("Action", map[string]interface{}{
+	spec, err := utils.NewStruct("Action", map[string]any{
 		"Nextpages": []string{"Connection"}})
 	if err != nil {
 		t.Fatal(err)
 	}
 	a := new(Action)
-	err = dethcl.UnmarshalSpec([]byte(data1), a, spec, map[string]interface{}{
+	err = dethcl.UnmarshalSpec([]byte(data1), a, spec, map[string]any{
 		"Connection": new(Connection)})
 	if err != nil {
 		t.Fatal(err)
@@ -70,48 +70,48 @@ func TestAction(t *testing.T) {
 	edit := new(Edit)
 	dele := new(Delete)
 
-	var lists []interface{}
+	var lists []any
 	// the 1st web requests is assumed to create id=1 to the m_a table
 	//
-	args := map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john"}
-	lists, err = insert.RunAction(db, table, args)
+	args := map[string]any{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john"}
+	_, err = insert.RunAction(db, table, args)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// the 2nd request just updates, becaues [x,y] is defined to the unique
 	//
-	args = map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "zzzzz", "child": "sam"}
-	lists, err = insupd.RunAction(db, table, args)
+	args = map[string]any{"x": "a1234567", "y": "b1234567", "z": "zzzzz", "child": "sam"}
+	_, err = insupd.RunAction(db, table, args)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// the 3rd request creates id=2
 	//
-	args = map[string]interface{}{"x": "c1234567", "y": "d1234567", "z": "e1234", "child": "mary"}
-	lists, err = insert.RunAction(db, table, args)
+	args = map[string]any{"x": "c1234567", "y": "d1234567", "z": "e1234", "child": "mary"}
+	_, err = insert.RunAction(db, table, args)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// the 4th request creates id=3
 	//
-	args = map[string]interface{}{"x": "e1234567", "y": "f1234567", "z": "e1234", "child": "marcus"}
-	lists, err = insupd.RunAction(db, table, args)
+	args = map[string]any{"x": "e1234567", "y": "f1234567", "z": "e1234", "child": "marcus"}
+	_, err = insupd.RunAction(db, table, args)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// GET all
-	args = map[string]interface{}{}
+	args = map[string]any{}
 	lists, err = topics.RunAction(db, table, args)
 	if err != nil {
 		t.Fatal(err)
 	}
 	// []map[string]interface {}{map[string]interface {}{"id":1, "x":"a1234567", "y":"b1234567", "z":"zzzzz"}, map[string]interface {}{"id":2, "x":"c1234567", "y":"d1234567", "z":"e1234"}, map[string]interface {}{"id":3, "x":"e1234567", "y":"f1234567", "z":"e1234"}}
-	e1 := lists[0].(map[string]interface{})
-	e2 := lists[2].(map[string]interface{})
+	e1 := lists[0].(map[string]any)
+	e2 := lists[2].(map[string]any)
 	if len(lists) != 3 ||
 		e1["id"].(int) != 1 ||
 		e1["z"].(string) != "zzzzz" ||
@@ -120,12 +120,12 @@ func TestAction(t *testing.T) {
 	}
 
 	// GET one
-	args = map[string]interface{}{"id": 1}
+	args = map[string]any{"id": 1}
 	lists, err = edit.RunAction(db, table, args)
 	if err != nil {
 		t.Fatal(err)
 	}
-	e1 = lists[0].(map[string]interface{})
+	e1 = lists[0].(map[string]any)
 	if len(lists) != 1 ||
 		e1["id"].(int) != 1 ||
 		e1["z"].(string) != "zzzzz" {
@@ -133,14 +133,14 @@ func TestAction(t *testing.T) {
 	}
 
 	// DELETE
-	args = map[string]interface{}{"id": 1}
-	lists, err = dele.RunAction(db, table, args)
+	args = map[string]any{"id": 1}
+	_, err = dele.RunAction(db, table, args)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// GET all
-	args = map[string]interface{}{}
+	args = map[string]any{}
 	lists, err = topics.RunAction(db, table, args)
 	if err != nil {
 		t.Fatal(err)

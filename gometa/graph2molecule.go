@@ -33,7 +33,7 @@ func nodeTableToAtomTable(nodeTable *Node_Table) (*godbi.Table, map[string][]str
 	atomTable := &godbi.Table{}
 	atomTable.TableName = nodeTable.GetTableName()
 	atomTable.Pks = nodeTable.GetPks()
-	atomTable.IdAuto = nodeTable.GetIdAuto()
+	atomTable.IDAuto = nodeTable.GetIDAuto()
 	atomTable.Uniques = nodeTable.GetUniques()
 
 	var oneofs map[string][]string

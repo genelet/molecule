@@ -10,9 +10,9 @@ const (
 )
 
 type StmtContext struct {
-	Statement string        `json:"statement" hcl:"statement,optional"`
-	Labels    []interface{} `json:"labels,omitempty" hcl:"labels,optional"`
-	Pars      []string      `json:"pars,omitempty" hcl:"pars,optional"`
+	Statement string   `json:"statement" hcl:"statement,optional"`
+	Labels    []any    `json:"labels,omitempty" hcl:"labels,optional"`
+	Pars      []string `json:"pars,omitempty" hcl:"pars,optional"`
 }
 
 // Stmt struct for search one specific row by primary key
@@ -24,10 +24,10 @@ type Stmt struct {
 
 var _ Capability = (*Stmt)(nil)
 
-func (self *Stmt) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+func (self *Stmt) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
 	var statement string
 	var pars []string
-	var labels []interface{}
+	var labels []any
 	if v, ok := ARGS[STMT]; ok {
 		if self.Others == nil || self.Others[v.(string)] == nil {
 			return nil, errorActionNil(v.(string))
@@ -47,11 +47,11 @@ func (self *Stmt) RunActionContext(ctx context.Context, db *sql.DB, t *Table, AR
 		}
 	}
 
-	var extra0 map[string]interface{}
+	var extra0 map[string]any
 	if extra != nil {
 		extra0 = extra[0]
 	}
 	ids := properValues(pars, ARGS, extra0)
 
-	return getSQL(ctx, db, statement, labels, ids...)
+	return getSQL(ctx, db, t.logger, statement, labels, ids...)
 }

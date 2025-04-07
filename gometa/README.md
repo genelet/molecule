@@ -46,7 +46,7 @@ It translates _Graph_ to _Molecule_ and the associated oneofs in _map[string]map
 ### 2.2 _Molecule_ to _Graph_
 
 ```go
-func MoleculeToGraph(molecule *godbi.Molecule, args ...interface{}) *Graph
+func MoleculeToGraph(molecule *godbi.Molecule, args ...any) *Graph
 ```
 
 where _args_ are

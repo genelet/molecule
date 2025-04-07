@@ -3,7 +3,6 @@ package godbi
 import (
 	"context"
 	"database/sql"
-	"regexp"
 	"strings"
 	"time"
 )
@@ -35,10 +34,21 @@ type Table struct {
 	TableName string   `json:"tableName" hcl:"tableName,optional"`
 	Columns   []*Col   `json:"columns" hcl:"columns,block"`
 	Pks       []string `json:"pks,omitempty" hcl:"pks,optional"`
-	IdAuto    string   `json:"idAuto,omitempty" hcl:"idAuto,optional"`
+	IDAuto    string   `json:"idAuto,omitempty" hcl:"idAuto,optional"`
 	Fks       []*Fk    `json:"fks,omitempty" hcl:"fks,block"`
 	Uniques   []string `json:"uniques,omitempty" hcl:"uniques,optional"`
 	dbDriver  DBType
+	logger    Slogger
+}
+
+// SetLogger sets the logger
+func (self *Table) SetLogger(logger Slogger) {
+	self.logger = logger
+}
+
+// GetLogger gets the logger
+func (self *Table) GetLogger() Slogger {
+	return self.logger
 }
 
 // IsRecursive indicates if table references to itself in one to multiple relations
@@ -67,8 +77,8 @@ func (self *Table) SetDBDriver(driver DBType) {
 	self.dbDriver = driver
 }
 
-func (self *Table) byConstraint(ARGS map[string]interface{}, extra ...map[string]interface{}) map[string]interface{} {
-	var output map[string]interface{}
+func (self *Table) byConstraint(ARGS map[string]any, extra ...map[string]any) map[string]any {
+	var output map[string]any
 	for k, v := range ARGS {
 		find := false
 		for _, col := range self.Columns {
@@ -76,18 +86,18 @@ func (self *Table) byConstraint(ARGS map[string]interface{}, extra ...map[string
 				find = true
 			}
 		}
-		if find == false {
+		if !find {
 			continue
 		}
 		if output == nil {
-			output = make(map[string]interface{})
+			output = make(map[string]any)
 		}
 		output[k] = v
 	}
 	if hasValue(extra) && hasValue(extra[0]) {
 		for k, v := range extra[0] {
 			if output == nil {
-				output = make(map[string]interface{})
+				output = make(map[string]any)
 			}
 			output[k] = v
 		}
@@ -99,13 +109,13 @@ func (self *Table) byConstraint(ARGS map[string]interface{}, extra ...map[string
 // If it exists,
 // if force is true, forcefully sets the column using label's value;
 // if force is not set, optionally set the column.
-func (self *Table) refreshArgs(args interface{}, force ...bool) interface{} {
+func (self *Table) refreshArgs(args any, force ...bool) any {
 	if args == nil {
 		return args
 	}
 
-	cut := func(item map[string]interface{}, force ...bool) map[string]interface{} {
-		newArgs := make(map[string]interface{})
+	cut := func(item map[string]any, force ...bool) map[string]any {
+		newArgs := make(map[string]any)
 		for k, v := range item {
 			newArgs[k] = v
 		}
@@ -124,29 +134,29 @@ func (self *Table) refreshArgs(args interface{}, force ...bool) interface{} {
 	}
 
 	switch t := args.(type) {
-	case []interface{}:
-		var lists interface{}
+	case []any:
+		var lists any
 		for _, item := range t {
-			got := cut(item.(map[string]interface{}), force...)
+			got := cut(item.(map[string]any), force...)
 			if lists == nil {
-				lists = []map[string]interface{}{got}
-			} else if !grepMap(lists.([]map[string]interface{}), got) {
-				lists = append(lists.([]map[string]interface{}), got)
+				lists = []map[string]any{got}
+			} else if !grepMap(lists.([]map[string]any), got) {
+				lists = append(lists.([]map[string]any), got)
 			}
 		}
 		return lists
-	case []map[string]interface{}:
-		var lists interface{}
+	case []map[string]any:
+		var lists any
 		for _, item := range t {
 			got := cut(item, force...)
 			if lists == nil {
-				lists = []map[string]interface{}{got}
-			} else if !grepMap(lists.([]map[string]interface{}), got) {
-				lists = append(lists.([]map[string]interface{}), got)
+				lists = []map[string]any{got}
+			} else if !grepMap(lists.([]map[string]any), got) {
+				lists = append(lists.([]map[string]any), got)
 			}
 		}
 		return lists
-	case map[string]interface{}:
+	case map[string]any:
 		return cut(t, force...)
 	default:
 	}
@@ -159,8 +169,8 @@ func (self *Table) getKeyColumns() []string {
 	for _, pk := range self.Pks {
 		labels[pk] = true
 	}
-	if self.IdAuto != "" {
-		labels[self.IdAuto] = true
+	if self.IDAuto != "" {
+		labels[self.IDAuto] = true
 	}
 	if self.Fks != nil {
 		for _, fk := range self.Fks {
@@ -175,8 +185,8 @@ func (self *Table) getKeyColumns() []string {
 	return outs
 }
 
-func (self *Table) getFv(ARGS map[string]interface{}, allowed map[string]bool) (map[string]interface{}, bool) {
-	fieldValues := make(map[string]interface{})
+func (self *Table) getFv(ARGS map[string]any, allowed map[string]bool) (map[string]any, bool) {
+	fieldValues := make(map[string]any)
 	for f, l := range self.insertCols(allowed) {
 		v, ok := ARGS[f]
 		if !ok {
@@ -184,7 +194,7 @@ func (self *Table) getFv(ARGS map[string]interface{}, allowed map[string]bool) (
 		}
 		if ok {
 			switch t := v.(type) {
-			case []map[string]interface{}, map[string]interface{}:
+			case []map[string]any, map[string]any:
 			case bool:
 				switch self.dbDriver {
 				case SQLite, TSNano:
@@ -208,7 +218,7 @@ func (self *Table) getFv(ARGS map[string]interface{}, allowed map[string]bool) (
 
 	allAuto := true
 	for _, col := range self.Columns {
-		if col.Auto != true && col.Notnull == true {
+		if !col.Auto && col.Notnull {
 			allAuto = false
 			break
 		}
@@ -217,9 +227,9 @@ func (self *Table) getFv(ARGS map[string]interface{}, allowed map[string]bool) (
 	return fieldValues, allAuto
 }
 
-func (self *Table) checkNull(ARGS map[string]interface{}, extra ...map[string]interface{}) error {
+func (self *Table) checkNull(ARGS map[string]any, extra ...map[string]any) error {
 	for _, col := range self.Columns {
-		if col.Notnull == false || col.Auto == true {
+		if !col.Notnull || col.Auto {
 			continue
 		} // the column is ok with null
 		err := errorNoSuchColumn(col.ColumnName)
@@ -250,11 +260,11 @@ func (self *Table) insertCols(allowed map[string]bool) map[string]string {
 	return cols
 }
 
-func (self *Table) insertHashContext(ctx context.Context, db *sql.DB, args map[string]interface{}) (int64, error) {
+func (self *Table) insertHashContext(ctx context.Context, db *sql.DB, args map[string]any) (int64, error) {
 	var fields []string
-	var values []interface{}
-	if self.IdAuto != "" && self.dbDriver == TSNano {
-		fields = append(fields, self.IdAuto)
+	var values []any
+	if self.IDAuto != "" && self.dbDriver == TSNano {
+		fields = append(fields, self.IDAuto)
 		values = append(values, time.Now().UnixNano()/int64(time.Millisecond))
 	}
 	for k, v := range args {
@@ -266,13 +276,13 @@ func (self *Table) insertHashContext(ctx context.Context, db *sql.DB, args map[s
 
 	sql := "INSERT INTO " + self.TableName + " (" + strings.Join(fields, ", ") + ") VALUES (" + strings.Join(strings.Split(strings.Repeat("?", len(fields)), ""), ",") + ")"
 
-	dbi := &DBI{DB: db}
+	dbi := &DBI{DB: db, logger: self.logger}
 	var err error
 	switch self.dbDriver {
 	case Postgres:
 		sql = questionMarkerNumber(sql)
-		if self.IdAuto != "" {
-			sql += " RETURNING " + self.IdAuto
+		if self.IDAuto != "" {
+			sql += " RETURNING " + self.IDAuto
 			err = dbi.InsertSerialContext(ctx, sql, values...)
 		} else {
 			err = dbi.DoSQLContext(ctx, sql, values...)
@@ -294,7 +304,7 @@ func (self *Table) insertHashContext(ctx context.Context, db *sql.DB, args map[s
 	return dbi.LastID, nil
 }
 
-func (self *Table) updateHashNullsContext(ctx context.Context, db *sql.DB, args map[string]interface{}, ids []interface{}, empties []string, extra ...map[string]interface{}) error {
+func (self *Table) updateHashNullsContext(ctx context.Context, db *sql.DB, args map[string]any, ids []any, empties []string, extra ...map[string]any) error {
 	if !hasValue(args) {
 		return errorEmptyInput(self.TableName)
 	}
@@ -304,13 +314,16 @@ func (self *Table) updateHashNullsContext(ctx context.Context, db *sql.DB, args 
 		}
 	}
 
-	var fields []string
-	var field0 []string
-	var values []interface{}
+	n := len(args)
+	fields := make([]string, n)
+	field0 := make([]string, n)
+	values := make([]any, n)
+	i := 0
 	for k, v := range args {
-		fields = append(fields, k)
-		field0 = append(field0, k+"=?")
-		values = append(values, v)
+		fields[i] = k
+		field0[i] = k + "=?"
+		values[i] = v
+		i++
 	}
 
 	sql := "UPDATE " + self.TableName + " SET " + strings.Join(field0, ", ")
@@ -324,22 +337,20 @@ func (self *Table) updateHashNullsContext(ctx context.Context, db *sql.DB, args 
 	where, extraValues := self.singleCondition(ids, "", extra...)
 	if where != "" {
 		sql += "\nWHERE " + where
-		for _, v := range extraValues {
-			values = append(values, v)
-		}
+		values = append(values, extraValues...)
 	}
 
-	dbi := &DBI{DB: db}
+	dbi := &DBI{DB: db, logger: self.logger}
 	if self.dbDriver == Postgres {
 		sql = questionMarkerNumber(sql)
 	}
 	return dbi.DoSQLContext(ctx, sql, values...)
 }
 
-func (self *Table) insupdTableContext(ctx context.Context, db *sql.DB, args map[string]interface{}) (int64, error) {
+func (self *Table) insupdTableContext(ctx context.Context, db *sql.DB, args map[string]any) (int64, error) {
 	changed := int64(0)
 	s := "SELECT " + strings.Join(self.Pks, ", ") + " FROM " + self.TableName + "\nWHERE "
-	var v []interface{}
+	var v []any
 	if self.Uniques == nil {
 		return changed, errorNoUniqueKey(self.TableName)
 	}
@@ -355,8 +366,8 @@ func (self *Table) insupdTableContext(ctx context.Context, db *sql.DB, args map[
 		}
 	}
 
-	lists := make([]interface{}, 0)
-	dbi := &DBI{DB: db}
+	lists := make([]any, 0)
+	dbi := &DBI{DB: db, logger: self.logger}
 	if self.dbDriver == Postgres {
 		s = questionMarkerNumber(s)
 	}
@@ -369,13 +380,13 @@ func (self *Table) insupdTableContext(ctx context.Context, db *sql.DB, args map[
 	}
 
 	if len(lists) == 1 {
-		ids := make([]interface{}, 0)
+		ids := make([]any, 0)
 		for _, k := range self.Pks {
-			ids = append(ids, lists[0].(map[string]interface{})[k])
+			ids = append(ids, lists[0].(map[string]any)[k])
 		}
 		err = self.updateHashNullsContext(ctx, db, args, ids, nil)
-		if err == nil && self.IdAuto != "" {
-			sql := "SELECT " + self.IdAuto + " FROM " + self.TableName + "\nWHERE " + strings.Join(self.Pks, "=? AND ") + "=?"
+		if err == nil && self.IDAuto != "" {
+			sql := "SELECT " + self.IDAuto + " FROM " + self.TableName + "\nWHERE " + strings.Join(self.Pks, "=? AND ") + "=?"
 			if self.dbDriver == Postgres {
 				sql = questionMarkerNumber(sql)
 			}
@@ -389,7 +400,7 @@ func (self *Table) insupdTableContext(ctx context.Context, db *sql.DB, args map[
 	return changed, err
 }
 
-func (self *Table) totalHashContext(ctx context.Context, db *sql.DB, v interface{}, extra ...map[string]interface{}) error {
+func (self *Table) totalHashContext(ctx context.Context, db *sql.DB, v any, extra ...map[string]any) error {
 	sql := "SELECT COUNT(*) FROM " + self.TableName
 
 	if hasValue(extra) {
@@ -406,17 +417,17 @@ func (self *Table) totalHashContext(ctx context.Context, db *sql.DB, v interface
 	return db.QueryRowContext(ctx, sql).Scan(v)
 }
 
-func (self *Table) getIdVal(ARGS map[string]interface{}, extra ...map[string]interface{}) []interface{} {
+func (self *Table) getIDVal(ARGS map[string]any, extra ...map[string]any) []any {
 	if hasValue(extra) {
 		return properValues(self.Pks, ARGS, extra[0])
 	}
 	return properValues(self.Pks, ARGS, nil)
 }
 
-func (self *Table) singleCondition(ids []interface{}, table string, extra ...map[string]interface{}) (string, []interface{}) {
+func (self *Table) singleCondition(ids []any, table string, extra ...map[string]any) (string, []any) {
 	keys := self.Pks
 	sql := ""
-	var extraValues []interface{}
+	var extraValues []any
 
 	for i, item := range keys {
 		val := ids[i]
@@ -426,12 +437,10 @@ func (self *Table) singleCondition(ids []interface{}, table string, extra ...map
 			sql += " AND "
 		}
 		switch idValues := val.(type) {
-		case []interface{}:
+		case []any:
 			n := len(idValues)
 			sql += item + " IN (" + strings.Join(strings.Split(strings.Repeat("?", n), ""), ",") + ")"
-			for _, v := range idValues {
-				extraValues = append(extraValues, v)
-			}
+			extraValues = append(extraValues, idValues...)
 		default:
 			sql += item + " =?"
 			extraValues = append(extraValues, val)
@@ -442,15 +451,13 @@ func (self *Table) singleCondition(ids []interface{}, table string, extra ...map
 	if hasValue(extra) && hasValue(extra[0]) {
 		s, arr := selectCondition(extra[0], table)
 		sql += " AND " + s
-		for _, u := range arr {
-			extraValues = append(extraValues, u)
-		}
+		extraValues = append(extraValues, arr...)
 	}
 
 	return sql, extraValues
 }
 
-func properValue(u string, ARGS map[string]interface{}, extra map[string]interface{}) interface{} {
+func properValue(u string, ARGS map[string]any, extra map[string]any) any {
 	if !hasValue(extra) {
 		return ARGS[u]
 	}
@@ -460,8 +467,8 @@ func properValue(u string, ARGS map[string]interface{}, extra map[string]interfa
 	return ARGS[u]
 }
 
-func properValues(us []string, ARGS map[string]interface{}, extra map[string]interface{}) []interface{} {
-	outs := make([]interface{}, len(us))
+func properValues(us []string, ARGS map[string]any, extra map[string]any) []any {
+	outs := make([]any, len(us))
 	if !hasValue(extra) {
 		for i, u := range us {
 			outs[i] = ARGS[u]
@@ -478,18 +485,18 @@ func properValues(us []string, ARGS map[string]interface{}, extra map[string]int
 	return outs
 }
 
-func properValuesHash(vs []string, ARGS map[string]interface{}, extra map[string]interface{}) map[string]interface{} {
+func properValuesHash(vs []string, ARGS map[string]any, extra map[string]any) map[string]any {
 	values := properValues(vs, ARGS, extra)
-	hash := make(map[string]interface{})
+	hash := make(map[string]any)
 	for i, v := range vs {
 		hash[v] = values[i]
 	}
 	return hash
 }
 
-func selectCondition(extra map[string]interface{}, table string) (string, []interface{}) {
+func selectCondition(extra map[string]any, table string) (string, []any) {
 	sql := ""
-	var values []interface{}
+	var values []any
 	i := 0
 
 	for field, valueInterface := range extra {
@@ -500,8 +507,7 @@ func selectCondition(extra map[string]interface{}, table string) (string, []inte
 		sql += "("
 
 		if table != "" {
-			match, err := regexp.MatchString("\\.", field)
-			if err == nil && !match {
+			if !strings.Contains(field, ".") {
 				field = table + "." + field
 			}
 		}
@@ -542,7 +548,7 @@ func selectCondition(extra map[string]interface{}, table string) (string, []inte
 	return sql, values
 }
 
-func (self *Table) filterPars(ARGS map[string]interface{}, fieldsName string, allowed map[string]bool) (string, []interface{}) {
+func (self *Table) filterPars(ARGS map[string]any, fieldsName string, allowed map[string]bool) (string, []any) {
 	if allowed == nil {
 		allowed = make(map[string]bool)
 		for _, col := range self.Columns {
@@ -563,10 +569,10 @@ func (self *Table) filterPars(ARGS map[string]interface{}, fieldsName string, al
 	}
 
 	var keys []string
-	var labels []interface{}
+	var labels []any
 	for _, col := range self.Columns {
 		label := col.Label
-		if fields == nil || fields[label] == true {
+		if fields == nil || fields[label] {
 			keys = append(keys, col.ColumnName)
 			labels = append(labels, [2]string{label, col.TypeName})
 		}
@@ -576,7 +582,7 @@ func (self *Table) filterPars(ARGS map[string]interface{}, fieldsName string, al
 }
 
 /*
-func (self *Table) filterPars(ARGS map[string]interface{}, fieldsName string, rest ...interface{}) (string, []interface{}, string) {
+func (self *Table) filterPars(ARGS map[string]any, fieldsName string, rest ...any) (string, []any, string) {
 	var fields map[string]bool
 	if v, ok := ARGS[fieldsName]; ok {
 		fields := make(map[string]bool)
@@ -586,7 +592,7 @@ func (self *Table) filterPars(ARGS map[string]interface{}, fieldsName string, re
 	}
 
 	var keys []string
-	var labels []interface{}
+	var labels []any
 	if rest != nil && len(rest) == 2 {
 		for k, label := range rest[1].(map[string]string) {
 			if fields == nil || fields[label] == true {
@@ -629,6 +635,6 @@ func (self *Table) filterPars(ARGS map[string]interface{}, fieldsName string, re
 }
 */
 
-func fromFv(fv map[string]interface{}) []interface{} {
-	return []interface{}{fv}
+func fromFv(fv map[string]any) []any {
+	return []any{fv}
 }

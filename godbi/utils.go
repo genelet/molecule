@@ -18,7 +18,7 @@ func questionMarkerNumber(query string) string {
 	return re.ReplaceAllStringFunc(query, repl)
 }
 
-func hasValue(extra interface{}) bool {
+func hasValue(extra any) bool {
 	if extra == nil {
 		return false
 	}
@@ -28,7 +28,7 @@ func hasValue(extra interface{}) bool {
 			return false
 		}
 		return hasValue(v[0])
-	case []interface{}:
+	case []any:
 		if len(v) == 0 {
 			return false
 		}
@@ -42,11 +42,11 @@ func hasValue(extra interface{}) bool {
 		if len(v) == 0 {
 			return false
 		}
-	case map[string]interface{}:
+	case map[string]any:
 		if len(v) == 0 {
 			return false
 		}
-	case []map[string]interface{}:
+	case []map[string]any:
 		if len(v) == 0 {
 			return false
 		}
@@ -58,12 +58,14 @@ func hasValue(extra interface{}) bool {
 
 func stripchars(str, chr string) string {
 	return strings.Map(func(r rune) rune {
-		if strings.IndexRune(chr, r) < 0 {
+		if !strings.ContainsRune(chr, r) {
 			return r
 		}
 		return -1
 	}, str)
 }
+
+/*
 
 func filtering(vs []string, f func(string) bool) []string {
 	vsf := make([]string, 0)
@@ -83,6 +85,8 @@ func mapping(vs []string, f func(string) string) []string {
 	return vsm
 }
 
+*/
+
 func index(vs []string, t string) int {
 	for i, v := range vs {
 		if v == t {
@@ -98,7 +102,7 @@ func grep(vs []string, t string) bool {
 
 // return 1st bool: yes, the maps are identical
 // 2nd bool: no, the maps are completely different (no common key)
-func compareMap(extra, item map[string]interface{}) (bool, bool) {
+func compareMap(extra, item map[string]any) (bool, bool) {
 	if extra == nil || item == nil {
 		return false, false
 	}
@@ -120,7 +124,7 @@ func compareMap(extra, item map[string]interface{}) (bool, bool) {
 	return identical, keyFound
 }
 
-func grepMap(lists []map[string]interface{}, item map[string]interface{}) bool {
+func grepMap(lists []map[string]any, item map[string]any) bool {
 	for _, each := range lists {
 		if identical, _ := compareMap(each, item); identical {
 			return true
@@ -130,11 +134,11 @@ func grepMap(lists []map[string]interface{}, item map[string]interface{}) bool {
 }
 
 // cloneMap clones extra to a new extra
-func cloneMap(hash map[string]interface{}) map[string]interface{} {
+func cloneMap(hash map[string]any) map[string]any {
 	if hash == nil {
 		return nil
 	}
-	newHash := map[string]interface{}{}
+	newHash := map[string]any{}
 	for k, v := range hash {
 		newHash[k] = v
 	}
@@ -142,7 +146,7 @@ func cloneMap(hash map[string]interface{}) map[string]interface{} {
 }
 
 // mergeMap merges two maps
-func mergeMap(extra, item map[string]interface{}) map[string]interface{} {
+func mergeMap(extra, item map[string]any) map[string]any {
 	if extra == nil {
 		return item
 	} else if item == nil {
@@ -156,7 +160,7 @@ func mergeMap(extra, item map[string]interface{}) map[string]interface{} {
 }
 
 // mergeMapOr merges two maps
-func mergeMapOr(extra, item map[string]interface{}) interface{} {
+func mergeMapOr(extra, item map[string]any) any {
 	if extra == nil {
 		return item
 	} else if item == nil {
@@ -170,7 +174,7 @@ func mergeMapOr(extra, item map[string]interface{}) interface{} {
 	}
 
 	if keyFound {
-		return []map[string]interface{}{extra, item}
+		return []map[string]any{extra, item}
 	}
 
 	// all keys are different

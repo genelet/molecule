@@ -62,13 +62,12 @@ func sqliteToNative(u string) string {
 // .header on
 // .mode column
 // PRAGMA table_info(table_name);
-//
 func (self *sQLite) getTable(db *sql.DB, tableName string) (*godbi.Table, error) {
 	dbi := &godbi.DBI{DB: db}
-	lists := make([]interface{}, 0)
+	lists := make([]any, 0)
 	err := dbi.SelectSQL(&lists,
 		`PRAGMA table_info(`+tableName+`)`,
-		[]interface{}{[2]string{"cid", "int"}, [2]string{"name", "string"}, "type", [2]string{"notnull", "int"}, [2]string{"default", "string"}, [2]string{"pk", "int"}})
+		[]any{[2]string{"cid", "int"}, [2]string{"name", "string"}, "type", [2]string{"notnull", "int"}, [2]string{"default", "string"}, [2]string{"pk", "int"}})
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +77,7 @@ func (self *sQLite) getTable(db *sql.DB, tableName string) (*godbi.Table, error)
 	var cols []*godbi.Col
 
 	for _, iitem := range lists {
-		item := iitem.(map[string]interface{})
+		item := iitem.(map[string]any)
 		field := item["name"].(string)
 		col := &godbi.Col{
 			ColumnName: field,
@@ -105,7 +104,7 @@ func (self *sQLite) getTable(db *sql.DB, tableName string) (*godbi.Table, error)
 		TableName: tableName,
 		Columns:   cols,
 		Pks:       pks,
-		IdAuto:    idauto}, nil
+		IDAuto:    idauto}, nil
 }
 
 // PRAGMA foreign_keys; 0 means disabled
@@ -114,7 +113,7 @@ func (self *sQLite) getTable(db *sql.DB, tableName string) (*godbi.Table, error)
 
 func (self *sQLite) getFks(db *sql.DB, tableName string) ([]*godbi.Fk, error) {
 	dbi := &godbi.DBI{DB: db}
-	lists := make([]interface{}, 0)
+	lists := make([]any, 0)
 	err := dbi.SelectSQL(&lists,
 		/*
 		   sqlite> PRAGMA foreign_key_list(nodes);
@@ -131,14 +130,14 @@ func (self *sQLite) getFks(db *sql.DB, tableName string) ([]*godbi.Fk, error) {
 FROM sqlite_master m
 JOIN pragma_foreign_key_list(m.name) p ON m.name != p."table"
 WHERE m.type = 'table'
-AND m.name=?`, []interface{}{"name", "table", "from", "to"}, tableName)
+AND m.name=?`, []any{"name", "table", "from", "to"}, tableName)
 	if err != nil {
 		return nil, err
 	}
 
 	var fks []*godbi.Fk
 	for _, iitem := range lists {
-		item := iitem.(map[string]interface{})
+		item := iitem.(map[string]any)
 		fkTable := item["table"].(string)
 		fkColumn := item["to"].(string)
 		column := item["from"].(string)
@@ -153,7 +152,7 @@ AND m.name=?`, []interface{}{"name", "table", "from", "to"}, tableName)
 
 func (self *sQLite) tableNames(db *sql.DB) ([]string, error) {
 	dbi := &godbi.DBI{DB: db}
-	lists := make([]interface{}, 0)
+	lists := make([]any, 0)
 	err := dbi.Select(&lists,
 		`SELECT name
 FROM sqlite_master 
@@ -163,7 +162,7 @@ WHERE type ='table' AND name NOT LIKE 'sqlite_%'`)
 	}
 	var names []string
 	for _, iitem := range lists {
-		item := iitem.(map[string]interface{})
+		item := iitem.(map[string]any)
 		names = append(names, item["name"].(string))
 	}
 	return names, nil

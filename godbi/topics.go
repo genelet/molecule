@@ -51,7 +51,7 @@ func (self *Topics) setDefaultElementNames() []string {
 }
 
 // orderString outputs the ORDER BY string using information in args
-func (self *Topics) orderString(t *Table, ARGS map[string]interface{}, joints ...[]*Joint) string {
+func (self *Topics) orderString(t *Table, ARGS map[string]any, joints ...[]*Joint) string {
 	nameSortby := self.SORTBY
 	nameSortreverse := self.SORTREVERSE
 	namePagesize := self.PAGESIZE
@@ -111,7 +111,7 @@ func (self *Topics) orderString(t *Table, ARGS map[string]interface{}, joints ..
 	return order
 }
 
-func (self *Topics) pagination(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) error {
+func (self *Topics) pagination(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) error {
 	nameTotalno := self.TOTALNO
 	namePagesize := self.PAGESIZE
 	namePageno := self.PAGENO
@@ -163,11 +163,11 @@ func (self *Topics) pagination(ctx context.Context, db *sql.DB, t *Table, ARGS m
 	return nil
 }
 
-func (self *Topics) RunAction(db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+func (self *Topics) RunAction(db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
 	return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
 }
 
-func (self *Topics) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+func (self *Topics) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
 	self.setDefaultElementNames()
 	sql, labels := t.filterPars(ARGS, self.FIELDS, self.getAllowed())
 	order := self.orderString(t, ARGS)
@@ -190,7 +190,7 @@ func (self *Topics) RunActionContext(ctx context.Context, db *sql.DB, t *Table, 
 			sql = questionMarkerNumber(sql)
 		}
 
-		return getSQL(ctx, db, sql, labels, values...)
+		return getSQL(ctx, db, t.logger, sql, labels, values...)
 	}
 
 	if order != "" {
@@ -200,5 +200,5 @@ func (self *Topics) RunActionContext(ctx context.Context, db *sql.DB, t *Table, 
 		sql = questionMarkerNumber(sql)
 	}
 
-	return getSQL(ctx, db, sql, labels)
+	return getSQL(ctx, db, t.logger, sql, labels)
 }

@@ -32,7 +32,14 @@ func TestMySQL(t *testing.T) {
 	dbUser := os.Getenv("DBUSER")
 	dbPass := os.Getenv("DBPASS")
 	databaseName := "classicmodels"
-	db, err := sql.Open("mysql", dbUser+":"+dbPass+"@/"+databaseName)
+    dbHOST := os.Getenv("DBHOST")
+	var db *sql.DB
+	var err error
+	if dbHOST != "" {
+		db, err = sql.Open("mysql", dbUser+":"+dbPass+"@("+dbHOST+")/"+databaseName)
+	} else {
+		db, err = sql.Open("mysql", dbUser+":"+dbPass+"@/"+databaseName)
+	}
 	if err != nil {
 		t.Fatal(err)
 	}

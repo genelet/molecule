@@ -12,11 +12,11 @@ func errorActionNil(name string) error {
 	return fmt.Errorf("actions or action %s is nil", name)
 }
 
-func errorInputDataType(v interface{}) error {
+func errorInputDataType(v any) error {
 	return fmt.Errorf("wrong input data type %T", v)
 }
 
-func errorExtraDataType(v interface{}) error {
+func errorExtraDataType(v any) error {
 	return fmt.Errorf("wrong extra data type %T", v)
 }
 

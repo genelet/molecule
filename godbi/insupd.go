@@ -12,11 +12,11 @@ type Insupd struct {
 
 var _ Capability = (*Insupd)(nil)
 
-func (self *Insupd) RunAction(db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+func (self *Insupd) RunAction(db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
 	return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
 }
 
-func (self *Insupd) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+func (self *Insupd) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
 	if err := t.checkNull(ARGS); err != nil {
 		return nil, err
 	}
@@ -31,8 +31,8 @@ func (self *Insupd) RunActionContext(ctx context.Context, db *sql.DB, t *Table, 
 		return nil, err
 	}
 
-	if t.IdAuto != "" {
-		fieldValues[t.IdAuto] = changed
+	if t.IDAuto != "" {
+		fieldValues[t.IDAuto] = changed
 	}
 
 	return fromFv(fieldValues), nil

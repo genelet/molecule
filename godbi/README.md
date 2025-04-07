@@ -63,10 +63,10 @@ The following names in functions are defined to be:
 
 Name | Type | IN/OUT | Meaning
 ---- | ---- | ------ | -------
-*args* | `...interface{}` | IN | arguments
-*ARGS* | `map[string]interface{}` | IN | input data
-*extra* | `...map[string]interface{}` | IN | _WHERE_ constraints
-*lists* | `[]map[string]interface{}` | OUT | output data
+*args* | `...any` | IN | arguments
+*ARGS* | `map[string]any` | IN | input data
+*extra* | `...map[string]any` | IN | _WHERE_ constraints
+*lists* | `[]map[string]any` | OUT | output data
 
 #### 1.3) Three Levels of Usages:
 
@@ -122,7 +122,7 @@ func main() {
 
     // select all data from the table using Select
     //
-    lists := make([]interface{}, 0)
+    lists := make([]any, 0)
     err = dbi.Select(&lists, "SELECT id, x FROM letters")
     if err != nil { panic(err) }
 
@@ -163,7 +163,7 @@ type DBI struct {
 The same as DB's `Exec`, except it returns error.
 
 ```go
-func (*DBI) DoSQL(query string, args ...interface{}) error
+func (*DBI) DoSQL(query string, args ...any) error
 ```
 
 ### 2.3) TxSQL
@@ -171,7 +171,7 @@ func (*DBI) DoSQL(query string, args ...interface{}) error
 The same as _DoSQL_ but using transaction.
 
 ```go
-func (*DBI) TxSQL(query string, args ...interface{}) error
+func (*DBI) TxSQL(query string, args ...any) error
 ```
 
 ### 2.4) Select
@@ -179,7 +179,7 @@ func (*DBI) TxSQL(query string, args ...interface{}) error
 Return query data into *lists*, with data types determined dynamically.
 
 ```go
-Select(lists *[]interface{}, query string, args ...interface{}) error
+Select(lists *[]any, query string, args ...any) error
 ```
 
 ### 2.5) SelectSQL
@@ -187,7 +187,7 @@ Select(lists *[]interface{}, query string, args ...interface{}) error
 The same as *Select* but using pre-defined labels and types.
 
 ```go
-func (*DBI) SelectSQL(lists *[]map[string]interface{}, labels []interface{}, query string, args ...interface{}) error
+func (*DBI) SelectSQL(lists *[]map[string]any, labels []any, query string, args ...any) error
 ```
 
 <details>
@@ -196,11 +196,11 @@ func (*DBI) SelectSQL(lists *[]map[string]interface{}, labels []interface{}, que
 The following example assigns key names _TS_, _id_, _Name_, _Length_, _Flag_ and _fv_, of data types _string_, _int_, _string_, _int8_, _bool_ and _float32_, to the returned rows:
 
 ```go
-lists := make([]map[string]interface{})
+lists := make([]map[string]any)
 err = molecule.SelectSQL(
     &lists, 
     `SELECT ts, id, name, len, flag, fv FROM mytable WHERE id=?`,
-    []interface{}{[2]string{"TS","string"], [2]string{"id","int"], [2]string{"Name","string"], [2]string{"Length","int8"], [2]string{"Flag","bool"], [2]string{"fv","float32"]},
+    []any{[2]string{"TS","string"], [2]string{"id","int"], [2]string{"Name","string"], [2]string{"Length","int8"], [2]string{"Flag","bool"], [2]string{"fv","float32"]},
     1234)
 ```
 	    
@@ -217,7 +217,7 @@ It outputs:
 If there is only one row returned, use this function to get a map.
 
 ```go
-func (*DBI) GetSQL(res map[string]interface{}, query string, labels []interface{}, args ...interface{}) error
+func (*DBI) GetSQL(res map[string]any, query string, labels []any, args ...any) error
 ```
 
 <br /><br />
@@ -248,12 +248,12 @@ type SQL struct {
     Statement string   `json:"statement"`
 }
 
-func (self *SQL) RunAction(db *sql.DB, t *godbi.Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+func (self *SQL) RunAction(db *sql.DB, t *godbi.Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
     return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
 }
 
-func (self *SQL) RunActionContext(ctx context.Context, db *sql.DB, t *godbi.Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
-    lists := make([]interface{}, 0)
+func (self *SQL) RunActionContext(ctx context.Context, db *sql.DB, t *godbi.Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
+    lists := make([]any, 0)
     dbi := &godbi.DBI{DB: db}
     err := dbi.SelectContext(ctx, &lists, self.Statement, ARGS["marker"])
     return lists, err
@@ -276,7 +276,7 @@ func main() {
     table := &godbi.Table{
         TableName: "testing",
         Pks:[]string{"id"},
-        IdAuto:"id",
+        IDAuto:"id",
         Columns: []*godbi.Col{
             &godbi.Col{ColumnName:"x",  Label:"x",  TypeName:"string", Notnull:true},
             &godbi.Col{ColumnName:"y",  Label:"y",  TypeName:"string", Notnull:true},
@@ -292,12 +292,12 @@ func main() {
     // a custom action
     sql   := &SQL{Action:godbi.Action{ActionName: "sql"}, Statement:"SELECT z FROM testing WHERE id=?"}
 
-    args := map[string]interface{}{"x":"a","y":"b","z":"c"}
+    args := map[string]any{"x":"a","y":"b","z":"c"}
     lists, err := insert.RunAction(db, table, args)
     if err != nil { panic(err) }
     fmt.Printf("Step 1: %v\n", lists)
 
-    args = map[string]interface{}{"x":"c","y":"d","z":"c"}
+    args = map[string]any{"x":"c","y":"d","z":"c"}
     lists, err = insert.RunAction(db, table, args)
     if err != nil { panic(err) }
     fmt.Printf("Step 2: %v\n", lists)
@@ -305,16 +305,16 @@ func main() {
     lists, err = topics.RunAction(db, table, nil)
     fmt.Printf("Step 3: %v\n", lists)
 
-    args = map[string]interface{}{"id":2,"x":"c","y":"z"}
+    args = map[string]any{"id":2,"x":"c","y":"z"}
     lists, err = update.RunAction(db, table, args)
     if err != nil { panic(err) }
     fmt.Printf("Step 4: %v\n", lists)
 
-    args = map[string]interface{}{"id":2}
+    args = map[string]any{"id":2}
     lists, err = edit.RunAction(db, table, args)
     fmt.Printf("Step 5: %v\n", lists)
 
-    args = map[string]interface{}{"marker":1}
+    args = map[string]any{"marker":1}
     lists, err = sql.RunAction(db, table, args)
     fmt.Printf("Step 6: %v\n", lists)
 
@@ -384,50 +384,50 @@ func main() {
     atom, err := godbi.NewAtomJson([]byte(str))
     if err != nil { panic(err) }
 
-    var lists []interface{}
+    var lists []any
     // the 1st web requests is assumed to create id=1 to the m_a table
     //
-    args := map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "temp"}
+    args := map[string]any{"x": "a1234567", "y": "b1234567", "z": "temp"}
     lists, err = atom.RunAtom(db, "insert", args)
     if err != nil { panic(err) }
 
     // the 2nd request just updates, becaues [x,y] is defined to the unique
     //
-    args = map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "zzzzz"}
+    args = map[string]any{"x": "a1234567", "y": "b1234567", "z": "zzzzz"}
     lists, err = atom.RunAtom(db, "insupd", args)
     if err != nil { panic(err) }
 
     // the 3rd request creates id=2
     //
-    args = map[string]interface{}{"x": "c1234567", "y": "d1234567", "z": "e1234"}
+    args = map[string]any{"x": "c1234567", "y": "d1234567", "z": "e1234"}
     lists, err = atom.RunAtom(db, "insert", args)
     if err != nil { panic(err) }
 
     // the 4th request creates id=3
     //
-    args = map[string]interface{}{"x": "e1234567", "y": "f1234567", "z": "e1234"}
+    args = map[string]any{"x": "e1234567", "y": "f1234567", "z": "e1234"}
     lists, err = atom.RunAtom(db, "insupd", args)
     if err != nil { panic(err) }
 
     // GET all
-    args = map[string]interface{}{}
+    args = map[string]any{}
     lists, err = atom.RunAtom(db, "topics", args)
     if err != nil { panic(err) }
     fmt.Printf("Step 1: %v\n", lists)
 
     // GET one
-    args = map[string]interface{}{"id": 1}
+    args = map[string]any{"id": 1}
     lists, err = atom.RunAtom(db, "edit", args)
     if err != nil { panic(err) }
     fmt.Printf("Step 2: %v\n", lists)
 
     // DELETE
-    args = map[string]interface{}{"id": 1}
+    args = map[string]any{"id": 1}
     lists, err = atom.RunAtom(db, "delete", args)
     if err != nil { panic(err) }
 
     // GET all
-    args = map[string]interface{}{}
+    args = map[string]any{}
     lists, err = atom.RunAtom(db, "topics", args)
     if err != nil { panic(err) }
     fmt.Printf("Step 3: %v\n", lists)
@@ -495,14 +495,14 @@ type Table struct {
     TableName string   `json:"tableName" hcl:"tableName"`
     Columns   []*Col   `json:"columns" hcl:"columns"`
     Pks       []string `json:"pks,omitempty" hcl:"pks,optional"`
-    IdAuto    string   `json:"idAuto,omitempty" hcl:"idAuto,optional"`
+    IDAuto    string   `json:"idAuto,omitempty" hcl:"idAuto,optional"`
     Fks       []*Fk    `json:"fks,omitempty" hcl:"fks,optional"`
     Uniques   []string `json:"uniques,omitempty" hcl:"uniques,optional"`
 }
 
 ```
 
-where _TableName_ is the table name. _Columns_ are all columns. _Pks_ is the primary key. _IdAuto_ is the auto ID. _Fks_ is a list of foreign-key relationships. And _Uniques_ is the combination of columns uniquely defining the row.
+where _TableName_ is the table name. _Columns_ are all columns. _Pks_ is the primary key. _IDAuto_ is the auto ID. _Fks_ is a list of foreign-key relationships. And _Uniques_ is the combination of columns uniquely defining the row.
 
 ### 3.4) Connection
 
@@ -540,7 +540,7 @@ where _Prepares_ is a list of actions to run before the current action, and _Nex
 This is the main function in _Capability_. It takes input data _ARGS_ and optional constraint _extra_, and run. The output is a slice of interface, and an optional error.
 
 ```go
-RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error)
+RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error)
 ```
 
 ### 3.7) Atom
@@ -558,7 +558,7 @@ type Atom struct {
 
 This is the main function for _action_. It takes input data _ARGS_ and optional constraint _extra_, and acts. The output is a slice of interface, and an optional error.
 ```go
-RunActomContext(ctx context.Context, db *sql.DB, action string, ARGS interface{}, extra ...map[string]interface{}) ([]interface{}, error)
+RunActomContext(ctx context.Context, db *sql.DB, action string, ARGS any, extra ...map[string]any) ([]any, error)
 ```
 
 <br /><br />
@@ -681,7 +681,7 @@ type Molecule struct {
 }
 
 type Stopper interface {
-	Sign(tableObj *Table, item interface{}) bool
+	Sign(tableObj *Table, item any) bool
 }
 ```
 
@@ -810,56 +810,56 @@ func main() {
 }]
 }`))
 
-    var lists []interface{}
+    var lists []any
 
     // the 1st web requests creates id=1 to the m_a and m_b tables:
     //
-    args := map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john", "m_b": []map[string]interface{}{{"child": "john"}, {"child": "john2"}}}
+    args := map[string]any{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john", "m_b": []map[string]any{{"child": "john"}, {"child": "john2"}}}
     lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], args)
     if err != nil { panic(err) }
 
     // the 2nd request just updates, becaues [x,y] is unique in m_a.
     // but creates a new record in tb for id=1
-   args = map[string]interface{}{"x": "a1234567", "y": "b1234567", "z": "zzzzz", "m_b": map[string]interface{}{"child": "sam"}}
+   args = map[string]any{"x": "a1234567", "y": "b1234567", "z": "zzzzz", "m_b": map[string]any{"child": "sam"}}
     lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], args)
     if err != nil { panic(err) }
 
     // the 3rd request creates id=2
     //
-    args = map[string]interface{}{"x": "c1234567", "y": "d1234567", "z": "e1234", "m_b": map[string]interface{}{"child": "mary"}}
+    args = map[string]any{"x": "c1234567", "y": "d1234567", "z": "e1234", "m_b": map[string]any{"child": "mary"}}
     lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args)
     if err != nil { panic(err) }
 
     // the 4th request creates id=3
     //
-    args = map[string]interface{}{"x": "e1234567", "y": "f1234567", "z": "e1234", "m_b": map[string]interface{}{"child": "marcus"}}
+    args = map[string]any{"x": "e1234567", "y": "f1234567", "z": "e1234", "m_b": map[string]any{"child": "marcus"}}
     lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args)
     if err != nil { panic(err) }
 
     // GET all
-    args = map[string]interface{}{}
+    args = map[string]any{}
     lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], args)
     if err != nil { panic(err) }
     fmt.Printf("Step 1: %v\n", lists)
 
     // GET one
-    args = map[string]interface{}{"id": 1}
+    args = map[string]any{"id": 1}
     lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["GET"], args)
     if err != nil { panic(err) }
     fmt.Printf("Step 2: %v\n", lists)
 
     // DELETE
-    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["DELETE"], map[string]interface{}{"id": 1})
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["DELETE"], map[string]any{"id": 1})
     if err != nil { panic(err) }
 
     // GET all m_a
-    args = map[string]interface{}{}
+    args = map[string]any{}
     lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], args)
     if err != nil { panic(err) }
     fmt.Printf("Step 3: %v\n", lists)
 
     // GET all m_b
-    args = map[string]interface{}{}
+    args = map[string]any{}
     lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], args)
     if err != nil { panic(err) }
     fmt.Printf("Step 4: %v\n", lists)
@@ -888,7 +888,7 @@ Step 4: [map[child:mary id:2 tid:4] map[child:marcus id:3 tid:5]]
 Use JSON to build a molecule
 
 ```go
-func NewMoleculeJsonFile(filename string, cmap ...map[string][]Capability) (*Molecule, error) 
+func NewMoleculeJSONFile(filename string, cmap ...map[string][]Capability) (*Molecule, error) 
 ```
 
 where _cmap_ is for customized actions not in the default list.
@@ -898,7 +898,7 @@ where _cmap_ is for customized actions not in the default list.
 We can run any action on any atom by names using _RunConext_. The output is data as a slice of interface, and an optional error.
 
 ```go
-func (self *Molecule) RunContext(ctx context.Context, db *sql.DB, atom, action string, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]map[string]interface{}, error)
+func (self *Molecule) RunContext(ctx context.Context, db *sql.DB, atom, action string, ARGS map[string]any, extra ...map[string]any) ([]map[string]any, error)
 ```
 
 Unlike traditional REST, which is limited to a sinlge table and sinle action, _RunContext_ will act on related tables and trigger associated actions.

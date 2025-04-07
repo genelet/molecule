@@ -28,8 +28,8 @@ func tryit(m *godbi.Molecule, t *testing.T) {
 	}
 }
 
-// newAtomJsonFile parse a disk file to atom
-func newAtomJsonFile(fn string, custom ...godbi.Capability) (*godbi.Atom, error) {
+// newAtomJSONFile parse a disk file to atom
+func newAtomJSONFile(fn string, custom ...godbi.Capability) (*godbi.Atom, error) {
 	dat, err := os.ReadFile(fn)
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func newAtomJsonFile(fn string, custom ...godbi.Capability) (*godbi.Atom, error)
 }
 
 // newMoleculeJson parses a JSON file into Molecule
-func newMoleculeJsonFile(fn string) (*godbi.Molecule, error) {
+func newMoleculeJSONFile(fn string) (*godbi.Molecule, error) {
 	dat, err := os.ReadFile(fn)
 	if err != nil {
 		return nil, err
@@ -57,11 +57,11 @@ func newMoleculeJsonFile(fn string) (*godbi.Molecule, error) {
 }
 
 func TestMolecule2Graph(t *testing.T) {
-	ta, err := newAtomJsonFile("m_a.json")
+	ta, err := newAtomJSONFile("m_a.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	tb, err := newAtomJsonFile("m_b.json")
+	tb, err := newAtomJSONFile("m_b.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -69,7 +69,7 @@ func TestMolecule2Graph(t *testing.T) {
 	tryit(molecule, t)
 
 	for _, fn := range []string{"molecule.json", "molecule2.json", "molecule21.json", "molecule3.json", "molecule31.json"} {
-		molecule, err = newMoleculeJsonFile(fn)
+		molecule, err = newMoleculeJSONFile(fn)
 		if err != nil {
 			t.Fatal(err)
 		}

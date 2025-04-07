@@ -5,7 +5,7 @@ import (
 	"database/sql"
 )
 
-// Action is to implement Capability interface
+// Capability is to implement Capability interface
 type Capability interface {
 	GetActionName() string
 	SetActionName(string)
@@ -18,7 +18,7 @@ type Capability interface {
 	GetPicked() []string
 	SetPicked([]string)
 	// RunActionContext runs the action with context, db, table, and args
-	RunActionContext(context.Context, *sql.DB, *Table, map[string]interface{}, ...map[string]interface{}) ([]interface{}, error)
+	RunActionContext(context.Context, *sql.DB, *Table, map[string]any, ...map[string]any) ([]any, error)
 }
 
 // Action is the base struct for REST actions. Prepares and Nextpages are edges to other tables before and after the action.
@@ -98,9 +98,9 @@ func (self *Action) SetNextpages(x []*Connection) {
 	self.Nextpages = x
 }
 
-func getSQL(ctx context.Context, db *sql.DB, statement string, labels []interface{}, ids ...interface{}) ([]interface{}, error) {
-	lists := make([]interface{}, 0)
-	dbi := &DBI{DB: db}
+func getSQL(ctx context.Context, db *sql.DB, logger Slogger, statement string, labels []any, ids ...any) ([]any, error) {
+	lists := make([]any, 0)
+	dbi := &DBI{DB: db, logger: logger}
 	err := dbi.SelectSQLContext(ctx, &lists, statement, labels, ids...)
 	return lists, err
 }

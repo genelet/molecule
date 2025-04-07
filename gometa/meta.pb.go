@@ -250,7 +250,7 @@ type Node_Table struct {
 	TableName string            `protobuf:"bytes,1,opt,name=tableName,proto3" json:"tableName,omitempty"`
 	Columns   []*Node_Table_Col `protobuf:"bytes,2,rep,name=columns,proto3" json:"columns,omitempty"`
 	Pks       []string          `protobuf:"bytes,3,rep,name=pks,proto3" json:"pks,omitempty"`
-	IdAuto    string            `protobuf:"bytes,4,opt,name=idAuto,proto3" json:"idAuto,omitempty"`
+	IDAuto    string            `protobuf:"bytes,4,opt,name=idAuto,proto3" json:"idAuto,omitempty"`
 	Fks       []*Node_Table_Fk  `protobuf:"bytes,5,rep,name=fks,proto3" json:"fks,omitempty"`
 	Uniques   []string          `protobuf:"bytes,6,rep,name=uniques,proto3" json:"uniques,omitempty"`
 }
@@ -308,9 +308,9 @@ func (x *Node_Table) GetPks() []string {
 	return nil
 }
 
-func (x *Node_Table) GetIdAuto() string {
+func (x *Node_Table) GetIDAuto() string {
 	if x != nil {
-		return x.IdAuto
+		return x.IDAuto
 	}
 	return ""
 }
@@ -1664,7 +1664,7 @@ func file_proto_meta_proto_rawDescGZIP() []byte {
 
 var file_proto_meta_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_proto_meta_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
-var file_proto_meta_proto_goTypes = []interface{}{
+var file_proto_meta_proto_goTypes = []any{
 	(Node_Actions_ConnectType)(0),   // 0: molecule.Node.Actions.ConnectType
 	(*Node)(nil),                    // 1: molecule.Node
 	(*Graph)(nil),                   // 2: molecule.Graph
@@ -1731,7 +1731,7 @@ func file_proto_meta_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_proto_meta_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*Node); i {
 			case 0:
 				return &v.state
@@ -1743,7 +1743,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*Graph); i {
 			case 0:
 				return &v.state
@@ -1755,7 +1755,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*Node_Table); i {
 			case 0:
 				return &v.state
@@ -1767,7 +1767,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*Node_Actions); i {
 			case 0:
 				return &v.state
@@ -1779,7 +1779,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[4].Exporter = func(v any, i int) any {
 			switch v := v.(*Node_Table_Col); i {
 			case 0:
 				return &v.state
@@ -1791,7 +1791,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[5].Exporter = func(v any, i int) any {
 			switch v := v.(*Node_Table_Fk); i {
 			case 0:
 				return &v.state
@@ -1803,7 +1803,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[6].Exporter = func(v any, i int) any {
 			switch v := v.(*Node_Actions_Connection); i {
 			case 0:
 				return &v.state
@@ -1815,7 +1815,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[7].Exporter = func(v any, i int) any {
 			switch v := v.(*Node_Actions_Insert); i {
 			case 0:
 				return &v.state
@@ -1827,7 +1827,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[8].Exporter = func(v any, i int) any {
 			switch v := v.(*Node_Actions_Update); i {
 			case 0:
 				return &v.state
@@ -1839,7 +1839,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[9].Exporter = func(v any, i int) any {
 			switch v := v.(*Node_Actions_Insupd); i {
 			case 0:
 				return &v.state
@@ -1851,7 +1851,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[10].Exporter = func(v any, i int) any {
 			switch v := v.(*Node_Actions_Delete); i {
 			case 0:
 				return &v.state
@@ -1863,7 +1863,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[11].Exporter = func(v any, i int) any {
 			switch v := v.(*Node_Actions_Delecs); i {
 			case 0:
 				return &v.state
@@ -1875,7 +1875,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[12].Exporter = func(v any, i int) any {
 			switch v := v.(*Node_Actions_Joint); i {
 			case 0:
 				return &v.state
@@ -1887,7 +1887,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[13].Exporter = func(v any, i int) any {
 			switch v := v.(*Node_Actions_Edit); i {
 			case 0:
 				return &v.state
@@ -1899,7 +1899,7 @@ func file_proto_meta_proto_init() {
 				return nil
 			}
 		}
-		file_proto_meta_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_meta_proto_msgTypes[14].Exporter = func(v any, i int) any {
 			switch v := v.(*Node_Actions_Topics); i {
 			case 0:
 				return &v.state

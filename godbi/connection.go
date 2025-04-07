@@ -43,7 +43,7 @@ func (self *Connection) Subname() string {
 
 // findExrea returns the value if the input i.e. item contains
 // the current table name as key.
-func (self *Connection) findExrea(item map[string]interface{}) map[string]interface{} {
+func (self *Connection) findExrea(item map[string]any) map[string]any {
 	marker := self.Marker
 	if marker == "" {
 		return nil
@@ -51,7 +51,7 @@ func (self *Connection) findExrea(item map[string]interface{}) map[string]interf
 
 	if v, ok := item[marker]; ok {
 		switch t := v.(type) {
-		case map[string]interface{}:
+		case map[string]any:
 			return t
 		default:
 		}
@@ -61,7 +61,7 @@ func (self *Connection) findExrea(item map[string]interface{}) map[string]interf
 
 // findArgs returns the value if the input i.e. args contains
 // the current table name as key.
-func (self *Connection) findArgs(args interface{}) (interface{}, bool) {
+func (self *Connection) findArgs(args any) (any, bool) {
 	if args == nil {
 		return nil, true
 	}
@@ -72,28 +72,28 @@ func (self *Connection) findArgs(args interface{}) (interface{}, bool) {
 	}
 
 	switch t := args.(type) {
-	case map[string]interface{}: // in practice, only this data type exists
+	case map[string]any: // in practice, only this data type exists
 		if v, ok := t[marker]; ok {
 			switch s := v.(type) {
-			case map[string]interface{}:
+			case map[string]any:
 				if self.Dimension == CONNECTMap {
-					var outs []map[string]interface{}
+					var outs []map[string]any
 					for key, value := range s {
-						outs = append(outs, map[string]interface{}{"key": key, "value": value})
+						outs = append(outs, map[string]any{"key": key, "value": value})
 					}
 					return outs, true
 				}
 				return s, true
-			case []map[string]interface{}:
+			case []map[string]any:
 				return s, true
-			case []interface{}:
-				var outs []map[string]interface{}
+			case []any:
+				var outs []map[string]any
 				for _, item := range s {
 					switch x := item.(type) {
-					case map[string]interface{}:
+					case map[string]any:
 						outs = append(outs, x)
 					default: // native types
-						outs = append(outs, map[string]interface{}{marker: x})
+						outs = append(outs, map[string]any{marker: x})
 					}
 				}
 				return outs, true
@@ -108,7 +108,7 @@ func (self *Connection) findArgs(args interface{}) (interface{}, bool) {
 }
 
 // NextArg returns nextpage's args as the value of key using current args map
-func (self *Connection) nextArgs(args interface{}) interface{} {
+func (self *Connection) nextArgs(args any) any {
 	if args == nil {
 		return nil
 	}
@@ -130,25 +130,25 @@ func (self *Connection) nextArgs(args interface{}) interface{} {
 	return nextArgsFromRelate(args, self.RelateArgs)
 }
 
-func nextArgsFromRelate(args interface{}, relate map[string]string) interface{} {
+func nextArgsFromRelate(args any, relate map[string]string) any {
 	if args == nil {
 		return nil
 	}
 	switch t := args.(type) {
-	case map[string]interface{}:
+	case map[string]any:
 		return createNextmap(relate, t)
-	case []map[string]interface{}:
-		var outs []interface{}
+	case []map[string]any:
+		var outs []any
 		for _, hash := range t {
 			if x := createNextmap(relate, hash); x != nil {
 				outs = append(outs, x)
 			}
 		}
 		return outs
-	case []interface{}:
-		var outs []interface{}
+	case []any:
+		var outs []any
 		for _, hash := range t {
-			if item, ok := hash.(map[string]interface{}); ok {
+			if item, ok := hash.(map[string]any); ok {
 				if x := createNextmap(relate, item); x != nil {
 					outs = append(outs, x)
 				}
@@ -161,35 +161,35 @@ func nextArgsFromRelate(args interface{}, relate map[string]string) interface{} 
 }
 
 // nextExtra returns nextpage's extra using current extra map
-func (self *Connection) nextExtra(args interface{}) map[string]interface{} {
+func (self *Connection) nextExtra(args any) map[string]any {
 	if _, ok := self.RelateExtra["ALL"]; ok {
-		if v, ok := args.(map[string]interface{}); ok {
+		if v, ok := args.(map[string]any); ok {
 			return v
 		}
 		return nil
 	}
 
 	switch t := args.(type) {
-	case map[string]interface{}:
+	case map[string]any:
 		return createNextmap(self.RelateExtra, t)
 	default:
 	}
 	return nil
 }
 
-func createNextmap(which map[string]string, item map[string]interface{}) map[string]interface{} {
+func createNextmap(which map[string]string, item map[string]any) map[string]any {
 	if which == nil {
 		return nil
 	}
 
-	var args map[string]interface{}
+	var args map[string]any
 	for k, v := range which {
 		if u, ok := item[k]; ok {
 			if args == nil {
-				args = make(map[string]interface{})
+				args = make(map[string]any)
 			}
 			switch t := u.(type) {
-			case map[string]interface{}:
+			case map[string]any:
 				for key, value := range t {
 					args[key] = value
 				}
@@ -201,51 +201,51 @@ func createNextmap(which map[string]string, item map[string]interface{}) map[str
 	return args
 }
 
-func (self *Connection) shorten(lists []interface{}) interface{} {
+func (self *Connection) shorten(lists []any) any {
 	if self.Dimension == CONNECTDefault || self.Marker == "" {
 		return lists
 	}
 
 	switch self.Dimension {
 	case CONNECTMap:
-		output := make(map[string]interface{})
+		output := make(map[string]any)
 		for _, single := range lists {
-			key, value := mapEntryToPair(single.(map[string]interface{}))
+			key, value := mapEntryToPair(single.(map[string]any))
 			if key != "" {
 				output[key] = value
 			}
 		}
 		return output
 	case CONNECTMany:
-		var output []interface{}
+		var output []any
 		for _, single := range lists {
-			output = append(output, manyEntry(self.Marker, single.(map[string]interface{})))
+			output = append(output, manyEntry(self.Marker, single.(map[string]any)))
 		}
 		return output
 	case CONNECTArray:
-		var output []interface{}
+		var output []any
 		for _, single := range lists {
-			output = append(output, single.(map[string]interface{})[self.Marker])
+			output = append(output, single.(map[string]any)[self.Marker])
 		}
 		return output
 	case CONNECTOne:
-		return manyEntry(self.Marker, lists[0].(map[string]interface{}))
+		return manyEntry(self.Marker, lists[0].(map[string]any))
 	default:
 	}
 	return lists
 }
 
-func mapEntryToPair(single map[string]interface{}) (string, interface{}) {
+func mapEntryToPair(single map[string]any) (string, any) {
 	var key string
-	var value interface{}
-	var object map[string]interface{}
+	var value any
+	var object map[string]any
 
 	for _, a := range single {
-		var c map[string]interface{}
+		var c map[string]any
 		switch b := a.(type) {
-		case []interface{}:
-			c = b[0].(map[string]interface{})
-		case []map[string]interface{}:
+		case []any:
+			c = b[0].(map[string]any)
+		case []map[string]any:
 			c = b[0]
 		default:
 			continue
@@ -261,9 +261,9 @@ func mapEntryToPair(single map[string]interface{}) (string, interface{}) {
 				continue
 			}
 			switch f := e.(type) {
-			case []interface{}:
-				object = f[0].(map[string]interface{})
-			case []map[string]interface{}:
+			case []any:
+				object = f[0].(map[string]any)
+			case []map[string]any:
 				object = f[0]
 			default:
 			}
@@ -276,23 +276,23 @@ func mapEntryToPair(single map[string]interface{}) (string, interface{}) {
 	return key, object
 }
 
-func manyEntry(leader string, single map[string]interface{}) map[string]interface{} {
-	output := make(map[string]interface{})
-	var higher map[string]interface{}
+func manyEntry(leader string, single map[string]any) map[string]any {
+	output := make(map[string]any)
+	var higher map[string]any
 
 	for key, value := range single {
 		if key == leader {
-			higher = make(map[string]interface{})
+			higher = make(map[string]any)
 			switch t := value.(type) {
-			case []interface{}:
-				for k, v := range t[0].(map[string]interface{}) {
+			case []any:
+				for k, v := range t[0].(map[string]any) {
 					higher[k] = v
 				}
-			case []map[string]interface{}:
+			case []map[string]any:
 				for k, v := range t[0] {
 					higher[k] = v
 				}
-			case map[string]interface{}:
+			case map[string]any:
 				for k, v := range t {
 					higher[k] = v
 				}
@@ -304,35 +304,33 @@ func manyEntry(leader string, single map[string]interface{}) map[string]interfac
 		}
 	}
 
-	if higher != nil {
-		for k, v := range higher {
-			output[k] = v
-		}
+	for k, v := range higher {
+		output[k] = v
 	}
 
 	return output
 }
 
-func shortRecursive(leader string, single map[string]interface{}) map[string]interface{} {
-	output := make(map[string]interface{})
-	var higher map[string]interface{}
+func shortRecursive(leader string, single map[string]any) map[string]any {
+	output := make(map[string]any)
+	var higher map[string]any
 
 	for key, value := range single {
 		if key == leader {
-			higher = make(map[string]interface{})
+			higher = make(map[string]any)
 			switch t := value.(type) {
-			case []interface{}:
+			case []any:
 				if len(t) > 1 {
 					higher[key] = t
 					continue
 				} else {
 					for _, s := range t {
-						for k, v := range s.(map[string]interface{}) {
+						for k, v := range s.(map[string]any) {
 							switch u := v.(type) {
-							case []interface{}:
+							case []any:
 								old, ok := higher[k]
 								if ok {
-									higher[k] = append(old.([]interface{}), u...)
+									higher[k] = append(old.([]any), u...)
 								} else {
 									higher[k] = u
 								}
@@ -342,11 +340,11 @@ func shortRecursive(leader string, single map[string]interface{}) map[string]int
 						}
 					}
 				}
-			case []map[string]interface{}:
+			case []map[string]any:
 				for k, v := range t[0] {
 					higher[k] = v
 				}
-			case map[string]interface{}:
+			case map[string]any:
 				for k, v := range t {
 					higher[k] = v
 				}
@@ -358,52 +356,50 @@ func shortRecursive(leader string, single map[string]interface{}) map[string]int
 		}
 	}
 
-	if higher != nil {
-		for k, v := range higher {
-			output[k] = v
-		}
+	for k, v := range higher {
+		output[k] = v
 	}
 
 	return output
 }
 
-func (self *Connection) shortenRecursive(lists []interface{}) interface{} {
+func (self *Connection) shortenRecursive(lists []any) any {
 	switch self.Dimension {
 	case CONNECTOne:
-		return shortRecursive(self.Marker, lists[0].(map[string]interface{}))
+		return shortRecursive(self.Marker, lists[0].(map[string]any))
 	default:
 	}
 
-	var output []interface{}
+	var output []any
 	for _, single := range lists {
-		output = append(output, shortRecursive(self.Marker, single.(map[string]interface{})))
+		output = append(output, shortRecursive(self.Marker, single.(map[string]any)))
 	}
 	return output
 }
 
 // useless but put here for backup
-func shortenX(leader string, lists []interface{}) []interface{} {
-	extra := make(map[string]interface{})
+func shortenX(leader string, lists []any) []any {
+	extra := make(map[string]any)
 
-	var higher map[string]interface{}
-	var temp []interface{}
+	var higher map[string]any
+	var temp []any
 
-	for key, value := range lists[0].(map[string]interface{}) {
+	for key, value := range lists[0].(map[string]any) {
 		if key == leader {
-			higher = make(map[string]interface{})
+			higher = make(map[string]any)
 			switch t := value.(type) {
-			case []interface{}:
+			case []any:
 				if len(t) > 1 {
 					higher[key] = t
 				} else {
 					for _, s := range t {
-						tmp := make(map[string]interface{})
-						for k, v := range s.(map[string]interface{}) {
+						tmp := make(map[string]any)
+						for k, v := range s.(map[string]any) {
 							switch u := v.(type) {
-							case []interface{}:
+							case []any:
 								old, ok := tmp[k]
 								if ok {
-									tmp[k] = append(old.([]interface{}), u...)
+									tmp[k] = append(old.([]any), u...)
 								} else {
 									tmp[k] = u
 								}
@@ -414,18 +410,18 @@ func shortenX(leader string, lists []interface{}) []interface{} {
 						temp = append(temp, tmp)
 					}
 				}
-			case []map[string]interface{}:
-				higher = make(map[string]interface{})
+			case []map[string]any:
+				higher = make(map[string]any)
 				for k, v := range t[0] {
 					higher[k] = v
 				}
-			case map[string]interface{}:
-				higher = make(map[string]interface{})
+			case map[string]any:
+				higher = make(map[string]any)
 				for k, v := range t {
 					higher[k] = v
 				}
 			default:
-				higher = make(map[string]interface{})
+				higher = make(map[string]any)
 				higher[key] = value
 			}
 		} else {
@@ -434,9 +430,9 @@ func shortenX(leader string, lists []interface{}) []interface{} {
 	}
 
 	if hasValue(temp) {
-		var output []interface{}
+		var output []any
 		for _, tmp := range temp {
-			for k, v := range tmp.(map[string]interface{}) {
+			for k, v := range tmp.(map[string]any) {
 				extra[k] = v
 			}
 			output = append(output, extra)
@@ -447,5 +443,5 @@ func shortenX(leader string, lists []interface{}) []interface{} {
 	for k, v := range higher {
 		extra[k] = v
 	}
-	return []interface{}{extra}
+	return []any{extra}
 }

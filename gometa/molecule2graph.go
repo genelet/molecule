@@ -13,7 +13,7 @@ import (
 //   - primary table's pk
 //   - child to parent table mapping
 //   - table name to pk mapping
-func MoleculeToGraph(molecule *godbi.Molecule, args ...interface{}) *Graph {
+func MoleculeToGraph(molecule *godbi.Molecule, args ...any) *Graph {
 	var oneofs map[string]map[string][]string
 	var packageName, goPackageName, pkTable, pkName string
 	var pksTable, pks map[string]string
@@ -91,7 +91,7 @@ func atomTableToNodeTable(table godbi.Table, oneofs ...map[string][]string) *Nod
 		nodeTable.Columns = append(nodeTable.Columns, nodeCol)
 	}
 	nodeTable.Pks = table.Pks
-	nodeTable.IdAuto = table.IdAuto
+	nodeTable.IDAuto = table.IDAuto
 	for _, fk := range table.Fks {
 		nodeFk := &Node_Table_Fk{
 			FkTable:  fk.FkTable,

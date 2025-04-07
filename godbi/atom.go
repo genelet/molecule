@@ -19,15 +19,15 @@ type Atom struct {
 	AtomName string `json:"atomName,omitempty" hcl:"atomName,label"`
 	Table
 	Actions []Capability `json:"actions,omitempty" hcl:"actions,block"`
-	customs map[string]interface{}
+	customs map[string]any
 }
 
-// Atom is a JSON unmarshaler
+// UnmarshalJSON is a JSON unmarshaler
 func (self *Atom) UnmarshalJSON(bs []byte) error {
 	type m struct {
 		AtomName string `json:"atomName,omitempty"`
 		Table
-		Actions []map[string]interface{} `json:"actions,omitempty"`
+		Actions []map[string]any `json:"actions,omitempty"`
 	}
 	tmp := &m{}
 	if err := json.Unmarshal(bs, tmp); err != nil {
@@ -67,7 +67,7 @@ func (self *Atom) UnmarshalJSON(bs []byte) error {
 	return nil
 }
 
-// Atom is a HCL unmarshaler
+// UnmarshalHCL is a HCL unmarshaler
 func (self *Atom) UnmarshalHCL(bs []byte, labels ...string) error {
 	file, diags := hclsyntax.ParseConfig(bs, rname(), hcl.Pos{Line: 1, Column: 1})
 	if diags.HasErrors() {
@@ -86,8 +86,8 @@ func (self *Atom) UnmarshalHCL(bs []byte, labels ...string) error {
 	return nil
 }
 
-func specFromAtomBody(body *hclsyntax.Body, customs map[string]interface{}) (*utils.Struct, map[string]interface{}, error) {
-	ref := map[string]interface{}{"Connection": new(Connection)}
+func specFromAtomBody(body *hclsyntax.Body, customs map[string]any) (*utils.Struct, map[string]any, error) {
+	ref := map[string]any{"Connection": new(Connection)}
 	accepted := make(map[string]bool)
 	for k, v := range customs {
 		ref[k] = v
@@ -98,12 +98,12 @@ func specFromAtomBody(body *hclsyntax.Body, customs map[string]interface{}) (*ut
 		accepted[v.GetActionName()] = true
 	}
 
-	var actions [][2]interface{}
+	var actions [][2]any
 	for _, block := range body.Blocks {
 		if block.Type != "actions" {
 			continue
 		}
-		if block.Labels == nil || len(block.Labels) == 0 {
+		if len(block.Labels) == 0 {
 			return nil, nil, fmt.Errorf("HCL finds no actionName from actions")
 		}
 		key := block.Labels[0]
@@ -120,17 +120,17 @@ func specFromAtomBody(body *hclsyntax.Body, customs map[string]interface{}) (*ut
 				prepares = append(prepares, "Connection")
 			}
 		}
-		second := make(map[string]interface{})
+		second := make(map[string]any)
 		if nextpages != nil {
 			second["Nextpages"] = nextpages
 		}
 		if prepares != nil {
 			second["Prepares"] = prepares
 		}
-		actions = append(actions, [2]interface{}{key, second})
+		actions = append(actions, [2]any{key, second})
 	}
 
-	s, err := utils.NewStruct("Atom", map[string]interface{}{"Actions": actions})
+	s, err := utils.NewStruct("Atom", map[string]any{"Actions": actions})
 	return s, ref, err
 }
 
@@ -184,7 +184,7 @@ func (self *Atom) MergeCustomActions(custom ...Capability) {
 		names[v.GetActionName()] = i
 	}
 
-	clone := func(old interface{}) interface{} {
+	clone := func(old any) any {
 		obj := reflect.New(reflect.TypeOf(old).Elem())
 		oldVal := reflect.ValueOf(old).Elem()
 		newVal := obj.Elem()
@@ -203,7 +203,7 @@ func (self *Atom) MergeCustomActions(custom ...Capability) {
 			self.Actions[i] = v
 		} else {
 			if self.customs == nil {
-				self.customs = make(map[string]interface{})
+				self.customs = make(map[string]any)
 			}
 			self.customs[actionName] = clone(v)
 			self.Actions = append(self.Actions, v)
@@ -223,12 +223,12 @@ func (self *Atom) GetAction(actionName string) Capability {
 }
 
 // RunAtom runs an action by name
-func (self *Atom) RunAtom(db *sql.DB, action string, ARGS interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+func (self *Atom) RunAtom(db *sql.DB, action string, ARGS any, extra ...map[string]any) ([]any, error) {
 	return self.RunAtomContext(context.Background(), db, action, ARGS, extra...)
 }
 
-// RunAtom runs an action with context by name
-func (self *Atom) RunAtomContext(ctx context.Context, db *sql.DB, action string, ARGS interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+// RunAtomContext runs an action with context by name
+func (self *Atom) RunAtomContext(ctx context.Context, db *sql.DB, action string, ARGS any, extra ...map[string]any) ([]any, error) {
 	obj := self.GetAction(action)
 	if obj == nil {
 		return nil, errorActionNil(action)
@@ -238,10 +238,10 @@ func (self *Atom) RunAtomContext(ctx context.Context, db *sql.DB, action string,
 	}
 
 	switch t := ARGS.(type) {
-	case map[string]interface{}:
+	case map[string]any:
 		return obj.RunActionContext(ctx, db, &self.Table, t, extra...)
-	case []map[string]interface{}:
-		var data []interface{}
+	case []map[string]any:
+		var data []any
 		for _, item := range t {
 			lists, err := obj.RunActionContext(ctx, db, &self.Table, item, extra...)
 			if err != nil {
@@ -250,10 +250,10 @@ func (self *Atom) RunAtomContext(ctx context.Context, db *sql.DB, action string,
 			data = append(data, lists...)
 		}
 		return data, nil
-	case []interface{}:
-		var data []interface{}
+	case []any:
+		var data []any
 		for _, item := range t {
-			if args, ok := item.(map[string]interface{}); ok {
+			if args, ok := item.(map[string]any); ok {
 				lists, err := obj.RunActionContext(ctx, db, &self.Table, args, extra...)
 				if err != nil {
 					return nil, err

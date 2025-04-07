@@ -12,15 +12,13 @@ type Insert struct {
 
 var _ Capability = (*Insert)(nil)
 
-// Run inserts a row using data passed in ARGS.
-//
-func (self *Insert) RunAction(db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+// RunAction inserts a row using data passed in ARGS.
+func (self *Insert) RunAction(db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
 	return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
 }
 
-// InsertContext inserts a row using data passed in ARGS.
-//
-func (self *Insert) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]interface{}, extra ...map[string]interface{}) ([]interface{}, error) {
+// RunActionContext inserts a row using data passed in ARGS.
+func (self *Insert) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
 	if err := t.checkNull(ARGS); err != nil {
 		return nil, err
 	}
@@ -35,8 +33,8 @@ func (self *Insert) RunActionContext(ctx context.Context, db *sql.DB, t *Table, 
 		return nil, err
 	}
 
-	if t.IdAuto != "" {
-		fieldValues[t.IdAuto] = autoID
+	if t.IDAuto != "" {
+		fieldValues[t.IDAuto] = autoID
 	}
 
 	return fromFv(fieldValues), nil

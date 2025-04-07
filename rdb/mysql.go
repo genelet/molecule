@@ -44,10 +44,10 @@ func mysqlToNative(u string) string {
 
 func (self *mySQL) getTable(db *sql.DB, tableName string) (*godbi.Table, error) {
 	dbi := &godbi.DBI{DB: db}
-	lists := make([]interface{}, 0)
+	lists := make([]any, 0)
 	err := dbi.SelectSQL(&lists,
 		`DESC `+tableName,
-		[]interface{}{"Field", "Type", "Null", "Key", "Default", "Extra"})
+		[]any{"Field", "Type", "Null", "Key", "Default", "Extra"})
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (self *mySQL) getTable(db *sql.DB, tableName string) (*godbi.Table, error) 
 	var cols []*godbi.Col
 
 	for _, iitem := range lists {
-		item := iitem.(map[string]interface{})
+		item := iitem.(map[string]any)
 		field := item["Field"].(string)
 		col := &godbi.Col{
 			ColumnName: field,
@@ -86,12 +86,12 @@ func (self *mySQL) getTable(db *sql.DB, tableName string) (*godbi.Table, error) 
 		TableName: tableName,
 		Columns:   cols,
 		Pks:       pks,
-		IdAuto:    idauto}, nil
+		IDAuto:    idauto}, nil
 }
 
 func (self *mySQL) getFks(db *sql.DB, tableName string) ([]*godbi.Fk, error) {
 	dbi := &godbi.DBI{DB: db}
-	lists := make([]interface{}, 0)
+	lists := make([]any, 0)
 	err := dbi.Select(&lists,
 		`SELECT A.REFERENCED_TABLE_SCHEMA AS FKTABLE_SCHEM,
 	A.REFERENCED_TABLE_NAME AS FKTABLE_NAME,
@@ -114,7 +114,7 @@ AND A.TABLE_NAME=?`, self.DatabaseName, tableName)
 
 	var fks []*godbi.Fk
 	for _, iitem := range lists {
-		item := iitem.(map[string]interface{})
+		item := iitem.(map[string]any)
 		fkTable := item["FKTABLE_NAME"].(string)
 		fkColumn := item["FKCOLUMN_NAME"].(string)
 		column := item["PKCOLUMN_NAME"].(string)
@@ -129,7 +129,7 @@ AND A.TABLE_NAME=?`, self.DatabaseName, tableName)
 
 func (self *mySQL) getFwks(db *sql.DB, tableName string) ([]*godbi.Fk, error) {
 	dbi := &godbi.DBI{DB: db}
-	lists := make([]interface{}, 0)
+	lists := make([]any, 0)
 	err := dbi.Select(&lists,
 		`SELECT A.REFERENCED_TABLE_SCHEMA AS PKTABLE_SCHEM,
 	A.REFERENCED_TABLE_NAME AS PKTABLE_NAME,
@@ -151,7 +151,7 @@ AND A.REFERENCED_TABLE_NAME=?`, self.DatabaseName, tableName)
 
 	var fks []*godbi.Fk
 	for _, iitem := range lists {
-		item := iitem.(map[string]interface{})
+		item := iitem.(map[string]any)
 		fkTable := item["FKTABLE_NAME"].(string)
 		fkColumn := item["FKCOLUMN_NAME"].(string)
 		column := item["PKCOLUMN_NAME"].(string)
@@ -166,7 +166,7 @@ AND A.REFERENCED_TABLE_NAME=?`, self.DatabaseName, tableName)
 
 func (self *mySQL) tableNames(db *sql.DB) ([]string, error) {
 	dbi := &godbi.DBI{DB: db}
-	lists := make([]interface{}, 0)
+	lists := make([]any, 0)
 	err := dbi.Select(&lists,
 		`SELECT table_name AS table_name
 FROM information_schema.tables
@@ -176,7 +176,7 @@ WHERE table_type='BASE TABLE' AND table_schema = ?`, self.DatabaseName)
 	}
 	names := make([]string, 0)
 	for _, iitem := range lists {
-		item := iitem.(map[string]interface{})
+		item := iitem.(map[string]any)
 		names = append(names, item["table_name"].(string))
 	}
 	return names, nil
