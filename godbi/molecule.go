@@ -164,6 +164,9 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 	// prepares receives filtered args and extra from current args
 	for _, p := range prepares {
 		pAtom := self.GetAtom(p.AtomName)
+		if pAtom == nil {
+			return nil, errorAtomNotFound(p.AtomName)
+		}
 		pTable := pAtom.Table
 		v, _ := p.findArgs(args)
 		preArgs := mergeArgs(p.nextArgs(args), v)
@@ -288,6 +291,9 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 			var rColumn string
 			for _, p = range nextpages {
 				pAtom = self.GetAtom(p.AtomName)
+				if pAtom == nil {
+					return nil, errorAtomNotFound(p.AtomName)
+				}
 				rColumn = pAtom.Table.RecursiveColumn()
 				if rColumn != "" {
 					break
@@ -314,6 +320,9 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 
 	for _, p := range nextpages {
 		pAtom := self.GetAtom(p.AtomName)
+		if pAtom == nil {
+			return nil, errorAtomNotFound(p.AtomName)
+		}
 		pAction := pAtom.GetAction(p.ActionName)
 		if self.Stopper != nil && self.Stopper.Stop(&tableObj, &(pAtom.Table)) {
 			continue
