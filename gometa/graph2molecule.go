@@ -85,7 +85,7 @@ func nodeActionsToAtomActions(nodeActions *Node_Actions) []godbi.Capability {
 
 	if insert := nodeActions.GetInsertItem(); insert != nil {
 		atomInsert := &godbi.Insert{Action: godbi.Action{ActionName: "insert"}}
-		atomInsert.SetIsDo(insert.GetIsDo())
+		atomInsert.IsDo = insert.GetIsDo()
 		atomInsert.Picked = insert.GetPicked()
 		for _, prepare := range insert.GetPrepareConnects() {
 			atomInsert.Prepares = append(atomInsert.Prepares, dbiConnection(prepare))
@@ -98,7 +98,7 @@ func nodeActionsToAtomActions(nodeActions *Node_Actions) []godbi.Capability {
 
 	if insupd := nodeActions.GetInsupdItem(); insupd != nil {
 		atomInsupd := &godbi.Insupd{Action: godbi.Action{ActionName: "insupd"}}
-		atomInsupd.SetIsDo(insupd.GetIsDo())
+		atomInsupd.IsDo = insupd.GetIsDo()
 		atomInsupd.Picked = insupd.GetPicked()
 		for _, prepare := range insupd.GetPrepareConnects() {
 			atomInsupd.Prepares = append(atomInsupd.Prepares, dbiConnection(prepare))
@@ -111,7 +111,7 @@ func nodeActionsToAtomActions(nodeActions *Node_Actions) []godbi.Capability {
 
 	if update := nodeActions.GetUpdateItem(); update != nil {
 		atomUpdate := &godbi.Update{Action: godbi.Action{ActionName: "update"}}
-		atomUpdate.SetIsDo(update.GetIsDo())
+		atomUpdate.IsDo = update.GetIsDo()
 		atomUpdate.Empties = update.GetEmpties()
 		atomUpdate.Picked = update.GetPicked()
 		for _, prepare := range update.GetPrepareConnects() {
@@ -125,7 +125,7 @@ func nodeActionsToAtomActions(nodeActions *Node_Actions) []godbi.Capability {
 
 	if delett := nodeActions.GetDeleteItem(); delett != nil {
 		atomDelete := &godbi.Delete{Action: godbi.Action{ActionName: "delete"}}
-		atomDelete.SetIsDo(delett.GetIsDo())
+		atomDelete.IsDo = delett.GetIsDo()
 		for _, prepare := range delett.GetPrepareConnects() {
 			atomDelete.Prepares = append(atomDelete.Prepares, dbiConnection(prepare))
 		}
@@ -137,7 +137,7 @@ func nodeActionsToAtomActions(nodeActions *Node_Actions) []godbi.Capability {
 
 	if delecs := nodeActions.GetDelecsItem(); delecs != nil {
 		atomDelecs := &godbi.Delecs{Action: godbi.Action{ActionName: "delecs"}}
-		atomDelecs.SetIsDo(delecs.GetIsDo())
+		atomDelecs.IsDo = delecs.GetIsDo()
 		for _, prepare := range delecs.GetPrepareConnects() {
 			atomDelecs.Prepares = append(atomDelecs.Prepares, dbiConnection(prepare))
 		}
@@ -149,7 +149,7 @@ func nodeActionsToAtomActions(nodeActions *Node_Actions) []godbi.Capability {
 
 	if topics := nodeActions.GetTopicsItem(); topics != nil {
 		atomTopics := &godbi.Topics{Action: godbi.Action{ActionName: "topics"}}
-		atomTopics.SetIsDo(topics.GetIsDo())
+		atomTopics.IsDo = topics.GetIsDo()
 		atomTopics.FIELDS = topics.GetFIELDS()
 		atomTopics.Totalforce = int(topics.GetTotalforce())
 		atomTopics.MAXPAGENO = topics.GetMAXPAGENO()
@@ -170,7 +170,6 @@ func nodeActionsToAtomActions(nodeActions *Node_Actions) []godbi.Capability {
 
 	if edit := nodeActions.GetEditItem(); edit != nil {
 		atomEdit := &godbi.Edit{Action: godbi.Action{ActionName: "edit"}}
-		atomEdit.SetIsDo(atomEdit.GetIsDo())
 		atomEdit.FIELDS = edit.GetFIELDS()
 		atomEdit.Picked = edit.GetPicked()
 		for _, prepare := range edit.GetPrepareConnects() {

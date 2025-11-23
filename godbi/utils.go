@@ -7,15 +7,19 @@ import (
 	"strings"
 )
 
+var reQuestion = regexp.MustCompile(`"[^"]*"|'[^']*(?:''[^']*)*'|\?`)
+
 func questionMarkerNumber(query string) string {
-	re := regexp.MustCompile(`\?`)
 	i := 1
 	repl := func(in string) string {
-		x := `$` + strconv.Itoa(i)
-		i++
-		return x
+		if in == "?" {
+			x := `$` + strconv.Itoa(i)
+			i++
+			return x
+		}
+		return in
 	}
-	return re.ReplaceAllStringFunc(query, repl)
+	return reQuestion.ReplaceAllStringFunc(query, repl)
 }
 
 func hasValue(extra any) bool {

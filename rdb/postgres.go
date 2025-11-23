@@ -2,6 +2,7 @@ package rdb
 
 import (
 	"database/sql"
+	"strings"
 
 	"github.com/genelet/molecule/godbi"
 )
@@ -17,7 +18,40 @@ func newPostgres(databaseName string) *postgres {
 	return postgres
 }
 
-func (self *postgres) getTable(db *sql.DB, tableName string) (*godbi.Table, error) {
+func postgresToNative(u string) string {
+	arr := strings.Split(u, "(")
+	key := strings.TrimSpace(arr[0])
+	pre := map[string]string{
+		"boolean":                     "bool",
+		"bytea":                       "string",
+		"character varying":           "string",
+		"character":                   "string",
+		"text":                        "string",
+		"name":                        "string",
+		"smallint":                    "int16",
+		"integer":                     "int",
+		"bigint":                      "int64",
+		"real":                        "float32",
+		"double precision":            "float64",
+		"numeric":                     "float64",
+		"decimal":                     "float64",
+		"date":                        "string",
+		"timestamp without time zone": "string",
+		"timestamp with time zone":    "string",
+		"time without time zone":      "string",
+		"time with time zone":         "string",
+		"json":                        "string",
+		"jsonb":                       "string",
+		"uuid":                        "string",
+		"xml":                         "string",
+	}
+	if v, ok := pre[key]; ok {
+		return v
+	}
+	return "string"
+}
+
+func (p *postgres) getTable(db *sql.DB, tableName string) (*godbi.Table, error) {
 	dbi := &godbi.DBI{DB: db}
 	lists := make([]any, 0)
 	err := dbi.Select(&lists,
@@ -34,7 +68,7 @@ JOIN pg_catalog.pg_namespace n ON (n.oid = c.relnamespace)
 WHERE a.attnum >= 0 AND c.relkind IN ('r','p','v','m','f')
 AND pg_catalog.quote_ident(n.nspname) = 'public'
 AND pg_catalog.quote_ident(pg_catalog.current_database()) = ?
-AND pg_catalog.quote_ident(c.relname) = ?`, self.DatabaseName, tableName)
+AND pg_catalog.quote_ident(c.relname) = ?`, p.DatabaseName, tableName)
 	if err != nil {
 		return nil, err
 	}
@@ -44,12 +78,17 @@ AND pg_catalog.quote_ident(c.relname) = ?`, self.DatabaseName, tableName)
 
 	for _, iitem := range lists {
 		item := iitem.(map[string]any)
-		field := item["COLUMN_NAME"].(string)
+		field := toString(item["COLUMN_NAME"])
 		col := &godbi.Col{
 			ColumnName: field,
 			Label:      field,
-			TypeName:   item["type"].(string)}
-		definition := item["COLUMN_DEF"].(string)
+			TypeName:   postgresToNative(toString(item["TYPE_NAME"]))}
+
+		if toString(item["IS_NULLABLE"]) == "NO" {
+			col.Notnull = true
+		}
+
+		definition := toString(item["COLUMN_DEF"])
 		if len(definition) > 7 && definition[0:7] == "nextval" {
 			idauto = field
 			col.Auto = true
@@ -73,7 +112,7 @@ WHERE tco.constraint_type = 'PRIMARY KEY'
 AND kcu.table_schema = 'public'
 AND tco.constraint_catalog = ?
 AND kcu.table_name = ?
-ORDER BY kcu.ordinal_position`, self.DatabaseName, tableName)
+ORDER BY kcu.ordinal_position`, p.DatabaseName, tableName)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +120,7 @@ ORDER BY kcu.ordinal_position`, self.DatabaseName, tableName)
 	var pks []string
 	for _, iitem := range lists {
 		item := iitem.(map[string]any)
-		field := item["column_name"].(string)
+		field := toString(item["column_name"])
 		col := ref[field]
 		col.Notnull = true
 		col.Constraint = true
@@ -101,7 +140,7 @@ ORDER BY kcu.ordinal_position`, self.DatabaseName, tableName)
 		IDAuto:    idauto}, nil
 }
 
-func (self *postgres) getFks(db *sql.DB, tableName string) ([]*godbi.Fk, error) {
+func (p *postgres) getFks(db *sql.DB, tableName string) ([]*godbi.Fk, error) {
 	dbi := &godbi.DBI{DB: db}
 	lists := make([]any, 0)
 	// from child table: constraint_name | table_name  | column_name | foreign_table_name | foreign_column_name
@@ -122,7 +161,7 @@ WHERE tc.constraint_type = 'FOREIGN KEY'
 AND tc.constraint_catalog = ?
 AND tc.table_schema='public'
 AND ccu.table_schema='public'
-AND ccu.table_name=?`, self.DatabaseName, tableName)
+AND ccu.table_name=?`, p.DatabaseName, tableName)
 	if err != nil {
 		return nil, err
 	}
@@ -142,14 +181,14 @@ AND ccu.table_name=?`, self.DatabaseName, tableName)
 	return fks, nil
 }
 
-func (self *postgres) tableNames(db *sql.DB) ([]string, error) {
+func (p *postgres) tableNames(db *sql.DB) ([]string, error) {
 	dbi := &godbi.DBI{DB: db}
 	lists := make([]any, 0)
 	err := dbi.Select(&lists,
 		`SELECT table_name FROM information_schema.tables
 WHERE table_schema='public'
 AND table_type='BASE TABLE'
-AND table_catalog=?`, self.DatabaseName)
+AND table_catalog=?`, p.DatabaseName)
 	if err != nil {
 		return nil, err
 	}

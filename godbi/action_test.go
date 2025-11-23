@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/genelet/determined/dethcl"
-	"github.com/genelet/determined/utils"
+	"github.com/genelet/horizon/dethcl"
+	"github.com/genelet/horizon/utils"
 )
 
 func TestHCLAction(t *testing.T) {
@@ -63,9 +63,9 @@ func TestAction(t *testing.T) {
 	}
 
 	insert := new(Insert)
-	insert.SetIsDo(true)
+	insert.IsDo = true
 	insupd := new(Insupd)
-	insupd.SetIsDo(true)
+	insupd.IsDo = true
 	topics := new(Topics)
 	edit := new(Edit)
 	dele := new(Delete)

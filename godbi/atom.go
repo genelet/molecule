@@ -8,8 +8,8 @@ import (
 	"math/rand"
 	"reflect"
 
-	"github.com/genelet/determined/dethcl"
-	"github.com/genelet/determined/utils"
+	"github.com/genelet/horizon/dethcl"
+	"github.com/genelet/horizon/utils"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 )
@@ -23,7 +23,7 @@ type Atom struct {
 }
 
 // UnmarshalJSON is a JSON unmarshaler
-func (self *Atom) UnmarshalJSON(bs []byte) error {
+func (a *Atom) UnmarshalJSON(bs []byte) error {
 	type m struct {
 		AtomName string `json:"atomName,omitempty"`
 		Table
@@ -46,13 +46,13 @@ func (self *Atom) UnmarshalJSON(bs []byte) error {
 			return err
 		}
 		for i, item := range trans {
-			if name == item.GetActionName() {
+			if name == item.GetBaseAction().ActionName {
 				if err = json.Unmarshal(jsonString, item); err != nil {
 					return err
 				}
 				switch name {
 				case "insert", "update", "insupd", "delete", "delecs":
-					item.SetIsDo(true)
+					item.GetBaseAction().IsDo = true
 				default:
 				}
 				trans[i] = item
@@ -61,28 +61,37 @@ func (self *Atom) UnmarshalJSON(bs []byte) error {
 		}
 	}
 
-	self.AtomName = tmp.AtomName
-	self.Table = tmp.Table
-	self.Actions = trans
+	a.AtomName = tmp.AtomName
+	a.Table = tmp.Table
+
+	for _, item := range trans {
+		switch item.GetBaseAction().ActionName {
+		case "insert", "update", "insupd", "delete", "delecs":
+			item.GetBaseAction().IsDo = true
+		default:
+		}
+	}
+
+	a.Actions = trans
 	return nil
 }
 
 // UnmarshalHCL is a HCL unmarshaler
-func (self *Atom) UnmarshalHCL(bs []byte, labels ...string) error {
+func (a *Atom) UnmarshalHCL(bs []byte, labels ...string) error {
 	file, diags := hclsyntax.ParseConfig(bs, rname(), hcl.Pos{Line: 1, Column: 1})
 	if diags.HasErrors() {
 		return diags
 	}
-	spec, ref, err := specFromAtomBody(file.Body.(*hclsyntax.Body), self.customs)
+	spec, ref, err := specFromAtomBody(file.Body.(*hclsyntax.Body), a.customs)
 	if err != nil {
 		return err
 	}
 
-	err = dethcl.UnmarshalSpec(bs, self, spec, ref, labels...)
+	err = dethcl.UnmarshalSpec(bs, a, spec, ref, labels...)
 	if err != nil {
 		return err
 	}
-	self.updateDefaultActions()
+	a.updateDefaultActions()
 	return nil
 }
 
@@ -94,8 +103,8 @@ func specFromAtomBody(body *hclsyntax.Body, customs map[string]any) (*utils.Stru
 		accepted[k] = true
 	}
 	for _, v := range getEmptyCapacities() {
-		ref[v.GetActionName()] = v
-		accepted[v.GetActionName()] = true
+		ref[v.GetBaseAction().ActionName] = v
+		accepted[v.GetBaseAction().ActionName] = true
 	}
 
 	var actions [][2]any
@@ -151,37 +160,37 @@ func getEmptyCapacities() []Capability {
 	}
 }
 
-func (self *Atom) updateDefaultActions() {
+func (a *Atom) updateDefaultActions() {
 	for _, v := range getEmptyCapacities() {
 		found := false
-		for _, existing := range self.Actions {
-			if v.GetActionName() == existing.GetActionName() {
+		for _, existing := range a.Actions {
+			if v.GetBaseAction().ActionName == existing.GetBaseAction().ActionName {
 				found = true
 				break
 			}
 		}
 		if !found {
-			self.Actions = append(self.Actions, v)
+			a.Actions = append(a.Actions, v)
 		}
 	}
-	for i, v := range self.Actions {
-		switch v.GetActionName() {
+	for i, v := range a.Actions {
+		switch v.GetBaseAction().ActionName {
 		case "insert", "update", "insupd", "delete", "delecs":
-			self.Actions[i].SetIsDo(true)
+			a.Actions[i].GetBaseAction().IsDo = true
 		default:
 		}
 	}
 }
 
 // MergeCustomActions merges custom actions
-func (self *Atom) MergeCustomActions(custom ...Capability) {
+func (a *Atom) MergeCustomActions(custom ...Capability) {
 	if custom == nil {
 		return
 	}
 
 	names := make(map[string]int)
-	for i, v := range self.Actions {
-		names[v.GetActionName()] = i
+	for i, v := range a.Actions {
+		names[v.GetBaseAction().ActionName] = i
 	}
 
 	clone := func(old any) any {
@@ -198,23 +207,23 @@ func (self *Atom) MergeCustomActions(custom ...Capability) {
 	}
 
 	for _, v := range custom {
-		actionName := v.GetActionName()
+		actionName := v.GetBaseAction().ActionName
 		if i, ok := names[actionName]; ok {
-			self.Actions[i] = v
+			a.Actions[i] = v
 		} else {
-			if self.customs == nil {
-				self.customs = make(map[string]any)
+			if a.customs == nil {
+				a.customs = make(map[string]any)
 			}
-			self.customs[actionName] = clone(v)
-			self.Actions = append(self.Actions, v)
+			a.customs[actionName] = clone(v)
+			a.Actions = append(a.Actions, v)
 		}
 	}
 }
 
 // GetAction gets a specific action by name
-func (self *Atom) GetAction(actionName string) Capability {
-	for _, item := range self.Actions {
-		if item.GetActionName() == actionName {
+func (a *Atom) GetAction(actionName string) Capability {
+	for _, item := range a.Actions {
+		if item.GetBaseAction().ActionName == actionName {
 			return item
 		}
 	}
@@ -223,27 +232,27 @@ func (self *Atom) GetAction(actionName string) Capability {
 }
 
 // RunAtom runs an action by name
-func (self *Atom) RunAtom(db *sql.DB, action string, ARGS any, extra ...map[string]any) ([]any, error) {
-	return self.RunAtomContext(context.Background(), db, action, ARGS, extra...)
+func (a *Atom) RunAtom(db *sql.DB, action string, args any, extra ...map[string]any) ([]any, error) {
+	return a.RunAtomContext(context.Background(), db, action, args, extra...)
 }
 
 // RunAtomContext runs an action with context by name
-func (self *Atom) RunAtomContext(ctx context.Context, db *sql.DB, action string, ARGS any, extra ...map[string]any) ([]any, error) {
-	obj := self.GetAction(action)
+func (a *Atom) RunAtomContext(ctx context.Context, db *sql.DB, action string, args any, extra ...map[string]any) ([]any, error) {
+	obj := a.GetAction(action)
 	if obj == nil {
 		return nil, errorActionNil(action)
 	}
-	if ARGS == nil {
-		return obj.RunActionContext(ctx, db, &self.Table, nil, extra...)
+	if args == nil {
+		return obj.RunActionContext(ctx, db, &a.Table, nil, extra...)
 	}
 
-	switch t := ARGS.(type) {
+	switch t := args.(type) {
 	case map[string]any:
-		return obj.RunActionContext(ctx, db, &self.Table, t, extra...)
+		return obj.RunActionContext(ctx, db, &a.Table, t, extra...)
 	case []map[string]any:
 		var data []any
 		for _, item := range t {
-			lists, err := obj.RunActionContext(ctx, db, &self.Table, item, extra...)
+			lists, err := obj.RunActionContext(ctx, db, &a.Table, item, extra...)
 			if err != nil {
 				return nil, err
 			}
@@ -254,7 +263,7 @@ func (self *Atom) RunAtomContext(ctx context.Context, db *sql.DB, action string,
 		var data []any
 		for _, item := range t {
 			if args, ok := item.(map[string]any); ok {
-				lists, err := obj.RunActionContext(ctx, db, &self.Table, args, extra...)
+				lists, err := obj.RunActionContext(ctx, db, &a.Table, args, extra...)
 				if err != nil {
 					return nil, err
 				}
@@ -265,5 +274,5 @@ func (self *Atom) RunAtomContext(ctx context.Context, db *sql.DB, action string,
 	default:
 	}
 
-	return nil, errorInputDataType(ARGS)
+	return nil, errorInputDataType(args)
 }

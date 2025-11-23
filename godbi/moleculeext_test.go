@@ -21,7 +21,7 @@ func local2Vars() (*sql.DB, context.Context, map[string]string) {
 func molecule2Check(ctx context.Context, db *sql.DB, molecule *Molecule, METHODS map[string]string, t *testing.T) {
 	// GET all
 	args := map[string]any{}
-	lists, err := molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], args)
+	lists, err := molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -34,7 +34,7 @@ func molecule2Check(ctx context.Context, db *sql.DB, molecule *Molecule, METHODS
 
 	// GET one
 	args = map[string]any{"id": 1}
-	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["GET"], args)
+	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["GET"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -46,7 +46,7 @@ func molecule2Check(ctx context.Context, db *sql.DB, molecule *Molecule, METHODS
 
 	// GET all
 	args = map[string]any{}
-	lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], args)
+	lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -55,13 +55,13 @@ func molecule2Check(ctx context.Context, db *sql.DB, molecule *Molecule, METHODS
 	}
 
 	// DELETE
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["DELETE"], map[string]any{"id": 1}); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["DELETE"], &RunOption{Args: map[string]any{"id": 1}}); err != nil {
 		panic(err)
 	}
 
 	// GET all
 	args = map[string]any{}
-	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], args)
+	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -74,7 +74,7 @@ func molecule2Check(ctx context.Context, db *sql.DB, molecule *Molecule, METHODS
 
 	// GET all m_b
 	args = map[string]any{}
-	lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], args)
+	lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -95,8 +95,8 @@ func MoleculeGeneral(t *testing.T, molecule *Molecule) {
 	args := map[string]any{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john"}
 	data := map[string]any{"child": "john"}
 	orig := map[string]any{"insert": data}
-	molecule.Initialize(map[string]any{"m_b": orig}, nil)
-	_, err := molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], args)
+	globalArgs := map[string]any{"m_b": orig}
+	_, err := molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], &RunOption{Args: args, GlobalArgs: globalArgs})
 	if err != nil {
 		panic(err)
 	}
@@ -107,8 +107,8 @@ func MoleculeGeneral(t *testing.T, molecule *Molecule) {
 	args = map[string]any{"x": "a1234567", "y": "b1234567", "z": "zzzzz"}
 	data = map[string]any{"child": "sam"}
 	orig = map[string]any{"insert": data}
-	molecule.Initialize(map[string]any{"m_b": orig}, nil)
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], args); err != nil {
+	globalArgs = map[string]any{"m_b": orig}
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], &RunOption{Args: args, GlobalArgs: globalArgs}); err != nil {
 		panic(err)
 	}
 
@@ -117,8 +117,8 @@ func MoleculeGeneral(t *testing.T, molecule *Molecule) {
 	args = map[string]any{"x": "c1234567", "y": "d1234567", "z": "e1234"}
 	data = map[string]any{"child": "mary"}
 	orig = map[string]any{"insert": data}
-	molecule.Initialize(map[string]any{"m_b": orig}, nil)
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args); err != nil {
+	globalArgs = map[string]any{"m_b": orig}
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], &RunOption{Args: args, GlobalArgs: globalArgs}); err != nil {
 		panic(err)
 	}
 
@@ -127,14 +127,14 @@ func MoleculeGeneral(t *testing.T, molecule *Molecule) {
 	args = map[string]any{"x": "e1234567", "y": "f1234567", "z": "e1234"}
 	data = map[string]any{"child": "marcus"}
 	orig = map[string]any{"insert": data}
-	molecule.Initialize(map[string]any{"m_b": orig}, nil)
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args); err != nil {
+	globalArgs = map[string]any{"m_b": orig}
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], &RunOption{Args: args, GlobalArgs: globalArgs}); err != nil {
 		panic(err)
 	}
 
 	// GET all
 	args = map[string]any{}
-	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], args)
+	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -147,7 +147,7 @@ func MoleculeGeneral(t *testing.T, molecule *Molecule) {
 
 	// GET one
 	args = map[string]any{"id": 1}
-	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["GET"], args)
+	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["GET"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -159,7 +159,7 @@ func MoleculeGeneral(t *testing.T, molecule *Molecule) {
 
 	// GET all
 	args = map[string]any{}
-	lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], args)
+	lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -169,19 +169,19 @@ func MoleculeGeneral(t *testing.T, molecule *Molecule) {
 
 	// DELETE
 	extra := map[string]any{"id": 1}
-	if _, err = molecule.RunContext(ctx, db, "m_b", METHODS["DELETE"], map[string]any{"tid": 1}, extra); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_b", METHODS["DELETE"], &RunOption{Args: map[string]any{"tid": 1}, Extra: extra}); err != nil {
 		panic(err)
 	}
-	if _, err = molecule.RunContext(ctx, db, "m_b", METHODS["DELETE"], map[string]any{"tid": 2}, extra); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_b", METHODS["DELETE"], &RunOption{Args: map[string]any{"tid": 2}, Extra: extra}); err != nil {
 		panic(err)
 	}
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["DELETE"], map[string]any{"id": 1}); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["DELETE"], &RunOption{Args: map[string]any{"id": 1}}); err != nil {
 		panic(err)
 	}
 
 	// GET all
 	args = map[string]any{}
-	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], args)
+	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -194,7 +194,7 @@ func MoleculeGeneral(t *testing.T, molecule *Molecule) {
 
 	// GET all m_b
 	args = map[string]any{}
-	lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], args)
+	lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -225,11 +225,11 @@ func MoleculeThreeGeneral(molecule *Molecule, t *testing.T) {
 	//
 	args := map[string]any{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john"}
 	data2 := []map[string]any{{"child": "john"}, {"child": "john2"}}
-	molecule.Initialize(map[string]any{
+	globalArgs := map[string]any{
 		"m_a": map[string]any{"insupd": args},
 		"m_b": map[string]any{"insupd": data2},
-	}, nil)
-	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"]); err != nil {
+	}
+	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], &RunOption{GlobalArgs: globalArgs}); err != nil {
 		panic(err)
 	}
 	if len(lists) != 1 {
@@ -241,11 +241,11 @@ func MoleculeThreeGeneral(molecule *Molecule, t *testing.T) {
 	//
 	args = map[string]any{"x": "a1234567", "y": "b1234567", "z": "zzzzz"}
 	data := map[string]any{"child": "sam"}
-	molecule.Initialize(map[string]any{
+	globalArgs = map[string]any{
 		"m_a": map[string]any{"insupd": args},
 		"m_b": map[string]any{"insupd": data},
-	}, nil)
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"]); err != nil {
+	}
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], &RunOption{GlobalArgs: globalArgs}); err != nil {
 		panic(err)
 	}
 
@@ -253,11 +253,11 @@ func MoleculeThreeGeneral(molecule *Molecule, t *testing.T) {
 	//
 	args = map[string]any{"x": "c1234567", "y": "d1234567", "z": "e1234"}
 	data = map[string]any{"child": "mary"}
-	molecule.Initialize(map[string]any{
+	globalArgs = map[string]any{
 		"m_a": map[string]any{"insert": args},
 		"m_b": map[string]any{"insert": data},
-	}, nil)
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"]); err != nil {
+	}
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], &RunOption{GlobalArgs: globalArgs}); err != nil {
 		panic(err)
 	}
 
@@ -265,17 +265,17 @@ func MoleculeThreeGeneral(molecule *Molecule, t *testing.T) {
 	//
 	args = map[string]any{"x": "e1234567", "y": "f1234567", "z": "e1234"}
 	data = map[string]any{"child": "marcus"}
-	molecule.Initialize(map[string]any{
+	globalArgs = map[string]any{
 		"m_a": map[string]any{"insert": args},
 		"m_b": map[string]any{"insert": data},
-	}, nil)
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"]); err != nil {
+	}
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], &RunOption{GlobalArgs: globalArgs}); err != nil {
 		panic(err)
 	}
 
 	// GET all
 	args = map[string]any{}
-	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], args)
+	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -289,7 +289,7 @@ func MoleculeThreeGeneral(molecule *Molecule, t *testing.T) {
 
 	// GET one
 	args = map[string]any{"id": 1}
-	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["GET"], args)
+	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["GET"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -303,7 +303,7 @@ func MoleculeThreeGeneral(molecule *Molecule, t *testing.T) {
 
 	// GET all
 	args = map[string]any{}
-	lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], args)
+	lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -312,13 +312,13 @@ func MoleculeThreeGeneral(molecule *Molecule, t *testing.T) {
 	}
 
 	// DELETE
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["DELETE"], map[string]any{"id": 1}); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["DELETE"], &RunOption{Args: map[string]any{"id": 1}}); err != nil {
 		panic(err)
 	}
 
 	// GET all
 	args = map[string]any{}
-	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], args)
+	lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], &RunOption{Args: args})
 	if err != nil {
 		panic(err)
 	}
@@ -330,7 +330,7 @@ func MoleculeThreeGeneral(molecule *Molecule, t *testing.T) {
 	//[map[id:2 m_ab_topics:[map[abid:4 id:2 m_b_topics:[map[child:mary tid:4]] tid:4]] x:c1234567 y:d1234567 z:e1234] map[id:3 m_ab_topics:[map[abid:5 id:3 m_b_topics:[map[child:marcus tid:5]] tid:5]] x:e1234567 y:f1234567 z:e1234]]
 
 	// GET all m_ab
-	lists, err = molecule.RunContext(ctx, db, "m_ab", METHODS["LIST"])
+	lists, err = molecule.RunContext(ctx, db, "m_ab", METHODS["LIST"], nil)
 	if err != nil {
 		panic(err)
 	}
@@ -340,7 +340,7 @@ func MoleculeThreeGeneral(molecule *Molecule, t *testing.T) {
 
 	// GET all m_b
 	// args = map[string]any{}
-	lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"])
+	lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], nil)
 	if err != nil {
 		panic(err)
 	}

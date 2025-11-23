@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/genelet/determined/dethcl"
+	"github.com/genelet/horizon/dethcl"
 )
 
 // newAtomJSONFile parse a disk file to atom
@@ -88,14 +88,14 @@ type SQL struct {
 	Statement string `json:"statement"`
 }
 
-func (self *SQL) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
+func (s *SQL) RunActionContext(ctx context.Context, db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
 	lists := make([]any, 0)
 	dbi := &DBI{DB: db}
 	var names []any
 	for _, col := range t.Columns {
 		names = append(names, col.ColumnName)
 	}
-	err := dbi.SelectSQLContext(ctx, &lists, self.Statement, names, ARGS["bravo"])
+	err := dbi.SelectSQLContext(ctx, &lists, s.Statement, names, args["bravo"])
 	return lists, err
 }
 
@@ -106,7 +106,7 @@ func TestAtom(t *testing.T) {
 	}
 
 	for _, v := range atom.Actions {
-		k := v.GetActionName()
+		k := v.GetBaseAction().ActionName
 		switch k {
 		case "topics":
 			topics := v.(*Topics)

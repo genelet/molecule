@@ -13,21 +13,21 @@ type Update struct {
 
 var _ Capability = (*Update)(nil)
 
-func (self *Update) RunAction(db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
-	return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
+func (u *Update) RunAction(db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
+	return u.RunActionContext(context.Background(), db, t, args, extra...)
 }
 
-func (self *Update) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
-	if err := t.checkNull(ARGS); err != nil {
+func (u *Update) RunActionContext(ctx context.Context, db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
+	if err := t.checkNull(args); err != nil {
 		return nil, err
 	}
 
-	ids := t.getIDVal(ARGS)
+	ids := t.getIDVal(args)
 	if !hasValue(ids) {
 		return nil, errorMissingPk(t.TableName)
 	}
 
-	fieldValues, allAuto := t.getFv(ARGS, self.getAllowed())
+	fieldValues, allAuto := t.getFv(args, u.getAllowed())
 	if allAuto {
 		return fromFv(fieldValues), nil
 	}
@@ -42,6 +42,6 @@ func (self *Update) RunActionContext(ctx context.Context, db *sql.DB, t *Table, 
 		return fromFv(fieldValues), nil
 	}
 
-	err := t.updateHashNullsContext(ctx, db, fieldValues, ids, self.Empties, extra...)
+	err := t.updateHashNullsContext(ctx, db, fieldValues, ids, u.Empties, extra...)
 	return fromFv(fieldValues), err
 }

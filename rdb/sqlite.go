@@ -62,7 +62,7 @@ func sqliteToNative(u string) string {
 // .header on
 // .mode column
 // PRAGMA table_info(table_name);
-func (self *sQLite) getTable(db *sql.DB, tableName string) (*godbi.Table, error) {
+func (s *sQLite) getTable(db *sql.DB, tableName string) (*godbi.Table, error) {
 	dbi := &godbi.DBI{DB: db}
 	lists := make([]any, 0)
 	err := dbi.SelectSQL(&lists,
@@ -78,12 +78,12 @@ func (self *sQLite) getTable(db *sql.DB, tableName string) (*godbi.Table, error)
 
 	for _, iitem := range lists {
 		item := iitem.(map[string]any)
-		field := item["name"].(string)
+		field := toString(item["name"])
 		col := &godbi.Col{
 			ColumnName: field,
 			Label:      field,
-			TypeName:   sqliteToNative(item["type"].(string))}
-		if item["default"] != nil && item["default"].(string) == "CURRENT_TIMESTAMP" {
+			TypeName:   sqliteToNative(toString(item["type"]))}
+		if toString(item["default"]) == "CURRENT_TIMESTAMP" {
 			col.Auto = true
 		}
 		pk := item["pk"].(int)
@@ -111,7 +111,7 @@ func (self *sQLite) getTable(db *sql.DB, tableName string) (*godbi.Table, error)
 // PRAGMA foreign_keys = ON;
 // PRAGMA foreign_key_list(tableName);
 
-func (self *sQLite) getFks(db *sql.DB, tableName string) ([]*godbi.Fk, error) {
+func (s *sQLite) getFks(db *sql.DB, tableName string) ([]*godbi.Fk, error) {
 	dbi := &godbi.DBI{DB: db}
 	lists := make([]any, 0)
 	err := dbi.SelectSQL(&lists,
@@ -138,9 +138,9 @@ AND m.name=?`, []any{"name", "table", "from", "to"}, tableName)
 	var fks []*godbi.Fk
 	for _, iitem := range lists {
 		item := iitem.(map[string]any)
-		fkTable := item["table"].(string)
-		fkColumn := item["to"].(string)
-		column := item["from"].(string)
+		fkTable := toString(item["table"])
+		fkColumn := toString(item["to"])
+		column := toString(item["from"])
 		if fkTable == tableName && fkColumn == column {
 			continue
 		}
@@ -150,7 +150,7 @@ AND m.name=?`, []any{"name", "table", "from", "to"}, tableName)
 	return fks, nil
 }
 
-func (self *sQLite) tableNames(db *sql.DB) ([]string, error) {
+func (s *sQLite) tableNames(db *sql.DB) ([]string, error) {
 	dbi := &godbi.DBI{DB: db}
 	lists := make([]any, 0)
 	err := dbi.Select(&lists,

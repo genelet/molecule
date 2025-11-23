@@ -153,7 +153,6 @@ package molecule
 
 type DBI struct {
     *sql.DB          
-    LastID   int64  // saves the last inserted id, if any
 }
 
 ```
@@ -163,7 +162,7 @@ type DBI struct {
 The same as DB's `Exec`, except it returns error.
 
 ```go
-func (*DBI) DoSQL(query string, args ...any) error
+func (*DBI) DoSQL(query string, args ...any) (sql.Result, error)
 ```
 
 ### 2.3) TxSQL
@@ -171,7 +170,7 @@ func (*DBI) DoSQL(query string, args ...any) error
 The same as _DoSQL_ but using transaction.
 
 ```go
-func (*DBI) TxSQL(query string, args ...any) error
+func (*DBI) TxSQL(query string, args ...any) (sql.Result, error)
 ```
 
 ### 2.4) Select
@@ -248,14 +247,14 @@ type SQL struct {
     Statement string   `json:"statement"`
 }
 
-func (self *SQL) RunAction(db *sql.DB, t *godbi.Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
-    return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
+func (s *SQL) RunAction(db *sql.DB, t *godbi.Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
+    return s.RunActionContext(context.Background(), db, t, ARGS, extra...)
 }
 
-func (self *SQL) RunActionContext(ctx context.Context, db *sql.DB, t *godbi.Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
+func (s *SQL) RunActionContext(ctx context.Context, db *sql.DB, t *godbi.Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
     lists := make([]any, 0)
     dbi := &godbi.DBI{DB: db}
-    err := dbi.SelectContext(ctx, &lists, self.Statement, ARGS["marker"])
+    err := dbi.SelectContext(ctx, &lists, s.Statement, ARGS["marker"])
     return lists, err
 }
 
@@ -530,6 +529,7 @@ type Action struct {
     ActionName string `json:"actionName,omitempty" hcl:"actionName,optional"`
     Prepares  []*Connection `json:"prepares,omitempty" hcl:"prepares,block"`
     Nextpages []*Connection `json:"nextpages,omitempty" hcl:"nextpages,block"`
+    IsDo      bool          `json:"-" hcl:"-"`
 }
 ```
 
@@ -815,52 +815,52 @@ func main() {
     // the 1st web requests creates id=1 to the m_a and m_b tables:
     //
     args := map[string]any{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john", "m_b": []map[string]any{{"child": "john"}, {"child": "john2"}}}
-    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], args)
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], &godbi.RunOption{Args: args})
     if err != nil { panic(err) }
 
     // the 2nd request just updates, becaues [x,y] is unique in m_a.
     // but creates a new record in tb for id=1
    args = map[string]any{"x": "a1234567", "y": "b1234567", "z": "zzzzz", "m_b": map[string]any{"child": "sam"}}
-    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], args)
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], &godbi.RunOption{Args: args})
     if err != nil { panic(err) }
 
     // the 3rd request creates id=2
     //
     args = map[string]any{"x": "c1234567", "y": "d1234567", "z": "e1234", "m_b": map[string]any{"child": "mary"}}
-    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args)
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], &godbi.RunOption{Args: args})
     if err != nil { panic(err) }
 
     // the 4th request creates id=3
     //
     args = map[string]any{"x": "e1234567", "y": "f1234567", "z": "e1234", "m_b": map[string]any{"child": "marcus"}}
-    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args)
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], &godbi.RunOption{Args: args})
     if err != nil { panic(err) }
 
     // GET all
     args = map[string]any{}
-    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], args)
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], &godbi.RunOption{Args: args})
     if err != nil { panic(err) }
     fmt.Printf("Step 1: %v\n", lists)
 
     // GET one
     args = map[string]any{"id": 1}
-    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["GET"], args)
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["GET"], &godbi.RunOption{Args: args})
     if err != nil { panic(err) }
     fmt.Printf("Step 2: %v\n", lists)
 
     // DELETE
-    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["DELETE"], map[string]any{"id": 1})
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["DELETE"], &godbi.RunOption{Args: map[string]any{"id": 1}})
     if err != nil { panic(err) }
 
     // GET all m_a
     args = map[string]any{}
-    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], args)
+    lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["LIST"], &godbi.RunOption{Args: args})
     if err != nil { panic(err) }
     fmt.Printf("Step 3: %v\n", lists)
 
     // GET all m_b
     args = map[string]any{}
-    lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], args)
+    lists, err = molecule.RunContext(ctx, db, "m_b", METHODS["LIST"], &godbi.RunOption{Args: args})
     if err != nil { panic(err) }
     fmt.Printf("Step 4: %v\n", lists)
 
@@ -898,7 +898,7 @@ where _cmap_ is for customized actions not in the default list.
 We can run any action on any atom by names using _RunConext_. The output is data as a slice of interface, and an optional error.
 
 ```go
-func (self *Molecule) RunContext(ctx context.Context, db *sql.DB, atom, action string, ARGS map[string]any, extra ...map[string]any) ([]map[string]any, error)
+func (m *Molecule) RunContext(ctx context.Context, db *sql.DB, atom, action string, opt *RunOption) ([]any, error)
 ```
 
 Unlike traditional REST, which is limited to a sinlge table and sinle action, _RunContext_ will act on related tables and trigger associated actions.

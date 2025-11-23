@@ -130,18 +130,18 @@ func fromCreateTable(createTable *xlight.CreateTableStmt) *godbi.Table {
 		IDAuto:    idauto}
 }
 
-func (self *postgresIO) tableNames(_ *sql.DB) ([]string, error) {
+func (p *postgresIO) tableNames(_ *sql.DB) ([]string, error) {
 	var names []string
-	for k := range self.tables {
+	for k := range p.tables {
 		names = append(names, k)
 	}
 	return names, nil
 }
 
-func (self *postgresIO) getTable(_ *sql.DB, tableName string) (*godbi.Table, error) {
-	return self.tables[tableName], nil
+func (p *postgresIO) getTable(_ *sql.DB, tableName string) (*godbi.Table, error) {
+	return p.tables[tableName], nil
 }
 
-func (self *postgresIO) getFks(_ *sql.DB, tableName string) ([]*godbi.Fk, error) {
-	return self.fks[tableName], nil
+func (p *postgresIO) getFks(_ *sql.DB, tableName string) ([]*godbi.Fk, error) {
+	return p.fks[tableName], nil
 }

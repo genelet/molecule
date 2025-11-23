@@ -3,8 +3,7 @@ package godbi
 import (
 	"encoding/json"
 	"testing"
-
-//	"github.com/genelet/determined/dethcl"
+	// "github.com/genelet/horizon/dethcl"
 )
 
 func TestTable(t *testing.T) {
@@ -79,12 +78,14 @@ func TestHCLTable(t *testing.T) {
 		t.Fatal(err)
 	}
 
-/*
-	t.Errorf("%#v", table)
-	bs, err := dethcl.Marshal(table)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Errorf("%s", bs)
-*/
+	/*
+	   t.Errorf("%#v", table)
+	   bs, err := dethcl.Marshal(table)
+
+	   	if err != nil {
+	   		t.Fatal(err)
+	   	}
+
+	   t.Errorf("%s", bs)
+	*/
 }

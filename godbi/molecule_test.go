@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/genelet/determined/dethcl"
-	"github.com/genelet/determined/utils"
+	"github.com/genelet/horizon/dethcl"
+	"github.com/genelet/horizon/utils"
 )
 
 // newMoleculeHclFile parse a HCL file to atom
@@ -165,11 +165,11 @@ func TestMoleculeDelecs(t *testing.T) {
 	//
 	args := map[string]any{"x": "a1234567", "y": "b1234567", "z": "temp", "child": "john"}
 	data2 := []map[string]any{{"child": "john"}, {"child": "john2"}}
-	molecule.Initialize(map[string]any{
+	globalArgs := map[string]any{
 		"m_a": map[string]any{"insupd": args},
 		"m_b": map[string]any{"insert": data2},
-	}, nil)
-	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"]); err != nil {
+	}
+	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], &RunOption{GlobalArgs: globalArgs}); err != nil {
 		panic(err)
 	}
 	if len(lists) != 1 {
@@ -181,11 +181,11 @@ func TestMoleculeDelecs(t *testing.T) {
 	//
 	args = map[string]any{"x": "a1234567", "y": "b1234567", "z": "zzzzz"}
 	data := map[string]any{"child": "sam"}
-	molecule.Initialize(map[string]any{
+	globalArgs = map[string]any{
 		"m_a": map[string]any{"insupd": args},
 		"m_b": map[string]any{"insert": data},
-	}, nil)
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"]); err != nil {
+	}
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], &RunOption{GlobalArgs: globalArgs}); err != nil {
 		panic(err)
 	}
 
@@ -193,11 +193,11 @@ func TestMoleculeDelecs(t *testing.T) {
 	//
 	args = map[string]any{"x": "c1234567", "y": "d1234567", "z": "e1234"}
 	data = map[string]any{"child": "mary"}
-	molecule.Initialize(map[string]any{
+	globalArgs = map[string]any{
 		"m_a": map[string]any{"insert": args},
 		"m_b": map[string]any{"insert": data},
-	}, nil)
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"]); err != nil {
+	}
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], &RunOption{GlobalArgs: globalArgs}); err != nil {
 		panic(err)
 	}
 
@@ -205,11 +205,11 @@ func TestMoleculeDelecs(t *testing.T) {
 	//
 	args = map[string]any{"x": "e1234567", "y": "f1234567", "z": "e1234"}
 	data = map[string]any{"child": "marcus"}
-	molecule.Initialize(map[string]any{
+	globalArgs = map[string]any{
 		"m_a": map[string]any{"insert": args},
 		"m_b": map[string]any{"insert": data},
-	}, nil)
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"]); err != nil {
+	}
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], &RunOption{GlobalArgs: globalArgs}); err != nil {
 		panic(err)
 	}
 
@@ -230,7 +230,7 @@ func TestMoleculeDelecs2(t *testing.T) {
 	//molecule.Initialize(map[string]any{
 	//"m_a":map[string]any{"insupd": args},
 	//, nil)
-	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], args); err != nil {
+	if lists, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], &RunOption{Args: args}); err != nil {
 		panic(err)
 	}
 	if len(lists) != 1 {
@@ -244,7 +244,7 @@ func TestMoleculeDelecs2(t *testing.T) {
 	//raph.Initialize(map[string]any{
 	//"m_a":map[string]any{"insupd": args},
 	//, nil)
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], args); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["PATCH"], &RunOption{Args: args}); err != nil {
 		panic(err)
 	}
 
@@ -254,7 +254,7 @@ func TestMoleculeDelecs2(t *testing.T) {
 	//raph.Initialize(map[string]any{
 	//"m_a":map[string]any{"insert": args},
 	//, nil)
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], &RunOption{Args: args}); err != nil {
 		panic(err)
 	}
 
@@ -264,7 +264,7 @@ func TestMoleculeDelecs2(t *testing.T) {
 	//raph.Initialize(map[string]any{
 	//"m_a":map[string]any{"insert": args},
 	//, nil)
-	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], args); err != nil {
+	if _, err = molecule.RunContext(ctx, db, "m_a", METHODS["POST"], &RunOption{Args: args}); err != nil {
 		panic(err)
 	}
 

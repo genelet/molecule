@@ -34,17 +34,17 @@ type Connection struct {
 }
 
 // Subname is the marker string used to store the output
-func (self *Connection) Subname() string {
-	if self.Marker != "" {
-		return self.Marker
+func (c *Connection) Subname() string {
+	if c.Marker != "" {
+		return c.Marker
 	}
-	return self.AtomName + "_" + self.ActionName
+	return c.AtomName + "_" + c.ActionName
 }
 
 // findExrea returns the value if the input i.e. item contains
 // the current table name as key.
-func (self *Connection) findExrea(item map[string]any) map[string]any {
-	marker := self.Marker
+func (c *Connection) findExrea(item map[string]any) map[string]any {
+	marker := c.Marker
 	if marker == "" {
 		return nil
 	}
@@ -61,12 +61,12 @@ func (self *Connection) findExrea(item map[string]any) map[string]any {
 
 // findArgs returns the value if the input i.e. args contains
 // the current table name as key.
-func (self *Connection) findArgs(args any) (any, bool) {
+func (c *Connection) findArgs(args any) (any, bool) {
 	if args == nil {
 		return nil, true
 	}
 
-	marker := self.Marker
+	marker := c.Marker
 	if marker == "" {
 		return nil, false
 	}
@@ -76,7 +76,7 @@ func (self *Connection) findArgs(args any) (any, bool) {
 		if v, ok := t[marker]; ok {
 			switch s := v.(type) {
 			case map[string]any:
-				if self.Dimension == CONNECTMap {
+				if c.Dimension == CONNECTMap {
 					var outs []map[string]any
 					for key, value := range s {
 						outs = append(outs, map[string]any{"key": key, "value": value})
@@ -108,13 +108,13 @@ func (self *Connection) findArgs(args any) (any, bool) {
 }
 
 // NextArg returns nextpage's args as the value of key using current args map
-func (self *Connection) nextArgs(args any) any {
+func (c *Connection) nextArgs(args any) any {
 	if args == nil {
 		return nil
 	}
-	if _, ok := self.RelateArgs["ALL"]; ok {
+	if _, ok := c.RelateArgs["ALL"]; ok {
 		smallerRelate := make(map[string]string)
-		for k, v := range self.RelateArgs {
+		for k, v := range c.RelateArgs {
 			if k == "ALL" {
 				continue
 			}
@@ -127,7 +127,7 @@ func (self *Connection) nextArgs(args any) any {
 		// keys in args will overrde exising keys in smallerArgs
 		return mergeArgs(smallerArgs, args, true)
 	}
-	return nextArgsFromRelate(args, self.RelateArgs)
+	return nextArgsFromRelate(args, c.RelateArgs)
 }
 
 func nextArgsFromRelate(args any, relate map[string]string) any {
@@ -161,8 +161,8 @@ func nextArgsFromRelate(args any, relate map[string]string) any {
 }
 
 // nextExtra returns nextpage's extra using current extra map
-func (self *Connection) nextExtra(args any) map[string]any {
-	if _, ok := self.RelateExtra["ALL"]; ok {
+func (c *Connection) nextExtra(args any) map[string]any {
+	if _, ok := c.RelateExtra["ALL"]; ok {
 		if v, ok := args.(map[string]any); ok {
 			return v
 		}
@@ -171,7 +171,7 @@ func (self *Connection) nextExtra(args any) map[string]any {
 
 	switch t := args.(type) {
 	case map[string]any:
-		return createNextmap(self.RelateExtra, t)
+		return createNextmap(c.RelateExtra, t)
 	default:
 	}
 	return nil
@@ -201,12 +201,12 @@ func createNextmap(which map[string]string, item map[string]any) map[string]any 
 	return args
 }
 
-func (self *Connection) shorten(lists []any) any {
-	if self.Dimension == CONNECTDefault || self.Marker == "" {
+func (c *Connection) shorten(lists []any) any {
+	if c.Dimension == CONNECTDefault || c.Marker == "" {
 		return lists
 	}
 
-	switch self.Dimension {
+	switch c.Dimension {
 	case CONNECTMap:
 		output := make(map[string]any)
 		for _, single := range lists {
@@ -219,17 +219,17 @@ func (self *Connection) shorten(lists []any) any {
 	case CONNECTMany:
 		var output []any
 		for _, single := range lists {
-			output = append(output, manyEntry(self.Marker, single.(map[string]any)))
+			output = append(output, manyEntry(c.Marker, single.(map[string]any)))
 		}
 		return output
 	case CONNECTArray:
 		var output []any
 		for _, single := range lists {
-			output = append(output, single.(map[string]any)[self.Marker])
+			output = append(output, single.(map[string]any)[c.Marker])
 		}
 		return output
 	case CONNECTOne:
-		return manyEntry(self.Marker, lists[0].(map[string]any))
+		return manyEntry(c.Marker, lists[0].(map[string]any))
 	default:
 	}
 	return lists
@@ -363,16 +363,16 @@ func shortRecursive(leader string, single map[string]any) map[string]any {
 	return output
 }
 
-func (self *Connection) shortenRecursive(lists []any) any {
-	switch self.Dimension {
+func (c *Connection) shortenRecursive(lists []any) any {
+	switch c.Dimension {
 	case CONNECTOne:
-		return shortRecursive(self.Marker, lists[0].(map[string]any))
+		return shortRecursive(c.Marker, lists[0].(map[string]any))
 	default:
 	}
 
 	var output []any
 	for _, single := range lists {
-		output = append(output, shortRecursive(self.Marker, single.(map[string]any)))
+		output = append(output, shortRecursive(c.Marker, single.(map[string]any)))
 	}
 	return output
 }

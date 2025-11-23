@@ -12,18 +12,18 @@ type Insert struct {
 
 var _ Capability = (*Insert)(nil)
 
-// RunAction inserts a row using data passed in ARGS.
-func (self *Insert) RunAction(db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
-	return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
+// RunAction inserts a row using data passed in args.
+func (i *Insert) RunAction(db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
+	return i.RunActionContext(context.Background(), db, t, args, extra...)
 }
 
-// RunActionContext inserts a row using data passed in ARGS.
-func (self *Insert) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
-	if err := t.checkNull(ARGS); err != nil {
+// RunActionContext inserts a row using data passed in args.
+func (i *Insert) RunActionContext(ctx context.Context, db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
+	if err := t.checkNull(args); err != nil {
 		return nil, err
 	}
 
-	fieldValues, allAuto := t.getFv(ARGS, self.getAllowed())
+	fieldValues, allAuto := t.getFv(args, i.getAllowed())
 	if !allAuto && !hasValue(fieldValues) {
 		return nil, errorEmptyInput(t.TableName)
 	}

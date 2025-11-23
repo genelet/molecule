@@ -12,12 +12,12 @@ type Delete struct {
 
 var _ Capability = (*Delete)(nil)
 
-func (self *Delete) RunAction(db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
-	return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
+func (d *Delete) RunAction(db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
+	return d.RunActionContext(context.Background(), db, t, args, extra...)
 }
 
-func (self *Delete) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
-	ids := t.getIDVal(ARGS)
+func (d *Delete) RunActionContext(ctx context.Context, db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
+	ids := t.getIDVal(args)
 	if !hasValue(ids) {
 		return nil, errorMissingPk(t.TableName)
 	}
@@ -33,5 +33,6 @@ func (self *Delete) RunActionContext(ctx context.Context, db *sql.DB, t *Table, 
 	if t.dbDriver == Postgres {
 		sql = questionMarkerNumber(sql)
 	}
-	return nil, dbi.DoSQLContext(ctx, sql, values...)
+	_, err := dbi.DoSQLContext(ctx, sql, values...)
+	return nil, err
 }

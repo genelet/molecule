@@ -13,27 +13,27 @@ type Edit struct {
 
 var _ Capability = (*Edit)(nil)
 
-func (self *Edit) setDefaultElementNames() []string {
-	if self.FIELDS == "" {
-		self.FIELDS = "fields"
+func (e *Edit) setDefaultElementNames() []string {
+	if e.FIELDS == "" {
+		e.FIELDS = "fields"
 	}
-	return []string{self.FIELDS}
+	return []string{e.FIELDS}
 }
 
-func (self *Edit) RunAction(db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
-	return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
+func (e *Edit) RunAction(db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
+	return e.RunActionContext(context.Background(), db, t, args, extra...)
 }
 
-func (self *Edit) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
-	self.setDefaultElementNames()
-	sql, labels := t.filterPars(ARGS, self.FIELDS, self.getAllowed())
+func (e *Edit) RunActionContext(ctx context.Context, db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
+	e.setDefaultElementNames()
+	sql, labels := t.filterPars(args, e.FIELDS, e.getAllowed())
 
-	ids := t.getIDVal(ARGS, extra...)
+	ids := t.getIDVal(args, extra...)
 	if !hasValue(ids) {
 		return nil, errorMissingPk(t.TableName)
 	}
 
-	newExtra := t.byConstraint(ARGS, extra...)
+	newExtra := t.byConstraint(args, extra...)
 	where, extraValues := t.singleCondition(ids, t.TableName, newExtra)
 	if where != "" {
 		sql += "\nWHERE " + where

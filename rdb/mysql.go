@@ -42,7 +42,7 @@ func mysqlToNative(u string) string {
 	return ""
 }
 
-func (self *mySQL) getTable(db *sql.DB, tableName string) (*godbi.Table, error) {
+func (m *mySQL) getTable(db *sql.DB, tableName string) (*godbi.Table, error) {
 	dbi := &godbi.DBI{DB: db}
 	lists := make([]any, 0)
 	err := dbi.SelectSQL(&lists,
@@ -58,24 +58,24 @@ func (self *mySQL) getTable(db *sql.DB, tableName string) (*godbi.Table, error) 
 
 	for _, iitem := range lists {
 		item := iitem.(map[string]any)
-		field := item["Field"].(string)
+		field := toString(item["Field"])
 		col := &godbi.Col{
 			ColumnName: field,
 			Label:      field,
-			TypeName:   mysqlToNative(item["Type"].(string))}
-		if item["Null"].(string) == "NO" {
+			TypeName:   mysqlToNative(toString(item["Type"]))}
+		if toString(item["Null"]) == "NO" {
 			col.Notnull = true
 		}
-		if item["Key"].(string) == "PRI" {
+		if toString(item["Key"]) == "PRI" {
 			pks = append(pks, field)
 			col.Notnull = true
 			col.Constraint = true
 		}
-		if item["Extra"].(string) == "auto_increment" {
+		if toString(item["Extra"]) == "auto_increment" {
 			idauto = field
 			col.Auto = true
 			col.Notnull = true
-		} else if item["Default"] != nil && item["Default"].(string) == "CURRENT_TIMESTAMP" {
+		} else if toString(item["Default"]) == "CURRENT_TIMESTAMP" {
 			col.Auto = true
 			col.Notnull = true
 		}
@@ -89,7 +89,7 @@ func (self *mySQL) getTable(db *sql.DB, tableName string) (*godbi.Table, error) 
 		IDAuto:    idauto}, nil
 }
 
-func (self *mySQL) getFks(db *sql.DB, tableName string) ([]*godbi.Fk, error) {
+func (m *mySQL) getFks(db *sql.DB, tableName string) ([]*godbi.Fk, error) {
 	dbi := &godbi.DBI{DB: db}
 	lists := make([]any, 0)
 	err := dbi.Select(&lists,
@@ -107,7 +107,7 @@ AND (A.CONSTRAINT_NAME = B.CONSTRAINT_NAME)
 AND (B.CONSTRAINT_TYPE IS NOT NULL)
 AND A.REFERENCED_TABLE_NAME IS NOT NULL
 AND A.TABLE_SCHEMA=?
-AND A.TABLE_NAME=?`, self.DatabaseName, tableName)
+AND A.TABLE_NAME=?`, m.DatabaseName, tableName)
 	if err != nil {
 		return nil, err
 	}
@@ -115,9 +115,9 @@ AND A.TABLE_NAME=?`, self.DatabaseName, tableName)
 	var fks []*godbi.Fk
 	for _, iitem := range lists {
 		item := iitem.(map[string]any)
-		fkTable := item["FKTABLE_NAME"].(string)
-		fkColumn := item["FKCOLUMN_NAME"].(string)
-		column := item["PKCOLUMN_NAME"].(string)
+		fkTable := toString(item["FKTABLE_NAME"])
+		fkColumn := toString(item["FKCOLUMN_NAME"])
+		column := toString(item["PKCOLUMN_NAME"])
 		if fkTable == tableName && fkColumn == column {
 			continue
 		}
@@ -127,7 +127,7 @@ AND A.TABLE_NAME=?`, self.DatabaseName, tableName)
 	return fks, nil
 }
 
-func (self *mySQL) getFwks(db *sql.DB, tableName string) ([]*godbi.Fk, error) {
+func (m *mySQL) getFwks(db *sql.DB, tableName string) ([]*godbi.Fk, error) {
 	dbi := &godbi.DBI{DB: db}
 	lists := make([]any, 0)
 	err := dbi.Select(&lists,
@@ -144,7 +144,7 @@ AND (A.TABLE_NAME = B.TABLE_NAME)
 AND (A.CONSTRAINT_NAME = B.CONSTRAINT_NAME)
 AND (B.CONSTRAINT_TYPE IS NOT NULL)
 AND A.REFERENCED_TABLE_SCHEMA=?
-AND A.REFERENCED_TABLE_NAME=?`, self.DatabaseName, tableName)
+AND A.REFERENCED_TABLE_NAME=?`, m.DatabaseName, tableName)
 	if err != nil {
 		return nil, err
 	}
@@ -152,9 +152,9 @@ AND A.REFERENCED_TABLE_NAME=?`, self.DatabaseName, tableName)
 	var fks []*godbi.Fk
 	for _, iitem := range lists {
 		item := iitem.(map[string]any)
-		fkTable := item["FKTABLE_NAME"].(string)
-		fkColumn := item["FKCOLUMN_NAME"].(string)
-		column := item["PKCOLUMN_NAME"].(string)
+		fkTable := toString(item["FKTABLE_NAME"])
+		fkColumn := toString(item["FKCOLUMN_NAME"])
+		column := toString(item["PKCOLUMN_NAME"])
 		if fkTable == tableName && fkColumn == column {
 			continue
 		}
@@ -164,20 +164,20 @@ AND A.REFERENCED_TABLE_NAME=?`, self.DatabaseName, tableName)
 	return fks, nil
 }
 
-func (self *mySQL) tableNames(db *sql.DB) ([]string, error) {
+func (m *mySQL) tableNames(db *sql.DB) ([]string, error) {
 	dbi := &godbi.DBI{DB: db}
 	lists := make([]any, 0)
 	err := dbi.Select(&lists,
 		`SELECT table_name AS table_name
 FROM information_schema.tables
-WHERE table_type='BASE TABLE' AND table_schema = ?`, self.DatabaseName)
+WHERE table_type='BASE TABLE' AND table_schema = ?`, m.DatabaseName)
 	if err != nil {
 		return nil, err
 	}
 	names := make([]string, 0)
 	for _, iitem := range lists {
 		item := iitem.(map[string]any)
-		names = append(names, item["table_name"].(string))
+		names = append(names, toString(item["table_name"]))
 	}
 	return names, nil
 }

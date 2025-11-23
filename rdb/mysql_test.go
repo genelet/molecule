@@ -7,13 +7,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/genelet/determined/dethcl"
+	"github.com/genelet/horizon/dethcl"
 	"github.com/genelet/molecule/godbi"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func String(self *godbi.Molecule) string {
-	bs, err := json.MarshalIndent(self, "", "  ")
+func String(m *godbi.Molecule) string {
+	bs, err := json.MarshalIndent(m, "", "  ")
 	if err != nil {
 		panic(err)
 	}
@@ -32,7 +32,7 @@ func TestMySQL(t *testing.T) {
 	dbUser := os.Getenv("DBUSER")
 	dbPass := os.Getenv("DBPASS")
 	databaseName := "classicmodels"
-    dbHOST := os.Getenv("DBHOST")
+	dbHOST := os.Getenv("DBHOST")
 	var db *sql.DB
 	var err error
 	if dbHOST != "" {

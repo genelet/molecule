@@ -18,8 +18,8 @@ type database struct {
 	DatabaseName string
 }
 
-func (self *database) GetMolecule(db *sql.DB) (*godbi.Molecule, error) {
-	scheme := self.schema
+func (d *database) GetMolecule(db *sql.DB) (*godbi.Molecule, error) {
+	scheme := d.schema
 
 	tableNames, err := scheme.tableNames(db)
 	if err != nil {
@@ -59,7 +59,7 @@ func (self *database) GetMolecule(db *sql.DB) (*godbi.Molecule, error) {
 		newAtoms = append(newAtoms, &godbi.Atom{AtomName: atom.AtomName, Table: atom.Table, Actions: actions})
 	}
 
-	return &godbi.Molecule{Atoms: newAtoms, DBDriver: self.DBDriver}, nil
+	return &godbi.Molecule{Atoms: newAtoms, DBDriver: d.DBDriver}, nil
 }
 
 func autoAtom(table *godbi.Table) *godbi.Atom {
@@ -69,21 +69,21 @@ func autoAtom(table *godbi.Table) *godbi.Atom {
 	topics.ActionName = "topics"
 	insert := new(godbi.Insert)
 	insert.ActionName = "insert"
-	insert.SetIsDo(true)
+	insert.IsDo = true
 	update := new(godbi.Update)
 	update.ActionName = "update"
-	update.SetIsDo(true)
+	update.IsDo = true
 	insupd := new(godbi.Insupd)
 	insupd.ActionName = "insupd"
-	insupd.SetIsDo(true)
+	insupd.IsDo = true
 	delett := new(godbi.Delete)
 	delett.ActionName = "delete"
-	delett.SetIsDo(true)
+	delett.IsDo = true
 	capas := []godbi.Capability{edit, topics, insert, update, insupd, delett}
 	if table.IDAuto != "" {
 		delecs := new(godbi.Delecs)
 		delecs.ActionName = "delecs"
-		delecs.SetIsDo(true)
+		delecs.IsDo = true
 		delecs.Nextpages = []*godbi.Connection{{
 			AtomName:   table.TableName,
 			ActionName: "delete",
@@ -134,8 +134,8 @@ func setConnections(atom *godbi.Atom, nextpages, prepares map[string]map[string]
 		}
 		for actionName, nextpages := range actionMap {
 			for _, action := range actions {
-				if actionName == action.GetActionName() {
-					action.SetNextpages(nextpages)
+				if actionName == action.GetBaseAction().ActionName {
+					action.GetBaseAction().Nextpages = nextpages
 				}
 			}
 		}
@@ -146,11 +146,22 @@ func setConnections(atom *godbi.Atom, nextpages, prepares map[string]map[string]
 		}
 		for actionName, prepares := range actionMap {
 			for _, action := range actions {
-				if actionName == action.GetActionName() {
-					action.SetPrepares(prepares)
+				if actionName == action.GetBaseAction().ActionName {
+					action.GetBaseAction().Prepares = prepares
 				}
 			}
 		}
 	}
 	return actions
+}
+
+// toString helper function to safely convert interface{} to string
+func toString(v any) string {
+	if v == nil {
+		return ""
+	}
+	if s, ok := v.(string); ok {
+		return s
+	}
+	return ""
 }

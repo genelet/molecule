@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/genelet/determined/dethcl"
+	"github.com/genelet/horizon/dethcl"
 )
 
 func TestHCLConnection(t *testing.T) {

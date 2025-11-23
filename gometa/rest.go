@@ -45,7 +45,7 @@ func NewRestByte(bs []byte) (*Rest, error) {
 	return NewRest(graph), nil
 }
 
-func (self *Rest) nameArgsFromPBExtra(check bool, pb proto.Message, extra ...map[string]any) (string, map[string]any, error) {
+func (r *Rest) nameArgsFromPBExtra(check bool, pb proto.Message, extra ...map[string]any) (string, map[string]any, error) {
 	name := string(pb.ProtoReflect().Descriptor().Name())
 	args, err := ProtobufToMap(pb)
 	if err != nil {
@@ -57,60 +57,60 @@ func (self *Rest) nameArgsFromPBExtra(check bool, pb proto.Message, extra ...map
 		}
 	}
 	if check {
-		if self.Graph.PkName == "" {
+		if r.Graph.PkName == "" {
 			return "", nil, fmt.Errorf("primary key not defined")
 		}
-		if _, ok := args[self.Graph.PkName]; !ok {
-			return "", nil, fmt.Errorf("the primary key, %s is empty", self.Graph.PkName)
+		if _, ok := args[r.Graph.PkName]; !ok {
+			return "", nil, fmt.Errorf("the primary key, %s is empty", r.Graph.PkName)
 		}
 	}
 	return name, args, nil
 }
 
 // Search protobuf messages by placeholder's protobuf definition, with optional constraint extra.
-func (self *Rest) List(ctx context.Context, db *sql.DB, pb proto.Message, extra ...map[string]any) ([]any, error) {
+func (r *Rest) List(ctx context.Context, db *sql.DB, pb proto.Message, extra ...map[string]any) ([]any, error) {
 	name := string(pb.ProtoReflect().Descriptor().Name())
 	if extra != nil {
-		return self.mole.RunContext(ctx, db, name, "topics", nil, extra[0])
+		return r.mole.RunContext(ctx, db, name, "topics", &godbi.RunOption{Extra: extra[0]})
 	}
-	return self.mole.RunContext(ctx, db, name, "topics")
+	return r.mole.RunContext(ctx, db, name, "topics", nil)
 }
 
 // Get proto message from database by the primary key defined in constraint extra.
-func (self *Rest) Read(ctx context.Context, db *sql.DB, pb proto.Message, extra ...map[string]any) ([]any, error) {
-	name, args, err := self.nameArgsFromPBExtra(true, pb, extra...)
+func (r *Rest) Read(ctx context.Context, db *sql.DB, pb proto.Message, extra ...map[string]any) ([]any, error) {
+	name, args, err := r.nameArgsFromPBExtra(true, pb, extra...)
 	if err != nil {
 		return nil, err
 	}
 
-	return self.mole.RunContext(ctx, db, name, "edit", args)
+	return r.mole.RunContext(ctx, db, name, "edit", &godbi.RunOption{Args: args})
 }
 
 // Insert protobuf message into database, with optional input data in extra.
-func (self *Rest) Write(ctx context.Context, db *sql.DB, pb proto.Message, extra ...map[string]any) ([]any, error) {
-	name, args, err := self.nameArgsFromPBExtra(false, pb, extra...)
+func (r *Rest) Write(ctx context.Context, db *sql.DB, pb proto.Message, extra ...map[string]any) ([]any, error) {
+	name, args, err := r.nameArgsFromPBExtra(false, pb, extra...)
 	if err != nil {
 		return nil, err
 	}
-	return self.mole.RunContext(ctx, db, name, "insert", args)
+	return r.mole.RunContext(ctx, db, name, "insert", &godbi.RunOption{Args: args})
 }
 
 // Update protobuf message in database by the primary key defined in contraint extra.
-func (self *Rest) Update(ctx context.Context, db *sql.DB, pb proto.Message, extra ...map[string]any) ([]any, error) {
-	name, args, err := self.nameArgsFromPBExtra(true, pb, extra...)
+func (r *Rest) Update(ctx context.Context, db *sql.DB, pb proto.Message, extra ...map[string]any) ([]any, error) {
+	name, args, err := r.nameArgsFromPBExtra(true, pb, extra...)
 	if err != nil {
 		return nil, err
 	}
-	return self.mole.RunContext(ctx, db, name, "update", args)
+	return r.mole.RunContext(ctx, db, name, "update", &godbi.RunOption{Args: args})
 }
 
 // Delete protobuf message from database by the primary key defined in constraint extra.
-func (self *Rest) Delete(ctx context.Context, db *sql.DB, pb proto.Message, extra ...map[string]any) ([]any, error) {
-	name, args, err := self.nameArgsFromPBExtra(true, pb, extra...)
+func (r *Rest) Delete(ctx context.Context, db *sql.DB, pb proto.Message, extra ...map[string]any) ([]any, error) {
+	name, args, err := r.nameArgsFromPBExtra(true, pb, extra...)
 	if err != nil {
 		return nil, err
 	}
-	return self.mole.RunContext(ctx, db, name, "delecs", args)
+	return r.mole.RunContext(ctx, db, name, "delecs", &godbi.RunOption{Args: args})
 }
 
 func ProtobufToMap(pb proto.Message) (map[string]any, error) {

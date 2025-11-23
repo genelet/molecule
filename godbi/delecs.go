@@ -13,23 +13,23 @@ type Delecs struct {
 
 var _ Capability = (*Delecs)(nil)
 
-func (self *Delecs) RunAction(db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
-	return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
+func (d *Delecs) RunAction(db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
+	return d.RunActionContext(context.Background(), db, t, args, extra...)
 }
 
 // RunActionContext of Delecs is to populate Fks before making delete,
 // so that Fks could be passed to other Prepared delete actions.
 // If there is no Fks, we putput the input, then Delecs does nothing.
-func (self *Delecs) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
+func (d *Delecs) RunActionContext(ctx context.Context, db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
 	dbi := &DBI{DB: db, logger: t.logger}
 	lists := make([]any, 0)
 	if t.Fks == nil {
-		return []any{ARGS}, nil
+		return []any{args}, nil
 	}
 	str := ""
 	var values []any
 	for _, pk := range t.Pks {
-		if v, ok := ARGS[pk]; ok {
+		if v, ok := args[pk]; ok {
 			if str != "" {
 				str += ", "
 			}
@@ -39,7 +39,7 @@ func (self *Delecs) RunActionContext(ctx context.Context, db *sql.DB, t *Table, 
 	}
 	for _, fk := range t.Fks {
 		name := fk.Column
-		if v, ok := ARGS[name]; ok {
+		if v, ok := args[name]; ok {
 			if str != "" {
 				str += ", "
 			}

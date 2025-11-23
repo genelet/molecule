@@ -42,19 +42,19 @@ type Table struct {
 }
 
 // SetLogger sets the logger
-func (self *Table) SetLogger(logger Slogger) {
-	self.logger = logger
+func (t *Table) SetLogger(logger Slogger) {
+	t.logger = logger
 }
 
 // GetLogger gets the logger
-func (self *Table) GetLogger() Slogger {
-	return self.logger
+func (t *Table) GetLogger() Slogger {
+	return t.logger
 }
 
 // IsRecursive indicates if table references to itself in one to multiple relations
-func (self *Table) IsRecursive() bool {
-	for _, col := range self.Columns {
-		if col.ColumnName == self.Pks[0] && col.Recurse {
+func (t *Table) IsRecursive() bool {
+	for _, col := range t.Columns {
+		if col.ColumnName == t.Pks[0] && col.Recurse {
 			return true
 		}
 	}
@@ -62,9 +62,9 @@ func (self *Table) IsRecursive() bool {
 }
 
 // RecursiveColumn returns the name of the resursive column
-func (self *Table) RecursiveColumn() string {
-	for _, col := range self.Columns {
-		if col.ColumnName == self.Pks[0] || !col.Recurse {
+func (t *Table) RecursiveColumn() string {
+	for _, col := range t.Columns {
+		if col.ColumnName == t.Pks[0] || !col.Recurse {
 			continue
 		}
 		return col.ColumnName
@@ -73,15 +73,15 @@ func (self *Table) RecursiveColumn() string {
 }
 
 // SetDBDriver sets the driver type
-func (self *Table) SetDBDriver(driver DBType) {
-	self.dbDriver = driver
+func (t *Table) SetDBDriver(driver DBType) {
+	t.dbDriver = driver
 }
 
-func (self *Table) byConstraint(ARGS map[string]any, extra ...map[string]any) map[string]any {
+func (t *Table) byConstraint(args map[string]any, extra ...map[string]any) map[string]any {
 	var output map[string]any
-	for k, v := range ARGS {
+	for k, v := range args {
 		find := false
-		for _, col := range self.Columns {
+		for _, col := range t.Columns {
 			if col.Label == k && col.Constraint {
 				find = true
 			}
@@ -109,7 +109,7 @@ func (self *Table) byConstraint(ARGS map[string]any, extra ...map[string]any) ma
 // If it exists,
 // if force is true, forcefully sets the column using label's value;
 // if force is not set, optionally set the column.
-func (self *Table) refreshArgs(args any, force ...bool) any {
+func (t *Table) refreshArgs(args any, force ...bool) any {
 	if args == nil {
 		return args
 	}
@@ -119,7 +119,7 @@ func (self *Table) refreshArgs(args any, force ...bool) any {
 		for k, v := range item {
 			newArgs[k] = v
 		}
-		for _, col := range self.Columns {
+		for _, col := range t.Columns {
 			v, ok := item[col.Label]
 			if !ok {
 				continue
@@ -164,16 +164,16 @@ func (self *Table) refreshArgs(args any, force ...bool) any {
 	return nil
 }
 
-func (self *Table) getKeyColumns() []string {
+func (t *Table) getKeyColumns() []string {
 	labels := make(map[string]bool)
-	for _, pk := range self.Pks {
+	for _, pk := range t.Pks {
 		labels[pk] = true
 	}
-	if self.IDAuto != "" {
-		labels[self.IDAuto] = true
+	if t.IDAuto != "" {
+		labels[t.IDAuto] = true
 	}
-	if self.Fks != nil {
-		for _, fk := range self.Fks {
+	if t.Fks != nil {
+		for _, fk := range t.Fks {
 			labels[fk.Column] = true
 		}
 	}
@@ -185,39 +185,39 @@ func (self *Table) getKeyColumns() []string {
 	return outs
 }
 
-func (self *Table) getFv(ARGS map[string]any, allowed map[string]bool) (map[string]any, bool) {
+func (t *Table) getFv(args map[string]any, allowed map[string]bool) (map[string]any, bool) {
 	fieldValues := make(map[string]any)
-	for f, l := range self.insertCols(allowed) {
-		v, ok := ARGS[f]
+	for f, l := range t.insertCols(allowed) {
+		v, ok := args[f]
 		if !ok {
-			v, ok = ARGS[l]
+			v, ok = args[l]
 		}
 		if ok {
-			switch t := v.(type) {
+			switch val := v.(type) {
 			case []map[string]any, map[string]any:
 			case bool:
-				switch self.dbDriver {
+				switch t.dbDriver {
 				case SQLite, TSNano:
-					if t {
+					if val {
 						fieldValues[f] = 1
 					} else {
 						fieldValues[f] = 0
 					}
 				default:
-					if t {
+					if val {
 						fieldValues[f] = "true"
 					} else {
 						fieldValues[f] = "false"
 					}
 				}
 			default:
-				fieldValues[f] = t
+				fieldValues[f] = val
 			}
 		}
 	}
 
 	allAuto := true
-	for _, col := range self.Columns {
+	for _, col := range t.Columns {
 		if !col.Auto && col.Notnull {
 			allAuto = false
 			break
@@ -227,13 +227,13 @@ func (self *Table) getFv(ARGS map[string]any, allowed map[string]bool) (map[stri
 	return fieldValues, allAuto
 }
 
-func (self *Table) checkNull(ARGS map[string]any, extra ...map[string]any) error {
-	for _, col := range self.Columns {
+func (t *Table) checkNull(args map[string]any, extra ...map[string]any) error {
+	for _, col := range t.Columns {
 		if !col.Notnull || col.Auto {
 			continue
 		} // the column is ok with null
 		err := errorNoSuchColumn(col.ColumnName)
-		if _, ok := ARGS[col.ColumnName]; !ok {
+		if _, ok := args[col.ColumnName]; !ok {
 			if hasValue(extra) && hasValue(extra[0]) {
 				if _, ok = extra[0][col.ColumnName]; !ok {
 					return err
@@ -246,9 +246,9 @@ func (self *Table) checkNull(ARGS map[string]any, extra ...map[string]any) error
 	return nil
 }
 
-func (self *Table) insertCols(allowed map[string]bool) map[string]string {
+func (t *Table) insertCols(allowed map[string]bool) map[string]string {
 	cols := make(map[string]string)
-	for _, col := range self.Columns {
+	for _, col := range t.Columns {
 		if col.Auto {
 			continue
 		}
@@ -260,11 +260,11 @@ func (self *Table) insertCols(allowed map[string]bool) map[string]string {
 	return cols
 }
 
-func (self *Table) insertHashContext(ctx context.Context, db *sql.DB, args map[string]any) (int64, error) {
+func (t *Table) insertHashContext(ctx context.Context, db *sql.DB, args map[string]any) (int64, error) {
 	var fields []string
 	var values []any
-	if self.IDAuto != "" && self.dbDriver == TSNano {
-		fields = append(fields, self.IDAuto)
+	if t.IDAuto != "" && t.dbDriver == TSNano {
+		fields = append(fields, t.IDAuto)
 		values = append(values, time.Now().UnixNano()/int64(time.Millisecond))
 	}
 	for k, v := range args {
@@ -274,43 +274,48 @@ func (self *Table) insertHashContext(ctx context.Context, db *sql.DB, args map[s
 		}
 	}
 
-	sql := "INSERT INTO " + self.TableName + " (" + strings.Join(fields, ", ") + ") VALUES (" + strings.Join(strings.Split(strings.Repeat("?", len(fields)), ""), ",") + ")"
+	query := "INSERT INTO " + t.TableName + " (" + strings.Join(fields, ", ") + ") VALUES (" + strings.Join(strings.Split(strings.Repeat("?", len(fields)), ""), ",") + ")"
 
-	dbi := &DBI{DB: db, logger: self.logger}
+	dbi := &DBI{DB: db, logger: t.logger}
+	var lastID int64
 	var err error
-	switch self.dbDriver {
+	switch t.dbDriver {
 	case Postgres:
-		sql = questionMarkerNumber(sql)
-		if self.IDAuto != "" {
-			sql += " RETURNING " + self.IDAuto
-			err = dbi.InsertSerialContext(ctx, sql, values...)
+		query = questionMarkerNumber(query)
+		if t.IDAuto != "" {
+			query += " RETURNING " + t.IDAuto
+			lastID, err = dbi.InsertSerialContext(ctx, query, values...)
 		} else {
-			err = dbi.DoSQLContext(ctx, sql, values...)
+			_, err = dbi.DoSQLContext(ctx, query, values...)
 		}
 	case SQLite:
 		if hasValue(values) {
-			err = dbi.InsertIDContext(ctx, sql, values...)
+			lastID, err = dbi.InsertIDContext(ctx, query, values...)
 		} else {
-			err = dbi.InsertIDContext(ctx, "INSERT INTO "+self.TableName+" DEFAULT VALUES")
+			lastID, err = dbi.InsertIDContext(ctx, "INSERT INTO "+t.TableName+" DEFAULT VALUES")
 		}
 	case SQLRaw, TSNano:
-		err = dbi.DoSQLContext(ctx, sql, values...)
+		var res sql.Result
+		res, err = dbi.DoSQLContext(ctx, query, values...)
+		if err == nil {
+			lastID, _ = res.LastInsertId()
+		}
 	default:
-		err = dbi.InsertIDContext(ctx, sql, values...)
+		lastID, err = dbi.InsertIDContext(ctx, query, values...)
 	}
 	if err != nil {
 		return 0, err
 	}
-	return dbi.LastID, nil
+	return lastID, nil
 }
 
-func (self *Table) updateHashNullsContext(ctx context.Context, db *sql.DB, args map[string]any, ids []any, empties []string, extra ...map[string]any) error {
+func (t *Table) updateHashNullsContext(ctx context.Context, db *sql.DB, args map[string]any, ids []any, empties []string, extra ...map[string]any) error {
 	if !hasValue(args) {
-		return errorEmptyInput(self.TableName)
+		return errorEmptyInput(t.TableName)
 	}
-	for _, k := range self.Pks {
+	for _, k := range t.Pks {
 		if grep(empties, k) {
-			return errorMissingPk(self.TableName)
+			return errorMissingPk(t.TableName)
 		}
 	}
 
@@ -326,7 +331,7 @@ func (self *Table) updateHashNullsContext(ctx context.Context, db *sql.DB, args 
 		i++
 	}
 
-	sql := "UPDATE " + self.TableName + " SET " + strings.Join(field0, ", ")
+	sql := "UPDATE " + t.TableName + " SET " + strings.Join(field0, ", ")
 	for _, v := range empties {
 		if _, ok := args[v]; ok {
 			continue
@@ -334,27 +339,28 @@ func (self *Table) updateHashNullsContext(ctx context.Context, db *sql.DB, args 
 		sql += ", " + v + "=NULL"
 	}
 
-	where, extraValues := self.singleCondition(ids, "", extra...)
+	where, extraValues := t.singleCondition(ids, "", extra...)
 	if where != "" {
 		sql += "\nWHERE " + where
 		values = append(values, extraValues...)
 	}
 
-	dbi := &DBI{DB: db, logger: self.logger}
-	if self.dbDriver == Postgres {
+	dbi := &DBI{DB: db, logger: t.logger}
+	if t.dbDriver == Postgres {
 		sql = questionMarkerNumber(sql)
 	}
-	return dbi.DoSQLContext(ctx, sql, values...)
+	_, err := dbi.DoSQLContext(ctx, sql, values...)
+	return err
 }
 
-func (self *Table) insupdTableContext(ctx context.Context, db *sql.DB, args map[string]any) (int64, error) {
+func (t *Table) insupdTableContext(ctx context.Context, db *sql.DB, args map[string]any) (int64, error) {
 	changed := int64(0)
-	s := "SELECT " + strings.Join(self.Pks, ", ") + " FROM " + self.TableName + "\nWHERE "
+	s := "SELECT " + strings.Join(t.Pks, ", ") + " FROM " + t.TableName + "\nWHERE "
 	var v []any
-	if self.Uniques == nil {
-		return changed, errorNoUniqueKey(self.TableName)
+	if t.Uniques == nil {
+		return changed, errorNoUniqueKey(t.TableName)
 	}
-	for i, val := range self.Uniques {
+	for i, val := range t.Uniques {
 		if i > 0 {
 			s += " AND "
 		}
@@ -367,8 +373,8 @@ func (self *Table) insupdTableContext(ctx context.Context, db *sql.DB, args map[
 	}
 
 	lists := make([]any, 0)
-	dbi := &DBI{DB: db, logger: self.logger}
-	if self.dbDriver == Postgres {
+	dbi := &DBI{DB: db, logger: t.logger}
+	if t.dbDriver == Postgres {
 		s = questionMarkerNumber(s)
 	}
 	err := dbi.SelectContext(ctx, &lists, s, v...)
@@ -376,39 +382,39 @@ func (self *Table) insupdTableContext(ctx context.Context, db *sql.DB, args map[
 		return changed, err
 	}
 	if len(lists) > 1 {
-		return changed, errorNotUnique(self.TableName)
+		return changed, errorNotUnique(t.TableName)
 	}
 
 	if len(lists) == 1 {
 		ids := make([]any, 0)
-		for _, k := range self.Pks {
+		for _, k := range t.Pks {
 			ids = append(ids, lists[0].(map[string]any)[k])
 		}
-		err = self.updateHashNullsContext(ctx, db, args, ids, nil)
-		if err == nil && self.IDAuto != "" {
-			sql := "SELECT " + self.IDAuto + " FROM " + self.TableName + "\nWHERE " + strings.Join(self.Pks, "=? AND ") + "=?"
-			if self.dbDriver == Postgres {
+		err = t.updateHashNullsContext(ctx, db, args, ids, nil)
+		if err == nil && t.IDAuto != "" {
+			sql := "SELECT " + t.IDAuto + " FROM " + t.TableName + "\nWHERE " + strings.Join(t.Pks, "=? AND ") + "=?"
+			if t.dbDriver == Postgres {
 				sql = questionMarkerNumber(sql)
 			}
 			err = db.QueryRowContext(ctx, sql, ids...).Scan(&changed)
 			return changed, err
 		}
 	} else {
-		changed, err = self.insertHashContext(ctx, db, args)
+		changed, err = t.insertHashContext(ctx, db, args)
 	}
 
 	return changed, err
 }
 
-func (self *Table) totalHashContext(ctx context.Context, db *sql.DB, v any, extra ...map[string]any) error {
-	sql := "SELECT COUNT(*) FROM " + self.TableName
+func (t *Table) totalHashContext(ctx context.Context, db *sql.DB, v any, extra ...map[string]any) error {
+	sql := "SELECT COUNT(*) FROM " + t.TableName
 
 	if hasValue(extra) {
 		where, values := selectCondition(extra[0], "")
 		if where != "" {
 			sql += "\nWHERE " + where
 		}
-		if self.dbDriver == Postgres {
+		if t.dbDriver == Postgres {
 			sql = questionMarkerNumber(sql)
 		}
 		return db.QueryRowContext(ctx, sql, values...).Scan(v)
@@ -417,15 +423,15 @@ func (self *Table) totalHashContext(ctx context.Context, db *sql.DB, v any, extr
 	return db.QueryRowContext(ctx, sql).Scan(v)
 }
 
-func (self *Table) getIDVal(ARGS map[string]any, extra ...map[string]any) []any {
+func (t *Table) getIDVal(args map[string]any, extra ...map[string]any) []any {
 	if hasValue(extra) {
-		return properValues(self.Pks, ARGS, extra[0])
+		return properValues(t.Pks, args, extra[0])
 	}
-	return properValues(self.Pks, ARGS, nil)
+	return properValues(t.Pks, args, nil)
 }
 
-func (self *Table) singleCondition(ids []any, table string, extra ...map[string]any) (string, []any) {
-	keys := self.Pks
+func (t *Table) singleCondition(ids []any, table string, extra ...map[string]any) (string, []any) {
+	keys := t.Pks
 	sql := ""
 	var extraValues []any
 
@@ -457,21 +463,21 @@ func (self *Table) singleCondition(ids []any, table string, extra ...map[string]
 	return sql, extraValues
 }
 
-func properValue(u string, ARGS map[string]any, extra map[string]any) any {
+func properValue(u string, args map[string]any, extra map[string]any) any {
 	if !hasValue(extra) {
-		return ARGS[u]
+		return args[u]
 	}
 	if val, ok := extra[u]; ok {
 		return val
 	}
-	return ARGS[u]
+	return args[u]
 }
 
-func properValues(us []string, ARGS map[string]any, extra map[string]any) []any {
+func properValues(us []string, args map[string]any, extra map[string]any) []any {
 	outs := make([]any, len(us))
 	if !hasValue(extra) {
 		for i, u := range us {
-			outs[i] = ARGS[u]
+			outs[i] = args[u]
 		}
 		return outs
 	}
@@ -479,14 +485,14 @@ func properValues(us []string, ARGS map[string]any, extra map[string]any) []any 
 		if val, ok := extra[u]; ok {
 			outs[i] = val
 		} else {
-			outs[i] = ARGS[u]
+			outs[i] = args[u]
 		}
 	}
 	return outs
 }
 
-func properValuesHash(vs []string, ARGS map[string]any, extra map[string]any) map[string]any {
-	values := properValues(vs, ARGS, extra)
+func properValuesHash(vs []string, args map[string]any, extra map[string]any) map[string]any {
+	values := properValues(vs, args, extra)
 	hash := make(map[string]any)
 	for i, v := range vs {
 		hash[v] = values[i]
@@ -548,18 +554,18 @@ func selectCondition(extra map[string]any, table string) (string, []any) {
 	return sql, values
 }
 
-func (self *Table) filterPars(ARGS map[string]any, fieldsName string, allowed map[string]bool) (string, []any) {
+func (t *Table) filterPars(args map[string]any, fieldsName string, allowed map[string]bool) (string, []any) {
 	if allowed == nil {
 		allowed = make(map[string]bool)
-		for _, col := range self.Columns {
+		for _, col := range t.Columns {
 			allowed[col.Label] = true
 		}
 	}
 
 	var fields map[string]bool
-	if hasValue(ARGS) && hasValue(ARGS[fieldsName]) {
+	if hasValue(args) && hasValue(args[fieldsName]) {
 		fields = make(map[string]bool)
-		for _, item := range strings.Split(ARGS[fieldsName].(string), ",") {
+		for _, item := range strings.Split(args[fieldsName].(string), ",") {
 			if allowed[item] {
 				fields[item] = true
 			}
@@ -570,7 +576,7 @@ func (self *Table) filterPars(ARGS map[string]any, fieldsName string, allowed ma
 
 	var keys []string
 	var labels []any
-	for _, col := range self.Columns {
+	for _, col := range t.Columns {
 		label := col.Label
 		if fields == nil || fields[label] {
 			keys = append(keys, col.ColumnName)
@@ -578,11 +584,11 @@ func (self *Table) filterPars(ARGS map[string]any, fieldsName string, allowed ma
 		}
 	}
 
-	return "SELECT " + strings.Join(keys, ", ") + "\nFROM " + self.TableName, labels
+	return "SELECT " + strings.Join(keys, ", ") + "\nFROM " + t.TableName, labels
 }
 
 /*
-func (self *Table) filterPars(ARGS map[string]any, fieldsName string, rest ...any) (string, []any, string) {
+func (t *Table) filterPars(ARGS map[string]any, fieldsName string, rest ...any) (string, []any, string) {
 	var fields map[string]bool
 	if v, ok := ARGS[fieldsName]; ok {
 		fields := make(map[string]bool)
@@ -609,7 +615,7 @@ func (self *Table) filterPars(ARGS map[string]any, fieldsName string, rest ...an
 		if rest != nil {
 			allowed = rest[0].(map[string]bool)
 		}
-		for _, col := range self.Columns {
+		for _, col := range t.Columns {
 			label := col.Label
 			if allowed != nil && !allowed[label] {
 				continue
@@ -628,7 +634,7 @@ func (self *Table) filterPars(ARGS map[string]any, fieldsName string, rest ...an
 		sql = "SELECT " + sql + "\nFROM " + joinString(joints)
 		table = joints[0].getAlias()
 	} else {
-		sql = "SELECT " + sql + "\nFROM " + self.TableName
+		sql = "SELECT " + sql + "\nFROM " + t.TableName
 	}
 
 	return sql, labels, table

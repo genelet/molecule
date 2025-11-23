@@ -12,8 +12,8 @@ const (
 )
 
 // LowerName returns the lower case name of the DBType
-func (self DBType) LowerName() string {
-	switch self {
+func (d DBType) LowerName() string {
+	switch d {
 	case SQLite:
 		return "sqlite3"
 	case MySQL:

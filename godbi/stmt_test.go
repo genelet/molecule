@@ -13,7 +13,7 @@ func TestStmt(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, v := range atom.Actions {
-		k := v.GetActionName()
+		k := v.GetBaseAction().ActionName
 		switch k {
 		case "stmt":
 			stmt := v.(*Stmt)

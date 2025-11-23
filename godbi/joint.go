@@ -11,7 +11,6 @@ type Joint struct {
 }
 
 // joinString outputs the joined SQL statements from multiple tables.
-//
 func joinString(tables []*Joint) string {
 	sql := ""
 	for i, table := range tables {
@@ -35,9 +34,9 @@ func joinString(tables []*Joint) string {
 	return sql
 }
 
-func (self *Joint) getAlias() string {
-	if self.Alias != "" {
-		return self.Alias
+func (j *Joint) getAlias() string {
+	if j.Alias != "" {
+		return j.Alias
 	}
-	return self.TableName
+	return j.TableName
 }

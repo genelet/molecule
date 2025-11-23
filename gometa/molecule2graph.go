@@ -121,11 +121,11 @@ func atomActionsToNodeActions(atom *godbi.Atom) *Node_Actions {
 		nodeInsert := &Node_Actions_Insert{
 			ActionName: "insert",
 			Picked:     insert.(*godbi.Insert).Picked,
-			IsDo:       insert.GetIsDo()}
-		for _, prepare := range insert.GetPrepares() {
+			IsDo:       insert.GetBaseAction().IsDo}
+		for _, prepare := range insert.GetBaseAction().Prepares {
 			nodeInsert.PrepareConnects = append(nodeInsert.PrepareConnects, dbiConnection(prepare))
 		}
-		for _, nextpage := range insert.GetNextpages() {
+		for _, nextpage := range insert.GetBaseAction().Nextpages {
 			nodeInsert.NextpageConnects = append(nodeInsert.NextpageConnects, dbiConnection(nextpage))
 		}
 		nodeActions.InsertItem = nodeInsert
@@ -135,11 +135,11 @@ func atomActionsToNodeActions(atom *godbi.Atom) *Node_Actions {
 		nodeInsupd := &Node_Actions_Insupd{
 			ActionName: "insupd",
 			Picked:     insupd.(*godbi.Insupd).Picked,
-			IsDo:       insupd.GetIsDo()}
-		for _, prepare := range insupd.GetPrepares() {
+			IsDo:       insupd.GetBaseAction().IsDo}
+		for _, prepare := range insupd.GetBaseAction().Prepares {
 			nodeInsupd.PrepareConnects = append(nodeInsupd.PrepareConnects, dbiConnection(prepare))
 		}
-		for _, nextpage := range insupd.GetNextpages() {
+		for _, nextpage := range insupd.GetBaseAction().Nextpages {
 			nodeInsupd.NextpageConnects = append(nodeInsupd.NextpageConnects, dbiConnection(nextpage))
 		}
 		nodeActions.InsupdItem = nodeInsupd
@@ -149,35 +149,35 @@ func atomActionsToNodeActions(atom *godbi.Atom) *Node_Actions {
 		update := iupdate.(*godbi.Update)
 		nodeUpdate := &Node_Actions_Update{
 			ActionName: "update",
-			IsDo:       update.GetIsDo(),
+			IsDo:       update.IsDo,
 			Picked:     update.Picked,
 			Empties:    update.Empties}
-		for _, prepare := range update.GetPrepares() {
+		for _, prepare := range update.Prepares {
 			nodeUpdate.PrepareConnects = append(nodeUpdate.PrepareConnects, dbiConnection(prepare))
 		}
-		for _, nextpage := range update.GetNextpages() {
+		for _, nextpage := range update.Nextpages {
 			nodeUpdate.NextpageConnects = append(nodeUpdate.NextpageConnects, dbiConnection(nextpage))
 		}
 		nodeActions.UpdateItem = nodeUpdate
 	}
 
 	if delett := atom.GetAction("delete"); delett != nil {
-		nodeDelete := &Node_Actions_Delete{ActionName: "delete", IsDo: delett.GetIsDo()}
-		for _, prepare := range delett.GetPrepares() {
+		nodeDelete := &Node_Actions_Delete{ActionName: "delete", IsDo: delett.GetBaseAction().IsDo}
+		for _, prepare := range delett.GetBaseAction().Prepares {
 			nodeDelete.PrepareConnects = append(nodeDelete.PrepareConnects, dbiConnection(prepare))
 		}
-		for _, nextpage := range delett.GetNextpages() {
+		for _, nextpage := range delett.GetBaseAction().Nextpages {
 			nodeDelete.NextpageConnects = append(nodeDelete.NextpageConnects, dbiConnection(nextpage))
 		}
 		nodeActions.DeleteItem = nodeDelete
 	}
 
 	if delecs := atom.GetAction("delecs"); delecs != nil {
-		nodeDelecs := &Node_Actions_Delecs{ActionName: "delecs", IsDo: delecs.GetIsDo()}
-		for _, prepare := range delecs.GetPrepares() {
+		nodeDelecs := &Node_Actions_Delecs{ActionName: "delecs", IsDo: delecs.GetBaseAction().IsDo}
+		for _, prepare := range delecs.GetBaseAction().Prepares {
 			nodeDelecs.PrepareConnects = append(nodeDelecs.PrepareConnects, dbiConnection(prepare))
 		}
-		for _, nextpage := range delecs.GetNextpages() {
+		for _, nextpage := range delecs.GetBaseAction().Nextpages {
 			nodeDelecs.NextpageConnects = append(nodeDelecs.NextpageConnects, dbiConnection(nextpage))
 		}
 		nodeActions.DelecsItem = nodeDelecs
@@ -186,7 +186,7 @@ func atomActionsToNodeActions(atom *godbi.Atom) *Node_Actions {
 	if itopics := atom.GetAction("topics"); itopics != nil {
 		topics := itopics.(*godbi.Topics)
 		nodeTopics := &Node_Actions_Topics{
-			IsDo:        topics.GetIsDo(),
+			IsDo:        topics.IsDo,
 			ActionName:  "topics",
 			Picked:      topics.Picked,
 			FIELDS:      topics.FIELDS,
@@ -197,10 +197,10 @@ func atomActionsToNodeActions(atom *godbi.Atom) *Node_Actions {
 			PAGENO:      topics.PAGENO,
 			SORTBY:      topics.SORTBY,
 			SORTREVERSE: topics.SORTREVERSE}
-		for _, prepare := range topics.GetPrepares() {
+		for _, prepare := range topics.Prepares {
 			nodeTopics.PrepareConnects = append(nodeTopics.PrepareConnects, dbiConnection(prepare))
 		}
-		for _, nextpage := range topics.GetNextpages() {
+		for _, nextpage := range topics.Nextpages {
 			nodeTopics.NextpageConnects = append(nodeTopics.NextpageConnects, dbiConnection(nextpage))
 		}
 		nodeActions.TopicsItem = nodeTopics
@@ -209,14 +209,14 @@ func atomActionsToNodeActions(atom *godbi.Atom) *Node_Actions {
 	if iedit := atom.GetAction("edit"); iedit != nil {
 		edit := iedit.(*godbi.Edit)
 		nodeEdit := &Node_Actions_Edit{
-			IsDo:       edit.GetIsDo(),
+			IsDo:       edit.IsDo,
 			ActionName: "edit",
 			Picked:     edit.Picked,
 			FIELDS:     edit.FIELDS}
-		for _, prepare := range edit.GetPrepares() {
+		for _, prepare := range edit.Prepares {
 			nodeEdit.PrepareConnects = append(nodeEdit.PrepareConnects, dbiConnection(prepare))
 		}
-		for _, nextpage := range edit.GetNextpages() {
+		for _, nextpage := range edit.Nextpages {
 			nodeEdit.NextpageConnects = append(nodeEdit.NextpageConnects, dbiConnection(nextpage))
 		}
 		nodeActions.EditItem = nodeEdit

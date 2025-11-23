@@ -24,24 +24,24 @@ type Stmt struct {
 
 var _ Capability = (*Stmt)(nil)
 
-func (self *Stmt) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
+func (s *Stmt) RunActionContext(ctx context.Context, db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
 	var statement string
 	var pars []string
 	var labels []any
-	if v, ok := ARGS[STMT]; ok {
-		if self.Others == nil || self.Others[v.(string)] == nil {
+	if v, ok := args[STMT]; ok {
+		if s.Others == nil || s.Others[v.(string)] == nil {
 			return nil, errorActionNil(v.(string))
 		}
-		other := self.Others[v.(string)]
+		other := s.Others[v.(string)]
 		statement = other.Statement
 		pars = other.Pars
 		labels = other.Labels
 	} else {
-		statement = self.Statement
-		pars = self.Pars
-		labels = self.Labels
+		statement = s.Statement
+		pars = s.Pars
+		labels = s.Labels
 		if labels == nil {
-			for _, col := range self.Picked {
+			for _, col := range s.Picked {
 				labels = append(labels, col)
 			}
 		}
@@ -51,7 +51,7 @@ func (self *Stmt) RunActionContext(ctx context.Context, db *sql.DB, t *Table, AR
 	if extra != nil {
 		extra0 = extra[0]
 	}
-	ids := properValues(pars, ARGS, extra0)
+	ids := properValues(pars, args, extra0)
 
 	return getSQL(ctx, db, t.logger, statement, labels, ids...)
 }

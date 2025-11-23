@@ -20,39 +20,29 @@ type Molecule struct {
 	DBDriver DBType  `json:"dbDriver" hcl:"dbDriver,optional"`
 	Stopper
 	PreStopper
-	logger   Slogger
-	argsMap  map[string]any
-	extraMap map[string]any
+	logger Slogger
 }
 
 // SetLogger sets the logger
-func (self *Molecule) SetLogger(logger Slogger) {
-	self.logger = logger
-	for _, atom := range self.Atoms {
+func (m *Molecule) SetLogger(logger Slogger) {
+	m.logger = logger
+	for _, atom := range m.Atoms {
 		atom.Table.SetLogger(logger)
 	}
 }
 
 // GetLogger gets the logger
-func (self *Molecule) GetLogger() Slogger {
-	return self.logger
-}
-
-// Initialize initializes molecule with args and extra
-// args is the input data, shared by all sub actions.
-// extra is specific data list for sub actions, starting with the current one.
-func (self *Molecule) Initialize(args map[string]any, extra map[string]any) {
-	self.argsMap = args
-	self.extraMap = extra
+func (m *Molecule) GetLogger() Slogger {
+	return m.logger
 }
 
 // GetAtom returns the atom by atom name
-func (self *Molecule) GetAtom(atomName string) *Atom {
-	if self.Atoms != nil {
-		for _, atom := range self.Atoms {
+func (m *Molecule) GetAtom(atomName string) *Atom {
+	if m.Atoms != nil {
+		for _, atom := range m.Atoms {
 			if atom.AtomName == atomName {
-				atom.SetDBDriver(self.DBDriver)
-				atom.Table.logger = self.logger
+				atom.SetDBDriver(m.DBDriver)
+				atom.Table.logger = m.logger
 				return atom
 			}
 		}
@@ -60,43 +50,45 @@ func (self *Molecule) GetAtom(atomName string) *Atom {
 	return nil
 }
 
+// RunOption holds the arguments for RunContext
+type RunOption struct {
+	Args        any
+	Extra       map[string]any
+	GlobalArgs  map[string]any
+	GlobalExtra map[string]any
+}
+
 // RunContext runs action by atom and action string names.
 // It returns the searched data and optional error code.
-// atom is the atom name, and action the action name. rest are:
-//   - the input data, shared by all sub actions.
-//   - specific data list for sub actions, starting with the current one.
-func (self *Molecule) RunContext(ctx context.Context, db *sql.DB, atom, action string, rest ...any) ([]any, error) {
-	return self.generalContext(false, ctx, db, atom, action, rest...)
+// atom is the atom name, and action the action name.
+func (m *Molecule) RunContext(ctx context.Context, db *sql.DB, atom, action string, opt *RunOption) ([]any, error) {
+	return m.processContext(false, ctx, db, atom, action, opt)
 }
 
-func (self *Molecule) runRecurseContext(ctx context.Context, db *sql.DB, atom, action string, rest ...any) ([]any, error) {
-	return self.generalContext(true, ctx, db, atom, action, rest...)
+func (m *Molecule) runRecurseContext(ctx context.Context, db *sql.DB, atom, action string, opt *RunOption) ([]any, error) {
+	return m.processContext(true, ctx, db, atom, action, opt)
 }
 
-func (self *Molecule) generalContext(topRecursive bool, ctx context.Context, db *sql.DB, atom, action string, rest ...any) ([]any, error) {
+func (m *Molecule) processContext(topRecursive bool, ctx context.Context, db *sql.DB, atom, action string, opt *RunOption) ([]any, error) {
 	var args any
 	var extra map[string]any
-	if rest != nil {
-		if hasValue(rest[0]) {
-			args = rest[0]
-		}
-		if len(rest) == 2 && hasValue(rest[1]) {
-			switch t := rest[1].(type) {
-			case map[string]any:
-				extra = t
-			default:
-				return nil, errorExtraDataType(rest[1])
-			}
-		}
+	var globalArgs map[string]any
+	var globalExtra map[string]any
+
+	if opt != nil {
+		args = opt.Args
+		extra = opt.Extra
+		globalArgs = opt.GlobalArgs
+		globalExtra = opt.GlobalExtra
 	}
 
-	if hasValue(self.argsMap[atom]) {
-		argsMap := self.argsMap[atom].(map[string]any)
+	if hasValue(globalArgs) && hasValue(globalArgs[atom]) {
+		argsMap := globalArgs[atom].(map[string]any)
 		args = mergeArgs(args, argsMap[action])
 	}
 
-	if hasValue(self.extraMap[atom]) {
-		extraAction := self.extraMap[atom].(map[string]any)
+	if hasValue(globalExtra) && hasValue(globalExtra[atom]) {
+		extraAction := globalExtra[atom].(map[string]any)
 		if hasValue(extraAction[action]) {
 			extra = mergeMap(extra, extraAction[action].(map[string]any))
 		}
@@ -104,11 +96,11 @@ func (self *Molecule) generalContext(topRecursive bool, ctx context.Context, db 
 
 	switch t := args.(type) {
 	case map[string]any:
-		return self.hashContext(topRecursive, ctx, db, atom, action, t, extra)
+		return m.execContext(topRecursive, ctx, db, atom, action, t, extra, globalArgs, globalExtra)
 	case []map[string]any:
 		var final []any
 		for _, arg := range t {
-			lists, err := self.hashContext(topRecursive, ctx, db, atom, action, arg, extra)
+			lists, err := m.execContext(topRecursive, ctx, db, atom, action, arg, extra, globalArgs, globalExtra)
 			if err != nil {
 				return nil, err
 			}
@@ -119,7 +111,7 @@ func (self *Molecule) generalContext(topRecursive bool, ctx context.Context, db 
 		var final []any
 		for _, arg := range t {
 			if v, ok := arg.(map[string]any); ok {
-				lists, err := self.hashContext(topRecursive, ctx, db, atom, action, v, extra)
+				lists, err := m.execContext(topRecursive, ctx, db, atom, action, v, extra, globalArgs, globalExtra)
 				if err != nil {
 					return nil, err
 				}
@@ -130,19 +122,12 @@ func (self *Molecule) generalContext(topRecursive bool, ctx context.Context, db 
 	default:
 	}
 
-	return self.hashContext(topRecursive, ctx, db, atom, action, nil, extra)
+	return m.execContext(topRecursive, ctx, db, atom, action, nil, extra, globalArgs, globalExtra)
 }
 
-// RunContext runs action by atom and action string names.
-// It returns the searched data and optional error code.
-//
-// 'atom' is the atom name, and 'action' the action name.
-// The first extra is the input data, shared by all sub actions.
-// The rest are specific data for each action starting with the current one.
-//
-
-func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sql.DB, atom, action string, args, extra map[string]any) ([]any, error) {
-	atomObj := self.GetAtom(atom)
+// execContext executes the action logic with fully resolved arguments.
+func (m *Molecule) execContext(topRecursive bool, ctx context.Context, db *sql.DB, atom, action string, args, extra, globalArgs, globalExtra map[string]any) ([]any, error) {
+	atomObj := m.GetAtom(atom)
 	if atomObj == nil {
 		return nil, errorAtomNotFound(atom)
 	}
@@ -151,19 +136,19 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 	if actionObj == nil {
 		return nil, errorActionNotFound(action, atom)
 	}
-	if actionObj.GetIsDo(action) && !hasValue(args) {
+	if actionObj.GetBaseAction().IsDo && !hasValue(args) {
 		return nil, nil
 	}
 
-	prepares := actionObj.GetPrepares()
-	nextpages := actionObj.GetNextpages()
+	prepares := actionObj.GetBaseAction().Prepares
+	nextpages := actionObj.GetBaseAction().Nextpages
 
 	newArgs := cloneArgs(args)
 	newExtra := cloneMap(extra)
 
 	// prepares receives filtered args and extra from current args
 	for _, p := range prepares {
-		pAtom := self.GetAtom(p.AtomName)
+		pAtom := m.GetAtom(p.AtomName)
 		if pAtom == nil {
 			return nil, errorAtomNotFound(p.AtomName)
 		}
@@ -171,7 +156,7 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 		v, _ := p.findArgs(args)
 		preArgs := mergeArgs(p.nextArgs(args), v)
 		preExtra := mergeMap(p.nextExtra(args), p.findExrea(extra))
-		isDo := pAtom.GetAction(p.ActionName).GetIsDo(p.ActionName)
+		isDo := pAtom.GetAction(p.ActionName).GetBaseAction().IsDo
 		isRecursive := pTable.IsRecursive()
 
 		var lists []any
@@ -195,12 +180,12 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 					}
 				}
 			}
-			lists, err = self.runRecurseContext(ctx, db, p.AtomName, p.ActionName, preArgs, preExtra)
+			lists, err = m.runRecurseContext(ctx, db, p.AtomName, p.ActionName, &RunOption{Args: preArgs, Extra: preExtra, GlobalArgs: globalArgs, GlobalExtra: globalExtra})
 		} else if isDo && isRecursive {
 			// this triggers the original topRecursive and is always a DO action
-			lists, err = self.runRecurseContext(ctx, db, p.AtomName, p.ActionName, preArgs, preExtra)
-		} else if self.PreStopper == nil || !self.PreStopper.Stop(&tableObj, &pTable) {
-			lists, err = self.RunContext(ctx, db, p.AtomName, p.ActionName, preArgs, preExtra)
+			lists, err = m.runRecurseContext(ctx, db, p.AtomName, p.ActionName, &RunOption{Args: preArgs, Extra: preExtra, GlobalArgs: globalArgs, GlobalExtra: globalExtra})
+		} else if m.PreStopper == nil || !m.PreStopper.Stop(&tableObj, &pTable) {
+			lists, err = m.RunContext(ctx, db, p.AtomName, p.ActionName, &RunOption{Args: preArgs, Extra: preExtra, GlobalArgs: globalArgs, GlobalExtra: globalExtra})
 		} // else means stopper is set and stopper stops preparing insert or update
 		if err != nil {
 			return nil, err
@@ -247,7 +232,7 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 		}
 	}
 
-	if !topRecursive && hasValue(newArgs) && actionObj.GetIsDo(action) {
+	if !topRecursive && hasValue(newArgs) && actionObj.GetBaseAction().IsDo {
 		//newArgs = tableObj.refreshArgs(newArgs, true)
 		newArgs = tableObj.refreshArgs(newArgs)
 	}
@@ -279,8 +264,8 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 		if !ok {
 			continue
 		}
-		if self.Stopper != nil {
-			self.Stopper.Sign(&tableObj, hash)
+		if m.Stopper != nil {
+			m.Stopper.Sign(&tableObj, hash)
 		}
 	}
 
@@ -290,7 +275,7 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 			var pAtom *Atom
 			var rColumn string
 			for _, p = range nextpages {
-				pAtom = self.GetAtom(p.AtomName)
+				pAtom = m.GetAtom(p.AtomName)
 				if pAtom == nil {
 					return nil, errorAtomNotFound(p.AtomName)
 				}
@@ -309,7 +294,7 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 			for _, item := range data {
 				nextArgs := p.nextArgs(item)
 				nextArgs = mergeArgs(argsData, nextArgs)
-				_, err = self.runRecurseContext(ctx, db, p.AtomName, p.ActionName, nextArgs, nil)
+				_, err = m.runRecurseContext(ctx, db, p.AtomName, p.ActionName, &RunOption{Args: nextArgs, GlobalArgs: globalArgs, GlobalExtra: globalExtra})
 				if err != nil {
 					return nil, err
 				}
@@ -319,12 +304,12 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 	}
 
 	for _, p := range nextpages {
-		pAtom := self.GetAtom(p.AtomName)
+		pAtom := m.GetAtom(p.AtomName)
 		if pAtom == nil {
 			return nil, errorAtomNotFound(p.AtomName)
 		}
 		pAction := pAtom.GetAction(p.ActionName)
-		if self.Stopper != nil && self.Stopper.Stop(&tableObj, &(pAtom.Table)) {
+		if m.Stopper != nil && m.Stopper.Stop(&tableObj, &(pAtom.Table)) {
 			continue
 		}
 
@@ -334,7 +319,7 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 			}
 			nextArgs := p.nextArgs(item)
 			nextExtra := p.nextExtra(item)
-			if pAction.GetIsDo(p.ActionName) {
+			if pAction.GetBaseAction().IsDo {
 				if v, ok := p.findArgs(newArgs); ok {
 					// do-action, needs input from the table, but not found
 					if !hasValue(v) {
@@ -348,7 +333,7 @@ func (self *Molecule) hashContext(topRecursive bool, ctx context.Context, db *sq
 					continue
 				}
 			}
-			newLists, err := self.RunContext(ctx, db, p.AtomName, p.ActionName, nextArgs, nextExtra)
+			newLists, err := m.RunContext(ctx, db, p.AtomName, p.ActionName, &RunOption{Args: nextArgs, Extra: nextExtra, GlobalArgs: globalArgs, GlobalExtra: globalExtra})
 			if err != nil {
 				return nil, err
 			}

@@ -12,16 +12,16 @@ type Insupd struct {
 
 var _ Capability = (*Insupd)(nil)
 
-func (self *Insupd) RunAction(db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
-	return self.RunActionContext(context.Background(), db, t, ARGS, extra...)
+func (i *Insupd) RunAction(db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
+	return i.RunActionContext(context.Background(), db, t, args, extra...)
 }
 
-func (self *Insupd) RunActionContext(ctx context.Context, db *sql.DB, t *Table, ARGS map[string]any, extra ...map[string]any) ([]any, error) {
-	if err := t.checkNull(ARGS); err != nil {
+func (i *Insupd) RunActionContext(ctx context.Context, db *sql.DB, t *Table, args map[string]any, extra ...map[string]any) ([]any, error) {
+	if err := t.checkNull(args); err != nil {
 		return nil, err
 	}
 
-	fieldValues, allAuto := t.getFv(ARGS, self.getAllowed())
+	fieldValues, allAuto := t.getFv(args, i.getAllowed())
 	if !allAuto && !hasValue(fieldValues) {
 		return nil, errorEmptyInput(t.TableName)
 	}
