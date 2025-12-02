@@ -2,6 +2,8 @@
 
 **Molecule** is a Go library designed to perform complex database operations across multiple tables as a single, atomic unit. It treats the database as a graph of "Atoms" (tables) and executes actions based on defined relationships.
 
+[![GoDoc](https://godoc.org/github.com/genelet/molecule?status.svg)](https://godoc.org/github.com/genelet/molecule)
+
 ## Overview
 
 Molecule abstracts database interactions into high-level actions, allowing you to:
