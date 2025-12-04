@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/genelet/horizon/dethcl"
-	"github.com/genelet/horizon/utils"
+	"github.com/genelet/schema"
 )
 
 // newMoleculeHclFile parse a HCL file to atom
@@ -82,7 +82,7 @@ func TestHCLMoleculeOld(t *testing.T) {
 		t.Fatal(err)
 	}
 	m := new(Molecule)
-	spec, err := utils.NewStruct(
+	spec, err := schema.NewStruct(
 		"Molecule", map[string]any{
 			"Atoms": [][2]any{
 				{"Atom", map[string]any{"Actions": [][2]any{

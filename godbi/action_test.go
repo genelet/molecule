@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/genelet/horizon/dethcl"
-	"github.com/genelet/horizon/utils"
+	"github.com/genelet/schema"
 )
 
 func TestHCLAction(t *testing.T) {
@@ -16,7 +16,7 @@ func TestHCLAction(t *testing.T) {
       }
     }
 `
-	spec, err := utils.NewStruct("Action", map[string]any{
+	spec, err := schema.NewStruct("Action", map[string]any{
 		"Nextpages": []string{"Connection"}})
 	if err != nil {
 		t.Fatal(err)

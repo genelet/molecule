@@ -9,7 +9,7 @@ import (
 	"reflect"
 
 	"github.com/genelet/horizon/dethcl"
-	"github.com/genelet/horizon/utils"
+	"github.com/genelet/schema"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 )
@@ -95,7 +95,7 @@ func (a *Atom) UnmarshalHCL(bs []byte, labels ...string) error {
 	return nil
 }
 
-func specFromAtomBody(body *hclsyntax.Body, customs map[string]any) (*utils.Struct, map[string]any, error) {
+func specFromAtomBody(body *hclsyntax.Body, customs map[string]any) (*schema.Struct, map[string]any, error) {
 	ref := map[string]any{"Connection": new(Connection)}
 	accepted := make(map[string]bool)
 	for k, v := range customs {
@@ -139,7 +139,7 @@ func specFromAtomBody(body *hclsyntax.Body, customs map[string]any) (*utils.Stru
 		actions = append(actions, [2]any{key, second})
 	}
 
-	s, err := utils.NewStruct("Atom", map[string]any{"Actions": actions})
+	s, err := schema.NewStruct("Atom", map[string]any{"Actions": actions})
 	return s, ref, err
 }
 
