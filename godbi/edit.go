@@ -34,6 +34,7 @@ func (e *Edit) RunActionContext(ctx context.Context, db *sql.DB, t *Table, args 
 	}
 
 	newExtra := t.byConstraint(args, extra...)
+
 	where, extraValues := t.singleCondition(ids, t.TableName, newExtra)
 	if where != "" {
 		sql += "\nWHERE " + where

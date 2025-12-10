@@ -8,7 +8,6 @@ const (
 	SQLite
 	MySQL
 	Postgres
-	TSNano
 )
 
 // LowerName returns the lower case name of the DBType

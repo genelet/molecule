@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"strings"
-	"time"
 )
 
 // Col defines table column in GO struct
@@ -197,7 +196,7 @@ func (t *Table) getFv(args map[string]any, allowed map[string]bool) (map[string]
 			case []map[string]any, map[string]any:
 			case bool:
 				switch t.dbDriver {
-				case SQLite, TSNano:
+				case SQLite:
 					if val {
 						fieldValues[f] = 1
 					} else {
@@ -263,10 +262,6 @@ func (t *Table) insertCols(allowed map[string]bool) map[string]string {
 func (t *Table) insertHashContext(ctx context.Context, db *sql.DB, args map[string]any) (int64, error) {
 	var fields []string
 	var values []any
-	if t.IDAuto != "" && t.dbDriver == TSNano {
-		fields = append(fields, t.IDAuto)
-		values = append(values, time.Now().UnixNano()/int64(time.Millisecond))
-	}
 	for k, v := range args {
 		if v != nil {
 			fields = append(fields, k)
@@ -294,7 +289,7 @@ func (t *Table) insertHashContext(ctx context.Context, db *sql.DB, args map[stri
 		} else {
 			lastID, err = dbi.InsertIDContext(ctx, "INSERT INTO "+t.TableName+" DEFAULT VALUES")
 		}
-	case SQLRaw, TSNano:
+	case SQLRaw:
 		var res sql.Result
 		res, err = dbi.DoSQLContext(ctx, query, values...)
 		if err == nil {
